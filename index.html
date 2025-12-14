@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>PQC Quality Dashboard – FINAL</title>
+<title>Quality Dashboard - FINAL</title>
 
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -12,29 +12,35 @@ body{font-family:Arial;background:#f4f7fb;margin:15px}
 h2,h3{margin:5px 0}
 .form-row{display:flex;gap:10px;flex-wrap:wrap}
 label{font-size:12px;font-weight:bold}
-input,select,textarea{padding:7px;border-radius:6px;border:1px solid #ccc}
-button{background:#0b66d2;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
+input{padding:6px;border-radius:6px;border:1px solid #ccc}
+button{background:#0b66d2;color:#fff;padding:7px 14px;border:none;border-radius:8px;cursor:pointer}
 button.gray{background:#666}
 .table{width:100%;border-collapse:collapse}
 .table th,.table td{border:1px solid #ddd;padding:6px;font-size:12px}
-.bad{color:red;font-weight:bold}
-.good{color:green;font-weight:bold}
-.modal{display:none;position:fixed;top:8%;left:15%;width:70%;background:#fff;padding:20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:9999}
+.kpi-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{padding:12px;border-radius:10px;text-align:center}
+.good{background:#e8f8ef}
+.bad{background:#fdecec}
+.warn{background:#fff4e5}
+.kpi-value{font-size:22px;font-weight:bold}
+.modal{display:none;position:fixed;top:5%;left:15%;width:70%;background:#fff;padding:15px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:9999}
+.red{color:red;font-weight:bold}
 </style>
 </head>
 
 <body>
 
-<h2>📊 PQC Quality Dashboard</h2>
+<h2>📊 Quality Dashboard</h2>
 
 <!-- KPI -->
 <div class="card">
-<b>Overall KPIs</b><br><br>
-FPY: <span id="kpi_fpy" class="good">--</span> |
-Rejection: <span id="kpi_rej" class="bad">--</span> |
-RMD: <span id="kpi_rmd">--</span> |
-Process: <span id="kpi_proc">--</span> |
-SMT: <span id="kpi_smt">--</span>
+<div class="kpi-wrap">
+  <div class="kpi good"><div>FPY %</div><div class="kpi-value" id="kpi_fpy">--</div></div>
+  <div class="kpi bad"><div>Rejection %</div><div class="kpi-value" id="kpi_rej">--</div></div>
+  <div class="kpi warn"><div>RMD %</div><div class="kpi-value" id="kpi_rmd">--</div></div>
+  <div class="kpi warn"><div>Process %</div><div class="kpi-value" id="kpi_proc">--</div></div>
+  <div class="kpi warn"><div>SMT %</div><div class="kpi-value" id="kpi_smt">--</div></div>
+</div>
 </div>
 
 <!-- DATA ENTRY -->
@@ -43,60 +49,66 @@ SMT: <span id="kpi_smt">--</span>
 
 <div class="form-row">
 <div><label>Date</label><input type="date" id="f_date"></div>
-<div><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
+<div><label>Shift</label><input id="f_shift"></div>
 <div><label>Line</label><input id="f_line"></div>
 <div><label>Model</label><input id="f_model"></div>
 <div><label>Input</label><input id="f_input" type="number" oninput="autoCalc()"></div>
-<div><label>Total Defect</label><input id="f_def" type="number" oninput="autoCalc()"></div>
+<div><label>Defect</label><input id="f_def" type="number" oninput="autoCalc()"></div>
 <div><label>Rej %</label><input id="f_rej" readonly></div>
 <div><label>FPY %</label><input id="f_fpy" readonly></div>
 </div>
 
 <h4>Defect Bifurcation</h4>
 <div class="form-row">
-<div><label>RMD Qty</label><input id="rmd" oninput="autoCalc()"></div>
+<div><label>RMD</label><input id="rmd" oninput="autoCalc()"></div>
 <div><label>RMD %</label><input id="rmd_r" readonly></div>
-<div><label>Process Qty</label><input id="proc" oninput="autoCalc()"></div>
+<div><label>Process</label><input id="proc" oninput="autoCalc()"></div>
 <div><label>Process %</label><input id="proc_r" readonly></div>
-<div><label>SMT Qty</label><input id="smt" oninput="autoCalc()"></div>
+<div><label>SMT</label><input id="smt" oninput="autoCalc()"></div>
 <div><label>SMT %</label><input id="smt_r" readonly></div>
 </div>
 
 <h4>Top 3 Defects</h4>
-
 <div class="form-row">
-<div><label>Defect 1</label><input id="d1"></div>
-<div><label>Qty</label><input id="q1" oninput="autoCalc()"></div>
-<div><label>%</label><input id="r1" readonly></div>
-<div><label>Cause</label><input id="c1"></div>
-<div><label>Action</label><input id="a1"></div>
+<input placeholder="Defect 1" id="d1">
+<input placeholder="Qty" id="q1">
+<input placeholder="Cause" id="c1">
+<input placeholder="Action" id="a1">
+</div>
+<div class="form-row">
+<input placeholder="Defect 2" id="d2">
+<input placeholder="Qty" id="q2">
+<input placeholder="Cause" id="c2">
+<input placeholder="Action" id="a2">
+</div>
+<div class="form-row">
+<input placeholder="Defect 3" id="d3">
+<input placeholder="Qty" id="q3">
+<input placeholder="Cause" id="c3">
+<input placeholder="Action" id="a3">
 </div>
 
 <div class="form-row">
-<div><label>Defect 2</label><input id="d2"></div>
-<div><label>Qty</label><input id="q2" oninput="autoCalc()"></div>
-<div><label>%</label><input id="r2" readonly></div>
-<div><label>Cause</label><input id="c2"></div>
-<div><label>Action</label><input id="a2"></div>
-</div>
-
-<div class="form-row">
-<div><label>Defect 3</label><input id="d3"></div>
-<div><label>Qty</label><input id="q3" oninput="autoCalc()"></div>
-<div><label>%</label><input id="r3" readonly></div>
-<div><label>Cause</label><input id="c3"></div>
-<div><label>Action</label><input id="a3"></div>
-</div>
-
-<br>
+<input placeholder="Prepared By" id="prep">
 <button onclick="saveData()">SAVE</button>
+</div>
+</div>
+
+<!-- FILTER -->
+<div class="card">
+<h3>Filter</h3>
+<div class="form-row">
+<input type="date" id="flt_from" onchange="applyFilter()">
+<input type="date" id="flt_to" onchange="applyFilter()">
+<input placeholder="Line" id="flt_line" oninput="applyFilter()">
+</div>
 </div>
 
 <!-- TABLE -->
 <div class="card">
-<h3>Report View</h3>
+<h3>Records</h3>
 <table class="table">
-<thead id="thead"></thead>
+<thead><tr id="thead"></tr></thead>
 <tbody id="tbody"></tbody>
 </table>
 </div>
@@ -105,66 +117,120 @@ SMT: <span id="kpi_smt">--</span>
 <div id="preview" class="modal"></div>
 
 <script>
-const API="https://script.google.com/macros/s/AKfycbyAzY1iGj-_gGt8i0aGxYRd9YMRKjqVBeQpu8NosZtqEBcAaYoV6sl7VzjqPIGb3nOPAQ/exec";
+const API="https://script.google.com/macros/s/AKfycbxsfFpMxNT2gzEVwxWYDT4t27QLP6hP-yR1GImxAhNX0GTwvpCSkg9igOHZaq67bpq-8Q/exec";
+let ALL=[];
 
 function autoCalc(){
  let i=+f_input.value||0,d=+f_def.value||0;
  if(i>0){
-   f_rej.value=((d/i)*100).toFixed(2);
-   f_fpy.value=(100-(d/i*100)).toFixed(2);
+  f_rej.value=((d/i)*100).toFixed(2);
+  f_fpy.value=(100-(d/i*100)).toFixed(2);
  }
  rmd_r.value=i?((+rmd.value||0)/i*100).toFixed(2):'';
  proc_r.value=i?((+proc.value||0)/i*100).toFixed(2):'';
  smt_r.value=i?((+smt.value||0)/i*100).toFixed(2):'';
-
- r1.value=i?((+q1.value||0)/i*100).toFixed(2):'';
- r2.value=i?((+q2.value||0)/i*100).toFixed(2):'';
- r3.value=i?((+q3.value||0)/i*100).toFixed(2):'';
 }
 
 async function saveData(){
  let row=[
- f_date.value,f_shift.value,f_line.value,f_model.value,
- f_input.value,f_def.value,f_rej.value,f_fpy.value,
- rmd.value,rmd_r.value,proc.value,proc_r.value,smt.value,smt_r.value,
- d1.value,q1.value,r1.value,c1.value,a1.value,
- d2.value,q2.value,r2.value,c2.value,a2.value,
- d3.value,q3.value,r3.value,c3.value,a3.value
+  f_date.value,f_shift.value,f_line.value,f_model.value,
+  f_input.value,f_def.value,f_rej.value,f_fpy.value,
+  rmd.value,rmd_r.value,proc.value,proc_r.value,smt.value,smt_r.value,
+  d1.value,q1.value,c1.value,a1.value,
+  d2.value,q2.value,c2.value,a2.value,
+  d3.value,q3.value,c3.value,a3.value,
+  prep.value
  ];
- await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'append',row})});
- showPreview(row);
- load();
+ let r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({action:'append',row})});
+ let j=await r.json();
+ if(j.status==="saved"){showPreview(row);load();}
 }
 
 function showPreview(r){
- let p=document.getElementById('preview');
- p.innerHTML=`<h3>Preview</h3>
- <b>Date:</b> ${r[0]}<br>
- <b>Model:</b> ${r[3]}<br>
- <b class="bad">Rejection:</b> ${r[6]}%<br>
- <b>FPY:</b> ${r[7]}%<br><br>
- <b>Top Defects:</b><br>
- ${r[14]} – ${r[16]}%<br>
- ${r[19]} – ${r[21]}%<br>
- ${r[24]} – ${r[26]}%<br><br>
- <button onclick="this.parentElement.style.display='none'">Close</button>`;
- p.style.display='block';
+ preview.innerHTML=`
+ <h3>Saved Preview</h3>
+ <p><b>Line:</b> ${r[2]}</p>
+ <p><b>Model:</b> ${r[3]}</p>
+ <p class="red"><b>Rejection %:</b> ${r[6]}</p>
+ <p><b>FPY %:</b> ${r[7]}</p>
+ <button onclick="preview.style.display='none'">Close</button>`;
+ preview.style.display='block';
 }
 
 async function load(){
- let r=await fetch(API);let j=await r.json();
- let rows=j.rows;
- let h=document.getElementById('thead');
- let t=document.getElementById('tbody');
- h.innerHTML='<tr>'+rows[0].map(x=>`<th>${x}</th>`).join('')+'</tr>';
- t.innerHTML='';
- rows.slice(1).forEach(r=>{
-   t.innerHTML+='<tr>'+r.map(c=>`<td>${c||''}</td>`).join('')+'</tr>';
+ let r=await fetch(API); let j=await r.json();
+ ALL=j.rows.slice(1);
+ render(ALL);
+ kpi(j.rows.slice(1));
+}
+
+function render(rows){
+ let h=document.getElementById('thead'),b=document.getElementById('tbody');
+ h.innerHTML='';b.innerHTML='';
+ let heads=["Date","Shift","Line","Model","Input","Defect","Rej%","FPY"];
+ heads.forEach(x=>h.innerHTML+=`<th>${x}</th>`);
+ rows.forEach((r,i)=>{
+  let tr=document.createElement('tr');
+  tr.innerHTML=`
+  <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td>
+  <td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td>
+  <td>
+   <button onclick="edit(${i})">Edit</button>
+   <button class="gray" onclick="del(${i})">Del</button>
+  </td>`;
+  b.appendChild(tr);
  });
+}
+
+function applyFilter(){
+ let f=flt_from.value,t=flt_to.value,l=flt_line.value.toLowerCase();
+ render(ALL.filter(r=>{
+  if(f && r[0]<f)return false;
+  if(t && r[0]>t)return false;
+  if(l && !r[2].toLowerCase().includes(l))return false;
+  return true;
+ }));
+}
+
+function kpi(rows){
+ let i=0,d=0,r=0,p=0,s=0;
+ rows.forEach(x=>{i+=+x[4]||0;d+=+x[5]||0;r+=+x[8]||0;p+=+x[10]||0;s+=+x[12]||0});
+ if(i){
+  kpi_rej.innerText=(d/i*100).toFixed(2)+'%';
+  kpi_fpy.innerText=(100-(d/i*100)).toFixed(2)+'%';
+  kpi_rmd.innerText=(r/i*100).toFixed(2)+'%';
+  kpi_proc.innerText=(p/i*100).toFixed(2)+'%';
+  kpi_smt.innerText=(s/i*100).toFixed(2)+'%';
+ }
+}
+
+async function del(i){
+ if(!confirm("Delete?"))return;
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({action:'delete',rowIndex:i+1})});
+ load();
+}
+
+function edit(i){
+ let r=ALL[i];
+ preview.innerHTML=`
+ <h3>Edit</h3>
+ <input id="ed1" value="${r[14]}">
+ <input id="eq1" value="${r[15]}">
+ <button onclick="saveEdit(${i})">Update</button>`;
+ preview.style.display='block';
+}
+async function saveEdit(i){
+ ALL[i][14]=ed1.value;
+ ALL[i][15]=eq1.value;
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+ body:JSON.stringify({action:'update',rowIndex:i+1,row:ALL[i]})});
+ preview.style.display='none';
+ load();
 }
 
 load();
 </script>
-
 </body>
 </html>
