@@ -2,143 +2,161 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Quality Dashboard – Floor Wise</title>
-
-<!-- Google Charts & Utils -->
+<title>Advanced Quality Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
 <style>
-body{font-family:Arial, sans-serif; background:#f4f7fb; margin:20px; color:#333;}
-.card{background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-bottom:20px;}
-h2,h3,h4{margin-top:0; color:#444;}
-h4{border-bottom:2px solid #eee; padding-bottom:5px; margin-bottom:15px;}
+/* CSS STYLES */
+body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#eef2f5; margin:15px; color:#333;}
+.card{background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.08); margin-bottom:20px;}
+h2,h3,h4{margin-top:0; color:#2c3e50;}
+h4{border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:15px; color:#555;}
 
-/* Form Styles */
-.form-row{display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;}
+/* Form */
+.form-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
 .form-group{display:flex; flex-direction:column; min-width:140px; flex:1;}
-label{font-size:12px; font-weight:bold; margin-bottom:5px; color:#666;}
-input,select{padding:8px; border-radius:6px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
+label{font-size:12px; font-weight:600; margin-bottom:4px; color:#555;}
+input,select{padding:8px; border-radius:5px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
 input:focus{border-color:#0b66d2; outline:none;}
+input[readonly]{background-color:#f9f9f9; color:#777;}
 
 /* Buttons */
-button{background:#0b66d2; color:#fff; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s;}
-button:hover{background:#084d9e;}
-button:disabled{background:#ccc; cursor:not-allowed;}
-.action-btn{font-size:11px; padding:5px 10px; margin-right:5px; background:#555;}
-.action-btn:hover{background:#333;}
+button{background:#0b66d2; color:#fff; padding:10px 18px; border:none; border-radius:6px; cursor:pointer; font-weight:600; transition:0.2s;}
+button:hover{background:#0954b0;}
+button:disabled{background:#ccc;}
+.btn-danger{background:#dc3545;} .btn-danger:hover{background:#bd2130;}
+.btn-edit{background:#ffc107; color:#333;} .btn-edit:hover{background:#e0a800;}
+.action-btn{padding:5px 10px; font-size:11px; margin-right:3px;}
 
-/* Tables */
-.table-responsive{overflow-x:auto;}
-.table{width:100%; border-collapse:collapse; margin-top:10px;}
-.table th, .table td{border:1px solid #ddd; padding:8px; font-size:12px; text-align:center;}
-.table th{background:#f8f9fa; color:#333;}
-
-/* KPIs */
-.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-.kpi-box { padding: 15px; border-radius: 10px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.kpi-title { font-size: 14px; opacity: 0.9; margin-bottom: 5px; }
-.kpi-val { font-size: 24px; font-weight: bold; }
+/* KPI GRID */
+.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
+.kpi-box { padding: 10px; border-radius: 8px; text-align: center; color: white; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+.kpi-title { font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-val { font-size: 18px; font-weight: bold; margin-top: 5px; }
 
 /* Dashboard Colors */
-.bg-blue { background: linear-gradient(135deg, #0b66d2, #004c99); } /* Global */
-.bg-green { background: linear-gradient(135deg, #28a745, #1e7e34); } /* 1st Floor */
-.bg-orange { background: linear-gradient(135deg, #fd7e14, #d96205); } /* 2nd Floor */
-.bg-purple { background: linear-gradient(135deg, #6f42c1, #553098); } /* Basement */
+.bg-blue { background: linear-gradient(135deg, #0b66d2, #004c99); }
+.bg-green { background: linear-gradient(135deg, #28a745, #1e7e34); }
+.bg-orange { background: linear-gradient(135deg, #fd7e14, #d96205); }
+.bg-purple { background: linear-gradient(135deg, #6f42c1, #553098); }
 
-/* Modal */
-.modal{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:90%; max-width:500px; background:#fff; padding:25px; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,0.3); z-index:1000;}
-.overlay{display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:999;}
+/* Table */
+.table-responsive{overflow-x:auto;}
+.table{width:100%; border-collapse:collapse; margin-top:10px; background:#fff;}
+.table th, .table td{border:1px solid #e0e0e0; padding:8px; font-size:12px; text-align:center;}
+.table th{background:#f4f6f8; color:#333;}
+
+/* PREVIEW MODAL (Full Detail) */
+.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; }
+.modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:95%; max-width:600px; background:#fff; padding:0; border-radius:12px; z-index:1000; box-shadow:0 10px 40px rgba(0,0,0,0.4); max-height:90vh; overflow-y:auto; }
+.modal-header { background:#0b66d2; color:#fff; padding:15px; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
+.modal-body { padding:20px; }
+.preview-table { width:100%; border-collapse:collapse; margin-bottom:15px; }
+.preview-table td { border-bottom:1px solid #eee; padding:8px; font-size:13px; }
+.preview-label { font-weight:bold; color:#555; width:40%; background:#f9f9f9; }
+.preview-val { font-weight:bold; color:#000; }
+.status-ok { color:green; } .status-ng { color:red; }
+
 </style>
 </head>
-
 <body>
 
-<h2>🏭 Quality Dashboard (Floor Wise)</h2>
+<h2>🏭 QC Dashboard & Line Efficiency</h2>
 
-<!-- GLOBAL & FLOOR DASHBOARD -->
+<!-- 1. DASHBOARD AREA -->
 <div class="card">
   <h3>📊 Overall Performance</h3>
   <div class="kpi-container">
-     <div class="kpi-box bg-blue"><div class="kpi-title">Global Input</div><div class="kpi-val" id="g_inp">0</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">Global FPY %</div><div class="kpi-val" id="g_fpy">--</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">Global Rej %</div><div class="kpi-val" id="g_rej">--</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">Input</div><div class="kpi-val" id="g_inp">0</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">FPY %</div><div class="kpi-val" id="g_fpy">--</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">Rej %</div><div class="kpi-val" id="g_rej">--</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">RMD %</div><div class="kpi-val" id="g_rmd">--</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">Proc %</div><div class="kpi-val" id="g_proc">--</div></div>
+     <div class="kpi-box bg-blue"><div class="kpi-title">SMT %</div><div class="kpi-val" id="g_smt">--</div></div>
   </div>
 
-  <h3>🏢 Floor Wise Performance</h3>
+  <h4 style="margin-top:20px;">🏢 Floor Wise KPIs (FPY | RMD% | Proc% | SMT%)</h4>
+  
+  <!-- 1st Floor -->
+  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#28a745;">1st Floor (Line 1-8)</p>
   <div class="kpi-container">
-     <!-- 1st Floor (Line 1-8) -->
-     <div class="kpi-box bg-green">
-        <div class="kpi-title">1st Floor (L 1-8)</div>
-        <div class="kpi-title">FPY %</div>
-        <div class="kpi-val" id="f1_fpy">--</div>
-     </div>
-     
-     <!-- 2nd Floor (Line 9-16) -->
-     <div class="kpi-box bg-orange">
-        <div class="kpi-title">2nd Floor (L 9-16)</div>
-        <div class="kpi-title">FPY %</div>
-        <div class="kpi-val" id="f2_fpy">--</div>
-     </div>
+     <div class="kpi-box bg-green"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f1_fpy">--</div></div>
+     <div class="kpi-box bg-green"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f1_rmd">--</div></div>
+     <div class="kpi-box bg-green"><div class="kpi-title">Proc %</div><div class="kpi-val" id="f1_proc">--</div></div>
+     <div class="kpi-box bg-green"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f1_smt">--</div></div>
+  </div>
 
-     <!-- Basement (Line 17-24) -->
-     <div class="kpi-box bg-purple">
-        <div class="kpi-title">Basement (L 17-24)</div>
-        <div class="kpi-title">FPY %</div>
-        <div class="kpi-val" id="fb_fpy">--</div>
-     </div>
+  <!-- 2nd Floor -->
+  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#d96205;">2nd Floor (Line 9-16)</p>
+  <div class="kpi-container">
+     <div class="kpi-box bg-orange"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f2_fpy">--</div></div>
+     <div class="kpi-box bg-orange"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f2_rmd">--</div></div>
+     <div class="kpi-box bg-orange"><div class="kpi-title">Proc %</div><div class="kpi-val" id="f2_proc">--</div></div>
+     <div class="kpi-box bg-orange"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f2_smt">--</div></div>
+  </div>
+
+  <!-- Basement -->
+  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#553098;">Basement (Line 17-24)</p>
+  <div class="kpi-container">
+     <div class="kpi-box bg-purple"><div class="kpi-title">FPY %</div><div class="kpi-val" id="fb_fpy">--</div></div>
+     <div class="kpi-box bg-purple"><div class="kpi-title">RMD %</div><div class="kpi-val" id="fb_rmd">--</div></div>
+     <div class="kpi-box bg-purple"><div class="kpi-title">Proc %</div><div class="kpi-val" id="fb_proc">--</div></div>
+     <div class="kpi-box bg-purple"><div class="kpi-title">SMT %</div><div class="kpi-val" id="fb_smt">--</div></div>
   </div>
 </div>
 
-<!-- DATA ENTRY FORM -->
-<div class="card">
-<h3>📝 Data Entry</h3>
+<!-- 2. DATA ENTRY FORM -->
+<div class="card" id="entryForm">
+  <div style="display:flex; justify-content:space-between;">
+    <h3>📝 Data Entry</h3>
+    <button onclick="resetForm()" style="background:#6c757d; font-size:11px; padding:5px 10px;">Clear Form</button>
+  </div>
 
 <div class="form-row">
 <div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
 <div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
-<div class="form-group"><label>Line (Enter Number only)</label><input type="number" id="f_line" placeholder="e.g. 5, 12, 20"></div>
+<div class="form-group"><label>Line No</label><input type="number" id="f_line" placeholder="1-24"></div>
 <div class="form-group"><label>Model</label><input id="f_model"></div>
 <div class="form-group"><label>Input Qty</label><input id="f_input" type="number" oninput="autoCalc()"></div>
 <div class="form-group"><label>Defect Qty</label><input id="f_def" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>Rejection %</label><input id="f_rej" readonly></div>
+<div class="form-group"><label>Rej %</label><input id="f_rej" readonly></div>
 <div class="form-group"><label>FPY %</label><input id="f_fpy" readonly></div>
 </div>
 
-<h4>Defect Bifurcation</h4>
+<h4>Detailed Bifurcation</h4>
 <div class="form-row">
-<div class="form-group"><label>RMD Qty</label><input id="rmd" oninput="autoCalc()"></div>
+<div class="form-group"><label>RMD Qty</label><input id="rmd" type="number" oninput="autoCalc()"></div>
 <div class="form-group"><label>RMD %</label><input id="rmd_r" readonly></div>
-<div class="form-group"><label>Process Qty</label><input id="proc" oninput="autoCalc()"></div>
+<div class="form-group"><label>Process Qty</label><input id="proc" type="number" oninput="autoCalc()"></div>
 <div class="form-group"><label>Process %</label><input id="proc_r" readonly></div>
-<div class="form-group"><label>SMT Qty</label><input id="smt" oninput="autoCalc()"></div>
+<div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
 <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
 </div>
 
 <h4>Top 3 Defects</h4>
 <div class="form-row">
-<div class="form-group"><label>Top-1 Defect</label><input id="d1"><input id="q1" placeholder="Qty"><input id="c1" placeholder="Cause"><input id="a1" placeholder="Action"></div>
+<div class="form-group"><label>Top-1 Defect</label><input id="d1"><input id="q1" placeholder="Qty" type="number"><input id="c1" placeholder="Cause"><input id="a1" placeholder="Action"></div>
 </div>
 <div class="form-row">
-<div class="form-group"><label>Top-2 Defect</label><input id="d2"><input id="q2" placeholder="Qty"><input id="c2" placeholder="Cause"><input id="a2" placeholder="Action"></div>
+<div class="form-group"><label>Top-2 Defect</label><input id="d2"><input id="q2" placeholder="Qty" type="number"><input id="c2" placeholder="Cause"><input id="a2" placeholder="Action"></div>
 </div>
 <div class="form-row">
-<div class="form-group"><label>Top-3 Defect</label><input id="d3"><input id="q3" placeholder="Qty"><input id="c3" placeholder="Cause"><input id="a3" placeholder="Action"></div>
+<div class="form-group"><label>Top-3 Defect</label><input id="d3"><input id="q3" placeholder="Qty" type="number"><input id="c3" placeholder="Cause"><input id="a3" placeholder="Action"></div>
 </div>
 
 <div class="form-row">
 <div class="form-group"><label>Prepared By</label><input id="prep"></div>
-<button onclick="saveData()" id="saveBtn">SAVE DATA</button>
+<button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:10px;">SAVE DATA</button>
 </div>
 </div>
 
-<!-- FILTERS & TABLE -->
+<!-- 3. TABLE SECTION -->
 <div class="card">
-<h3>📂 Records & Filters</h3>
+<h3>📂 Records</h3>
 <div class="form-row">
-    <div class="form-group"><label>From</label><input type="date" id="flt_from"></div>
-    <div class="form-group"><label>To</label><input type="date" id="flt_to"></div>
-    <div class="form-group"><label>Line</label><input id="flt_line"></div>
-    <div class="form-group"><label>&nbsp;</label><button onclick="applyFilter()">Apply Filter</button></div>
+    <div class="form-group"><label>Filter Date</label><input type="date" id="flt_date" onchange="load()"></div>
+    <div class="form-group"><label>&nbsp;</label><button onclick="load()">Refresh</button></div>
 </div>
 
 <div class="table-responsive">
@@ -149,15 +167,29 @@ button:disabled{background:#ccc; cursor:not-allowed;}
 </div>
 </div>
 
-<!-- PREVIEW MODAL -->
+<!-- 4. DETAILED PREVIEW MODAL -->
 <div class="overlay" id="overlay"></div>
-<div id="preview" class="modal"></div>
+<div class="modal" id="previewModal">
+  <div class="modal-header">
+    <h3 style="margin:0; color:#fff;">✅ Submission Successful</h3>
+    <button onclick="closeModal()" style="background:transparent; border:1px solid #fff;">✕</button>
+  </div>
+  <div class="modal-body" id="previewContent">
+    <!-- Dynamic Content Here -->
+  </div>
+  <div style="padding:0 20px 20px 20px; text-align:right;">
+    <button onclick="closeModal()">Close & Clear</button>
+  </div>
+</div>
 
 <script>
-// ⚠️ APNA LATEST GOOGLE SCRIPT URL YAHAN PASTE KAREIN
+// ⚠️ PASTE YOUR NEW SCRIPT URL HERE
 const API = "https://script.google.com/macros/s/AKfycbyxl7XlRDxHhQ64dh6ZHOrctvufFmQeM3rjaS7_90JmuXJw8kG-PRS08Kh3VtaaU0fGAg/exec";
 
-/* ---------------- CALCULATIONS ---------------- */
+let allData = []; // Store data locally for filtering
+let editingRowIndex = null; // Track if we are editing
+
+// 1. Calculation Logic
 function autoCalc(){
  let i = +f_input.value || 0;
  let d = +f_def.value || 0;
@@ -174,190 +206,217 @@ function autoCalc(){
  smt_r.value = i ? ((+smt.value||0)/i*100).toFixed(2) : '';
 }
 
-/* ---------------- SAVE DATA ---------------- */
+// 2. Save / Edit Logic
 async function saveData(){
- const row = [
-  f_date.value, f_shift.value, f_line.value, f_model.value,
-  f_input.value, f_def.value, f_rej.value, f_fpy.value,
-  rmd.value, rmd_r.value,
-  proc.value, proc_r.value,
-  smt.value, smt_r.value,
-  d1.value, q1.value, c1.value, a1.value,
-  d2.value, q2.value, c2.value, a2.value,
-  d3.value, q3.value, c3.value, a3.value,
-  prep.value
- ];
+  if(!f_line.value || !f_input.value) { alert("⚠️ Line and Input Qty required!"); return; }
 
- // Validation: Line aur Input zaroori hai
- if(!f_line.value || !f_input.value) {
-     alert("Please enter Line Number and Input Qty");
-     return;
- }
+  const row = [
+   f_date.value, f_shift.value, f_line.value, f_model.value,
+   f_input.value, f_def.value, f_rej.value, f_fpy.value,
+   rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value,
+   d1.value, q1.value, c1.value, a1.value,
+   d2.value, q2.value, c2.value, a2.value,
+   d3.value, q3.value, c3.value, a3.value,
+   prep.value
+  ];
 
- const btn = document.getElementById("saveBtn");
- btn.innerText = "Saving...";
- btn.disabled = true;
+  const btn = document.getElementById("saveBtn");
+  btn.innerText = editingRowIndex !== null ? "UPDATING..." : "SAVING...";
+  btn.disabled = true;
 
- try{
-  const res = await fetch(API, {
-   method: "POST",
-   body: JSON.stringify({ action: "append", row: row })
-  });
+  try {
+     // Check if Edit or Append
+     const action = editingRowIndex !== null ? "edit" : "append";
+     const bodyData = { action: action, row: row };
+     if(action === "edit") bodyData.rowIndex = editingRowIndex;
 
-  const result = await res.json();
+     const res = await fetch(API, { method: "POST", body: JSON.stringify(bodyData) });
+     const result = await res.json();
 
-  if(result.status === "saved"){
-    alert("✅ Data Saved Successfully");
-    
-    // ✅ Form Clear Karne ka Function Call
-    clearForm(); 
-    
-    showPreview(row);
-    load();
-  } else {
-    alert("❌ Save failed");
-    console.log(result);
+     if(result.status === "saved" || result.status === "updated"){
+       showDetailedPreview(row); // Show nice preview
+       load(); // Reload table
+     } else {
+       alert("❌ Failed: " + JSON.stringify(result));
+     }
+
+  } catch(e) {
+     console.error(e);
+     alert("❌ Error. Check Internet.");
+  } finally {
+     btn.innerText = "SAVE DATA";
+     btn.disabled = false;
   }
-
- } catch(err){
-  alert("❌ Error while saving. Check Internet.");
-  console.error(err);
- } finally {
-    btn.innerText = "SAVE DATA";
-    btn.disabled = false;
- }
 }
 
-// ✅ Form Clear Logic
-function clearForm(){
-  document.querySelectorAll('input').forEach(input => input.value = '');
-  document.getElementById('f_shift').value = 'A'; // Reset shift to A
-  // Date ko waisa hi rakhna hai to niche wali line hata dein
-  // document.getElementById('f_date').value = ''; 
+// 3. Edit Function
+function editRow(index, r){
+  editingRowIndex = index; // Store global index
+  
+  // Fill Form
+  f_date.value=r[0]; f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
+  f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
+  rmd.value=r[8]; rmd_r.value=r[9];
+  proc.value=r[10]; proc_r.value=r[11];
+  smt.value=r[12]; smt_r.value=r[13];
+  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17];
+  d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21];
+  d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25];
+  prep.value=r[26];
+
+  // Change Button
+  document.getElementById("saveBtn").innerText = "UPDATE RECORD (Row " + (index+1) + ")";
+  document.getElementById("saveBtn").style.background = "#ffc107";
+  document.getElementById("saveBtn").style.color = "#000";
+  
+  // Scroll to form
+  document.getElementById("entryForm").scrollIntoView({behavior: "smooth"});
 }
 
-/* ---------------- PREVIEW ---------------- */
-function showPreview(r){
- const p = document.getElementById('preview');
- const o = document.getElementById('overlay');
- 
- p.innerHTML = `
- <h3>✅ Saved Preview</h3>
- <p><b>Line:</b> ${r[2]} | <b>Floor:</b> ${getFloorName(r[2])}</p>
- <p><b>Input:</b> ${r[4]} | <b>Defect:</b> ${r[5]}</p>
- <p style="color:green; font-weight:bold;">FPY: ${r[7]}%</p>
- <button onclick="document.getElementById('preview').style.display='none';document.getElementById('overlay').style.display='none'">Close</button>
- `;
- p.style.display = "block";
- o.style.display = "block";
+// 4. Reset Form
+function resetForm(){
+  document.querySelectorAll('input').forEach(i => i.value = '');
+  document.getElementById('f_shift').value = 'A';
+  editingRowIndex = null;
+  const btn = document.getElementById("saveBtn");
+  btn.innerText = "SAVE DATA";
+  btn.style.background = "#0b66d2";
+  btn.style.color = "#fff";
 }
 
-/* ---------------- FLOOR LOGIC ---------------- */
-function getFloorName(lineNum) {
-    let l = parseInt(lineNum) || 0;
-    if (l >= 1 && l <= 8) return "1st Floor";
-    if (l >= 9 && l <= 16) return "2nd Floor";
-    if (l >= 17 && l <= 24) return "Basement";
-    return "Unknown Floor";
+// 5. Detailed Preview Modal
+function showDetailedPreview(r){
+  const content = document.getElementById("previewContent");
+  const floor = getFloorName(r[2]);
+  
+  content.innerHTML = `
+    <table class="preview-table">
+      <tr><td class="preview-label">Date / Shift</td><td class="preview-val">${r[0]} (${r[1]})</td></tr>
+      <tr><td class="preview-label">Floor / Line</td><td class="preview-val">${floor} / Line-${r[2]}</td></tr>
+      <tr><td class="preview-label">Model</td><td class="preview-val">${r[3]}</td></tr>
+      <tr><td class="preview-label">Input / Defects</td><td class="preview-val">${r[4]} / <span class="status-ng">${r[5]}</span></td></tr>
+      <tr><td class="preview-label">FPY %</td><td class="preview-val status-ok" style="font-size:16px;">${r[7]}%</td></tr>
+    </table>
+    
+    <h4 style="margin:10px 0 5px 0;">Defect Breakdown</h4>
+    <table class="preview-table">
+      <tr><td>RMD: <b>${r[8]}</b> (${r[9]}%)</td><td>Proc: <b>${r[10]}</b> (${r[11]}%)</td><td>SMT: <b>${r[12]}</b> (${r[13]}%)</td></tr>
+    </table>
+
+    <h4 style="margin:10px 0 5px 0;">Top Defects</h4>
+    <div style="font-size:13px; color:#444;">
+      ${r[14] ? `1. <b>${r[14]}</b> (Qty: ${r[15]}) - ${r[16]}<br>` : ''}
+      ${r[18] ? `2. <b>${r[18]}</b> (Qty: ${r[19]}) - ${r[20]}<br>` : ''}
+      ${r[22] ? `3. <b>${r[22]}</b> (Qty: ${r[23]}) - ${r[24]}` : ''}
+    </div>
+  `;
+  
+  document.getElementById("overlay").style.display = 'block';
+  document.getElementById("previewModal").style.display = 'block';
 }
 
-/* ---------------- LOAD & DASHBOARD LOGIC ---------------- */
+function closeModal(){
+  document.getElementById("overlay").style.display = 'none';
+  document.getElementById("previewModal").style.display = 'none';
+  resetForm(); // ✅ Clear form after closing modal
+}
+
+// 6. Load & Floor Logic
 async function load(){
  try {
    const res = await fetch(API);
    const j = await res.json();
-   const rows = j.rows;
+   allData = j.rows; // Save raw data
 
-   // Table Logic
    const t = tbody; const h = thead;
    t.innerHTML = ""; h.innerHTML = "";
+   
+   if(allData && allData.length > 0) {
+     // Header
+     allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`);
+     h.innerHTML += `<th>Floor</th><th style="min-width:100px;">Actions</th>`;
 
-   if(rows && rows.length > 0) {
-     rows[0].forEach(x => h.innerHTML += `<th>${x}</th>`);
-     // Add Floor Column Header
-     h.innerHTML += `<th>Floor</th><th>Action</th>`;
+     // Filter Logic (Simple Date Filter)
+     let fDate = document.getElementById("flt_date").value;
+     
+     allData.slice(1).forEach((r, i) => {
+        // Date Check
+        if(fDate && r[0] !== fDate) return;
 
-     rows.slice(1).forEach((r, i) => {
-      let tr = document.createElement("tr");
-      r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
-      
-      // Calculate Floor for this row
-      let floor = getFloorName(r[2]); // Index 2 is Line
-      tr.innerHTML += `<td><b>${floor}</b></td>`;
-
-      tr.innerHTML += `<td><button class="action-btn" onclick="deleteRow(${i+1})">Del</button></td>`;
-      t.appendChild(tr);
+        let tr = document.createElement("tr");
+        r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
+        tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`;
+        
+        // Buttons: Edit passes actual index 'i'
+        tr.innerHTML += `<td>
+          <button class="action-btn btn-edit" onclick='editRow(${i+1}, ${JSON.stringify(r)})'>✎</button>
+          <button class="action-btn btn-danger" onclick="deleteRow(${i+1})">🗑</button>
+        </td>`;
+        t.appendChild(tr);
      });
-
-     updateDashboard(rows.slice(1));
+     
+     updateDashboard(allData.slice(1));
    }
- } catch(err) { console.error(err); }
+ } catch(e) { console.error(e); }
+}
+
+function getFloorName(l){
+  l = parseInt(l);
+  if(l>=1 && l<=8) return "1st Floor";
+  if(l>=9 && l<=16) return "2nd Floor";
+  if(l>=17 && l<=24) return "Basement";
+  return "Other";
 }
 
 function updateDashboard(rows){
- // Variables for Global
- let g_i=0, g_d=0;
+  let stats = {
+    g: {i:0, d:0, r:0, p:0, s:0},
+    f1: {i:0, d:0, r:0, p:0, s:0},
+    f2: {i:0, d:0, r:0, p:0, s:0},
+    fb: {i:0, d:0, r:0, p:0, s:0}
+  };
 
- // Variables for Floors
- let f1_i=0, f1_d=0; // 1st Floor
- let f2_i=0, f2_d=0; // 2nd Floor
- let fb_i=0, fb_d=0; // Basement
+  rows.forEach(r => {
+    let line = parseInt(r[2]) || 0;
+    let inp = +r[4]||0; let def = +r[5]||0;
+    let rmd = +r[8]||0; let proc = +r[10]||0; let smt = +r[12]||0;
 
- rows.forEach(r => {
-    let line = parseInt(r[2]) || 0; // Column 2 is Line
-    let inp = +r[4] || 0;           // Column 4 is Input
-    let def = +r[5] || 0;           // Column 5 is Defect
+    // Helper to add
+    const add = (k) => {
+      stats[k].i += inp; stats[k].d += def;
+      stats[k].r += rmd; stats[k].p += proc; stats[k].s += smt;
+    };
 
-    // Global Add
-    g_i += inp; g_d += def;
+    add('g'); // Global
+    if(line>=1 && line<=8) add('f1');
+    else if(line>=9 && line<=16) add('f2');
+    else if(line>=17 && line<=24) add('fb');
+  });
 
-    // Floor Wise Add
-    if(line >= 1 && line <= 8) { f1_i += inp; f1_d += def; }
-    else if(line >= 9 && line <= 16) { f2_i += inp; f2_d += def; }
-    else if(line >= 17 && line <= 24) { fb_i += inp; fb_d += def; }
- });
+  // Render function
+  const render = (p, data) => {
+    const calc = (n, total) => total>0 ? (n/total*100).toFixed(2)+"%" : "--";
+    document.getElementById(p+"_fpy").innerText = data.i>0 ? (100-(data.d/data.i*100)).toFixed(2)+"%" : "--";
+    if(document.getElementById(p+"_inp")) document.getElementById(p+"_inp").innerText = data.i;
+    if(document.getElementById(p+"_rej")) document.getElementById(p+"_rej").innerText = calc(data.d, data.i);
+    
+    // New KPIs
+    if(document.getElementById(p+"_rmd")) document.getElementById(p+"_rmd").innerText = calc(data.r, data.i);
+    if(document.getElementById(p+"_proc")) document.getElementById(p+"_proc").innerText = calc(data.p, data.i);
+    if(document.getElementById(p+"_smt")) document.getElementById(p+"_smt").innerText = calc(data.s, data.i);
+  };
 
- // Update UI Function
- const setKPI = (id, val) => document.getElementById(id).innerText = val;
- const calcFPY = (i, d) => i > 0 ? (100 - (d/i*100)).toFixed(2) + "%" : "--";
- const calcRej = (i, d) => i > 0 ? (d/i*100).toFixed(2) + "%" : "--";
-
- // Set Global
- setKPI('g_inp', g_i);
- setKPI('g_fpy', calcFPY(g_i, g_d));
- setKPI('g_rej', calcRej(g_i, g_d));
-
- // Set Floors
- setKPI('f1_fpy', calcFPY(f1_i, f1_d));
- setKPI('f2_fpy', calcFPY(f2_i, f2_d));
- setKPI('fb_fpy', calcFPY(fb_i, fb_d));
+  render('g', stats.g);
+  render('f1', stats.f1);
+  render('f2', stats.f2);
+  render('fb', stats.fb);
 }
 
-/* ---------------- DELETE & FILTER ---------------- */
 async function deleteRow(i){
- if(confirm("Delete this record?")){
-  await fetch(API, { method:'POST', body:JSON.stringify({action:'delete', rowIndex:i}) });
-  load();
+ if(confirm("Are you sure?")){
+   await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})});
+   load();
  }
-}
-
-function applyFilter(){
- let line = flt_line.value;
- let fd = flt_from.value; 
- let td = flt_to.value;
- 
- let trs = tbody.querySelectorAll('tr');
- trs.forEach(tr => {
-  let show = true;
-  let rDate = tr.cells[0].innerText;
-  let rLine = tr.cells[2].innerText;
-
-  if(line && rLine !== line) show = false;
-  if(fd && rDate < fd) show = false;
-  if(td && rDate > td) show = false;
-  
-  tr.style.display = show ? '' : 'none';
- });
 }
 
 load();
