@@ -1,131 +1,89 @@
-<script>
-// Aapka Google Script URL
-const API = "https://script.google.com/macros/s/AKfycbyM3tKL84zNKH5cyq3sfN9GJb9eYN8EsmOVTZJFJ0y4umQlRyEimSXG0bqcDTv6mcbgKw/exec";
-
-// Calculations karne wala function
 function autoCalc(){
- let i = +f_input.value || 0;
- let d = +f_def.value || 0;
- 
- if(i > 0){
-  f_rej.value = ((d/i)*100).toFixed(2);
-  f_fpy.value = (100 - (d/i*100)).toFixed(2);
- }
- 
- rmd_r.value = i ? ((+rmd.value||0)/i*100).toFixed(2) : '';
- proc_r.value = i ? ((+proc.value||0)/i*100).toFixed(2) : '';
- smt_r.value = i ? ((+smt.value||0)/i*100).toFixed(2) : '';
+let i=+f_input.value||0,d=+f_def.value||0;
+if(i>0){
+f_rej.value=((d/i)100).toFixed(2);
+f_fpy.value=(100-(d/i100)).toFixed(2);
 }
-
-/* ✅ CORRECTED SAVE FUNCTION */
+rmd_r.value=i?((+rmd.value||0)/i100).toFixed(2):'';
+proc_r.value=i?((+proc.value||0)/i100).toFixed(2):'';
+smt_r.value=i?((+smt.value||0)/i*100).toFixed(2):'';
+}
+/* ✅ ONLY ONE SAVE FUNCTION */
 async function saveData(){
- // Button ko disable kar sakte hain taaki user bar-bar click na kare
- // let btn = event.target; 
- // btn.disabled = true;
- // btn.innerText = "Saving...";
-
- const row = [
-  f_date.value, f_shift.value, f_line.value, f_model.value,
-  f_input.value, f_def.value, f_rej.value, f_fpy.value,
-  rmd.value, rmd_r.value,
-  proc.value, proc_r.value,
-  smt.value, smt_r.value,
-  d1.value, q1.value, c1.value, a1.value,
-  d2.value, q2.value, c2.value, a2.value,
-  d3.value, q3.value, c3.value, a3.value,
-  prep.value
- ];
-
- try{
-  // ✅ Yahan se 'headers' hata diya gaya hai taaki Google Script data accept kare
-  const res = await fetch(API, {
-   method: "POST",
-   body: JSON.stringify({
-     action: "append",
-     row: row
-   })
-  });
-
-  const result = await res.json();
-
-  if(result.status === "saved"){
-    alert("✅ Data Saved Successfully");
-    showPreview(row);
-    load(); // Table refresh karein
-  } else {
-    alert("❌ Save failed. Check Console.");
-    console.log(result);
-  }
-
- } catch(err){
-  alert("❌ Error while saving. Check internet or Script URL.");
-  console.error(err);
- } 
- // finally {
- //   btn.disabled = false;
- //   btn.innerText = "SAVE";
- // }
+const row=[
+f_date.value,f_shift.value,f_line.value,f_model.value,
+f_input.value,f_def.value,f_rej.value,f_fpy.value,
+rmd.value,rmd_r.value,
+proc.value,proc_r.value,
+smt.value,smt_r.value,
+d1.value,q1.value,c1.value,a1.value,
+d2.value,q2.value,c2.value,a2.value,
+d3.value,q3.value,c3.value,a3.value,
+prep.value
+];
+try{
+const res = await fetch(API,{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify({
+action:"append",
+row: row
+})
+});
+const result = await res.json();
+if(result.status==="saved"){
+alert("✅ Data Saved Successfully");
+showPreview(row);
+load();
+}else{
+alert("❌ Save failed");
+console.log(result);
 }
-
+}catch(err){
+alert("❌ Error while saving");
+console.error(err);
+}
+}
 function showPreview(r){
- preview.innerHTML = `
+preview.innerHTML=`
  <h3>Saved Preview</h3>
  <p><b>Date:</b> ${r[0]} | <b>Line:</b> ${r[2]}</p>
  <p class="red">Rejection % : ${r[6]}</p>
  <p class="green">FPY % : ${r[7]}</p>
  <button onclick="preview.style.display='none'">Close</button>
  `;
- preview.style.display = "block";
+ preview.style.display="block";
 }
-
-/* ✅ LOAD FUNCTION */
 async function load(){
- try {
-   const res = await fetch(API);
-   const j = await res.json();
-   const rows = j.rows;
-
-   // Table clear karein
-   thead.innerHTML = "";
-   tbody.innerHTML = "";
-
-   if(rows && rows.length > 0) {
-     // Header set karein
-     rows[0].forEach(h => thead.innerHTML += `<th>${h}</th>`);
-
-     // Data rows set karein
-     rows.slice(1).forEach((r, i) => {
-      let tr = document.createElement("tr");
-      r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
-      tbody.appendChild(tr);
-     });
-
-     updateKPIs(rows.slice(1));
-   }
- } catch(err) {
-   console.error("Error loading data:", err);
- }
+const res = await fetch(API);
+const j = await res.json();
+const rows=j.rows;
+thead.innerHTML="";
+tbody.innerHTML="";
+rows[0].forEach(h=>thead.innerHTML+=<th>${h}</th>);
+rows.slice(1).forEach((r,i)=>{
+let tr=document.createElement("tr");
+r.forEach(c=>tr.innerHTML+=<td>${c||""}</td>);
+tbody.appendChild(tr);
+});
+updateKPIs(rows.slice(1));
 }
-
 function updateKPIs(rows){
- let inp=0, def=0, r=0, p=0, s=0;
- rows.forEach(x => {
-  inp += +x[4] || 0;
-  def += +x[5] || 0;
-  r += +x[8] || 0;
-  p += +x[10] || 0;
-  s += +x[12] || 0;
- });
- 
- if(inp > 0){
-  kpi_rej.innerText = (def/inp*100).toFixed(2) + "%";
-  kpi_fpy.innerText = (100 - (def/inp*100)).toFixed(2) + "%";
-  kpi_rmd.innerText = (r/inp*100).toFixed(2) + "%";
-  kpi_proc.innerText = (p/inp*100).toFixed(2) + "%";
-  kpi_smt.innerText = (s/inp*100).toFixed(2) + "%";
- }
+let inp=0,def=0,r=0,p=0,s=0;
+rows.forEach(x=>{
+inp+=+x[4]||0;
+def+=+x[5]||0;
+r+=+x[8]||0;
+p+=+x[10]||0;
+s+=+x[12]||0;
+});
+if(inp>0){
+kpi_rej.innerText=(def/inp100).toFixed(2)+"%";
+kpi_fpy.innerText=(100-(def/inp100)).toFixed(2)+"%";
+kpi_rmd.innerText=(r/inp100).toFixed(2)+"%";
+kpi_proc.innerText=(p/inp100).toFixed(2)+"%";
+kpi_smt.innerText=(s/inp*100).toFixed(2)+"%";
 }
-
-// Page load hone par data layein
+}
 load();
 </script>
