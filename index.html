@@ -1,14 +1,170 @@
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>Quality Dashboard v2</title>
-<link rel="stylesheet" href="ui.css">
-<script src="dashboard.js"></script>
+<title>PQC Quality Dashboard – FINAL</title>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+
+<style>
+body{font-family:Arial;background:#f4f7fb;margin:15px}
+.card{background:#fff;padding:15px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1);margin-bottom:15px}
+h2,h3{margin:5px 0}
+.form-row{display:flex;gap:10px;flex-wrap:wrap}
+label{font-size:12px;font-weight:bold}
+input,select,textarea{padding:7px;border-radius:6px;border:1px solid #ccc}
+button{background:#0b66d2;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
+button.gray{background:#666}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid #ddd;padding:6px;font-size:12px}
+.bad{color:red;font-weight:bold}
+.good{color:green;font-weight:bold}
+.modal{display:none;position:fixed;top:8%;left:15%;width:70%;background:#fff;padding:20px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:9999}
+</style>
 </head>
+
 <body>
-<h1>Quality Dashboard v2</h1>
-<p>FINAL combined dashboard ready.</p>
+
+<h2>📊 PQC Quality Dashboard</h2>
+
+<!-- KPI -->
+<div class="card">
+<b>Overall KPIs</b><br><br>
+FPY: <span id="kpi_fpy" class="good">--</span> |
+Rejection: <span id="kpi_rej" class="bad">--</span> |
+RMD: <span id="kpi_rmd">--</span> |
+Process: <span id="kpi_proc">--</span> |
+SMT: <span id="kpi_smt">--</span>
+</div>
+
+<!-- DATA ENTRY -->
+<div class="card">
+<h3>Data Entry</h3>
+
+<div class="form-row">
+<div><label>Date</label><input type="date" id="f_date"></div>
+<div><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
+<div><label>Line</label><input id="f_line"></div>
+<div><label>Model</label><input id="f_model"></div>
+<div><label>Input</label><input id="f_input" type="number" oninput="autoCalc()"></div>
+<div><label>Total Defect</label><input id="f_def" type="number" oninput="autoCalc()"></div>
+<div><label>Rej %</label><input id="f_rej" readonly></div>
+<div><label>FPY %</label><input id="f_fpy" readonly></div>
+</div>
+
+<h4>Defect Bifurcation</h4>
+<div class="form-row">
+<div><label>RMD Qty</label><input id="rmd" oninput="autoCalc()"></div>
+<div><label>RMD %</label><input id="rmd_r" readonly></div>
+<div><label>Process Qty</label><input id="proc" oninput="autoCalc()"></div>
+<div><label>Process %</label><input id="proc_r" readonly></div>
+<div><label>SMT Qty</label><input id="smt" oninput="autoCalc()"></div>
+<div><label>SMT %</label><input id="smt_r" readonly></div>
+</div>
+
+<h4>Top 3 Defects</h4>
+
+<div class="form-row">
+<div><label>Defect 1</label><input id="d1"></div>
+<div><label>Qty</label><input id="q1" oninput="autoCalc()"></div>
+<div><label>%</label><input id="r1" readonly></div>
+<div><label>Cause</label><input id="c1"></div>
+<div><label>Action</label><input id="a1"></div>
+</div>
+
+<div class="form-row">
+<div><label>Defect 2</label><input id="d2"></div>
+<div><label>Qty</label><input id="q2" oninput="autoCalc()"></div>
+<div><label>%</label><input id="r2" readonly></div>
+<div><label>Cause</label><input id="c2"></div>
+<div><label>Action</label><input id="a2"></div>
+</div>
+
+<div class="form-row">
+<div><label>Defect 3</label><input id="d3"></div>
+<div><label>Qty</label><input id="q3" oninput="autoCalc()"></div>
+<div><label>%</label><input id="r3" readonly></div>
+<div><label>Cause</label><input id="c3"></div>
+<div><label>Action</label><input id="a3"></div>
+</div>
+
+<br>
+<button onclick="saveData()">SAVE</button>
+</div>
+
+<!-- TABLE -->
+<div class="card">
+<h3>Report View</h3>
+<table class="table">
+<thead id="thead"></thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+<!-- PREVIEW -->
+<div id="preview" class="modal"></div>
+
+<script>
+const API="https://script.google.com/macros/s/AKfycbyAzY1iGj-_gGt8i0aGxYRd9YMRKjqVBeQpu8NosZtqEBcAaYoV6sl7VzjqPIGb3nOPAQ/exec";
+
+function autoCalc(){
+ let i=+f_input.value||0,d=+f_def.value||0;
+ if(i>0){
+   f_rej.value=((d/i)*100).toFixed(2);
+   f_fpy.value=(100-(d/i*100)).toFixed(2);
+ }
+ rmd_r.value=i?((+rmd.value||0)/i*100).toFixed(2):'';
+ proc_r.value=i?((+proc.value||0)/i*100).toFixed(2):'';
+ smt_r.value=i?((+smt.value||0)/i*100).toFixed(2):'';
+
+ r1.value=i?((+q1.value||0)/i*100).toFixed(2):'';
+ r2.value=i?((+q2.value||0)/i*100).toFixed(2):'';
+ r3.value=i?((+q3.value||0)/i*100).toFixed(2):'';
+}
+
+async function saveData(){
+ let row=[
+ f_date.value,f_shift.value,f_line.value,f_model.value,
+ f_input.value,f_def.value,f_rej.value,f_fpy.value,
+ rmd.value,rmd_r.value,proc.value,proc_r.value,smt.value,smt_r.value,
+ d1.value,q1.value,r1.value,c1.value,a1.value,
+ d2.value,q2.value,r2.value,c2.value,a2.value,
+ d3.value,q3.value,r3.value,c3.value,a3.value
+ ];
+ await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'append',row})});
+ showPreview(row);
+ load();
+}
+
+function showPreview(r){
+ let p=document.getElementById('preview');
+ p.innerHTML=`<h3>Preview</h3>
+ <b>Date:</b> ${r[0]}<br>
+ <b>Model:</b> ${r[3]}<br>
+ <b class="bad">Rejection:</b> ${r[6]}%<br>
+ <b>FPY:</b> ${r[7]}%<br><br>
+ <b>Top Defects:</b><br>
+ ${r[14]} – ${r[16]}%<br>
+ ${r[19]} – ${r[21]}%<br>
+ ${r[24]} – ${r[26]}%<br><br>
+ <button onclick="this.parentElement.style.display='none'">Close</button>`;
+ p.style.display='block';
+}
+
+async function load(){
+ let r=await fetch(API);let j=await r.json();
+ let rows=j.rows;
+ let h=document.getElementById('thead');
+ let t=document.getElementById('tbody');
+ h.innerHTML='<tr>'+rows[0].map(x=>`<th>${x}</th>`).join('')+'</tr>';
+ t.innerHTML='';
+ rows.slice(1).forEach(r=>{
+   t.innerHTML+='<tr>'+r.map(c=>`<td>${c||''}</td>`).join('')+'</tr>';
+ });
+}
+
+load();
+</script>
+
 </body>
 </html>
