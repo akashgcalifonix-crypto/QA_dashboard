@@ -6,7 +6,6 @@
 
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PptxGenJS/3.10.0/pptxgen.bundle.js"></script>
 
 <style>
 body{font-family:Arial;background:#f4f7fb;margin:15px}
@@ -33,11 +32,8 @@ button.gray{background:#666}
  box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:9999
 }
 .modal h3{margin-top:0}
-.modal .row{display:flex;gap:15px;flex-wrap:wrap}
-.modal .item{width:48%}
 .red{color:#b42318;font-weight:bold}
 .green{color:#067647;font-weight:bold}
-.img-preview{max-width:180px;border-radius:8px;border:1px solid #ddd}
 .action-btn{font-size:11px;padding:5px 8px;margin-right:4px}
 </style>
 </head>
@@ -106,7 +102,7 @@ button.gray{background:#666}
 
 <div class="form-row">
 <div class="form-group"><label>Prepared By</label><input id="prep"></div>
-<button onclick="saveData()">SAVE</button>
+<button onclick="saveData()" id="saveBtn">SAVE</button>
 </div>
 </div>
 
@@ -132,6 +128,7 @@ Line <input id="flt_line">
 <div id="preview" class="modal"></div>
 
 <script>
+// Yahan apna sahi Script URL dalein
 const API="https://script.google.com/macros/s/AKfycby67lAxRozU5IaFEfkuYcmPs1qOQ3NMAg4wPR1tshyS3G76TWNHK7li91l_q6fXEBapdQ/exec";
 
 function autoCalc(){
@@ -144,6 +141,8 @@ function autoCalc(){
  proc_r.value=i?((+proc.value||0)/i*100).toFixed(2):'';
  smt_r.value=i?((+smt.value||0)/i*100).toFixed(2):'';
 }
+
+/* ✅ SINGLE CORRECTED SAVE FUNCTION */
 async function saveData(){
   const row = [
     f_date.value,f_shift.value,f_line.value,f_model.value,
@@ -156,19 +155,38 @@ async function saveData(){
     prep.value
   ];
 
-  document.getElementById("formData").value =
-    JSON.stringify({ action:"append", row });
+  const btn = document.getElementById("saveBtn");
+  btn.innerText = "Saving...";
+  btn.disabled = true;
 
-  document.getElementById("postForm").action = API;
-  document.getElementById("postForm").submit();
+  try {
+    // ❌ Headers REMOVED to fix CORS issue
+    const res = await fetch(API, {
+      method: "POST",
+      body: JSON.stringify({
+        action: "append",
+        row: row
+      })
+    });
 
-  alert("Saved Successfully");
-  setTimeout(load, 1500);
-}
+    const result = await res.json();
 
- await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'append',row})});
- load();
- showPreview(row);
+    if (result.status === "saved" || result.status === "ok") {
+      alert("✅ Data Saved Successfully");
+      showPreview(row);
+      load(); // Refresh table
+    } else {
+      alert("❌ Save failed. Check console.");
+      console.log(result);
+    }
+
+  } catch (err) {
+    alert("❌ Error while saving. Check internet or URL.");
+    console.error(err);
+  } finally {
+    btn.innerText = "SAVE";
+    btn.disabled = false;
+  }
 }
 
 function showPreview(r){
@@ -190,19 +208,31 @@ function showPreview(r){
 }
 
 async function load(){
- let r=await fetch(API); let j=await r.json(); let rows=j.rows;
- let t=tbody,h=thead; t.innerHTML=''; h.innerHTML='';
- rows[0].forEach(x=>h.innerHTML+=`<th>${x}</th>`);
- rows.slice(1).forEach((r,i)=>{
-  let tr=document.createElement('tr');
-  r.forEach(c=>tr.innerHTML+=`<td>${c||''}</td>`);
-  tr.innerHTML+=`<td>
-   <button class="action-btn" onclick="showPreview(${JSON.stringify(r)})">Preview</button>
-   <button class="action-btn" onclick="deleteRow(${i+1})">Delete</button>
-  </td>`;
-  t.appendChild(tr);
- });
- updateKPIs(rows.slice(1));
+ try {
+   let r=await fetch(API); 
+   let j=await r.json(); 
+   let rows=j.rows;
+   
+   let t=tbody,h=thead; 
+   t.innerHTML=''; h.innerHTML='';
+
+   if(rows && rows.length > 0) {
+      rows[0].forEach(x=>h.innerHTML+=`<th>${x}</th>`);
+      
+      rows.slice(1).forEach((r,i)=>{
+        let tr=document.createElement('tr');
+        r.forEach(c=>tr.innerHTML+=`<td>${c||''}</td>`);
+        tr.innerHTML+=`<td>
+          <button class="action-btn" onclick="showPreview(${JSON.stringify(r).replace(/"/g, '&quot;')})">Preview</button>
+          <button class="action-btn" onclick="deleteRow(${i+1})">Delete</button>
+        </td>`;
+        t.appendChild(tr);
+      });
+      updateKPIs(rows.slice(1));
+   }
+ } catch(e) {
+   console.log("Loading error:", e);
+ }
 }
 
 function updateKPIs(rows){
@@ -219,7 +249,11 @@ function updateKPIs(rows){
 
 async function deleteRow(i){
  if(confirm("Delete this record?")){
-  await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'delete',rowIndex:i})});
+  // Headers removed here too
+  await fetch(API,{
+    method:'POST',
+    body:JSON.stringify({action:'delete',rowIndex:i})
+  });
   load();
  }
 }
@@ -235,49 +269,11 @@ function applyFilter(){
   r.style.display=show?'':'none';
  });
 }
-<script>
-async function saveData(){
-  const row = [
-    f_date.value, f_shift.value, f_line.value, f_model.value,
-    f_input.value, f_def.value, f_rej.value, f_fpy.value,
-    rmd.value, rmd_r.value,
-    proc.value, proc_r.value,
-    smt.value, smt_r.value,
-    d1.value, q1.value, c1.value, a1.value,
-    d2.value, q2.value, c2.value, a2.value,
-    d3.value, q3.value, c3.value, a3.value,
-    prep.value
-  ];
 
-  try {
-    const res = await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: "append",
-        row: row
-      })
-    });
-
-    const result = await res.json();
-
-    if (result.status === "saved" || result.status === "ok") {
-      alert("✅ Data Saved Successfully");
-      showPreview(row);
-      load();
-    } else {
-      alert("❌ Save failed");
-      console.log(result);
-    }
-
-  } catch (err) {
-    alert("❌ Error while saving");
-    console.error(err);
-  }
-}
-</script>
- 
+// Start loading data
 load();
+
 </script>
+
 </body>
 </html>
