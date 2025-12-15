@@ -1,458 +1,287 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Advanced Quality Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://www.gstatic.com/charts/loader.js"></script>
-
-<style>
-/* CSS STYLES */
-body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background:#eef2f5; margin:15px; color:#333;}
-.card{background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.08); margin-bottom:20px;}
-h2,h3,h4{margin-top:0; color:#2c3e50;}
-h4{border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:15px; color:#555;}
-
-/* Form */
-.form-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
-.form-group{display:flex; flex-direction:column; min-width:140px; flex:1;}
-label{font-size:12px; font-weight:600; margin-bottom:4px; color:#555;}
-input,select{padding:8px; border-radius:5px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
-input:focus{border-color:#0b66d2; outline:none;}
-input[readonly]{background-color:#f9f9f9; color:#777;}
-
-/* Buttons */
-button{background:#0b66d2; color:#fff; padding:10px 18px; border:none; border-radius:6px; cursor:pointer; font-weight:600; transition:0.2s;}
-button:hover{background:#0954b0;}
-button:disabled{background:#ccc;}
-.btn-danger{background:#dc3545;} .btn-danger:hover{background:#bd2130;}
-.btn-edit{background:#ffc107; color:#333;} .btn-edit:hover{background:#e0a800;}
-.action-btn{padding:5px 10px; font-size:11px; margin-right:3px;}
-
-/* KPI GRID */
-.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
-.kpi-box { padding: 10px; border-radius: 8px; text-align: center; color: white; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
-.kpi-title { font-size: 11px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; }
-.kpi-val { font-size: 18px; font-weight: bold; margin-top: 5px; }
-
-/* Dashboard Colors */
-.bg-blue { background: linear-gradient(135deg, #0b66d2, #004c99); }
-.bg-green { background: linear-gradient(135deg, #28a745, #1e7e34); }
-.bg-orange { background: linear-gradient(135deg, #fd7e14, #d96205); }
-.bg-purple { background: linear-gradient(135deg, #6f42c1, #553098); }
-
-/* Table */
-.table-responsive{overflow-x:auto;}
-.table{width:100%; border-collapse:collapse; margin-top:10px; background:#fff;}
-.table th, .table td{border:1px solid #e0e0e0; padding:8px; font-size:12px; text-align:center;}
-.table th{background:#f4f6f8; color:#333;}
-
-/* PREVIEW MODAL (Full Detail) */
-.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; }
-.modal { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:95%; max-width:600px; background:#fff; padding:0; border-radius:12px; z-index:1000; box-shadow:0 10px 40px rgba(0,0,0,0.4); max-height:90vh; overflow-y:auto; }
-.modal-header { background:#0b66d2; color:#fff; padding:15px; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
-.modal-body { padding:20px; }
-.preview-table { width:100%; border-collapse:collapse; margin-bottom:15px; }
-.preview-table td { border-bottom:1px solid #eee; padding:8px; font-size:13px; }
-.preview-label { font-weight:bold; color:#555; width:40%; background:#f9f9f9; }
-.preview-val { font-weight:bold; color:#000; }
-.status-ok { color:green; } .status-ng { color:red; }
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Quality Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; padding: 20px; font-family: sans-serif; }
+        .card { border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; border: none; }
+        .card-header { background: #fff; font-weight: bold; color: #333; border-bottom: 2px solid #ffc107; }
+        .form-label { font-weight: 600; font-size: 0.9rem; }
+        .btn-warning { color: #fff; font-weight: bold; }
+        th { font-size: 0.85rem; background-color: #343a40 !important; color: white; vertical-align: middle; }
+        td { font-size: 0.85rem; vertical-align: middle; }
+    </style>
 </head>
 <body>
 
-<h2>🏭 QC Dashboard & Line Efficiency</h2>
+<div class="container-fluid">
+    <!-- Form Section -->
+    <div class="card">
+        <div class="card-header">QA Entry Form</div>
+        <div class="card-body">
+            <form id="qaForm">
+                <input type="hidden" name="rowId" id="rowId"> <!-- Hidden ID for Editing -->
+                
+                <div class="row g-3">
+                    <!-- Date -->
+                    <div class="col-md-3">
+                        <label class="form-label">Date</label>
+                        <input type="date" name="Date" id="dateInput" class="form-control" required>
+                    </div>
 
-<!-- 1. DASHBOARD AREA -->
-<div class="card">
-  <h3>📊 Overall Performance</h3>
-  <div class="kpi-container">
-     <div class="kpi-box bg-blue"><div class="kpi-title">Input</div><div class="kpi-val" id="g_inp">0</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">FPY %</div><div class="kpi-val" id="g_fpy">--</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">Rej %</div><div class="kpi-val" id="g_rej">--</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">RMD %</div><div class="kpi-val" id="g_rmd">--</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">Proc %</div><div class="kpi-val" id="g_proc">--</div></div>
-     <div class="kpi-box bg-blue"><div class="kpi-title">SMT %</div><div class="kpi-val" id="g_smt">--</div></div>
-  </div>
+                    <!-- Top 3 Defects -->
+                    <div class="col-md-9">
+                        <label class="form-label">Top-3 Defect</label>
+                        <input type="text" name="Top3Defect" id="top3Input" class="form-control" placeholder="e.g. SPK Fail, Mic NG...">
+                    </div>
 
-  <h4 style="margin-top:20px;">🏢 Floor Wise KPIs (FPY | RMD% | Proc% | SMT%)</h4>
-  
-  <!-- 1st Floor -->
-  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#28a745;">1st Floor (Line 1-8)</p>
-  <div class="kpi-container">
-     <div class="kpi-box bg-green"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f1_fpy">--</div></div>
-     <div class="kpi-box bg-green"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f1_rmd">--</div></div>
-     <div class="kpi-box bg-green"><div class="kpi-title">Proc %</div><div class="kpi-val" id="f1_proc">--</div></div>
-     <div class="kpi-box bg-green"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f1_smt">--</div></div>
-  </div>
+                    <!-- Metrics -->
+                    <div class="col-md-2">
+                        <label class="form-label">Process Qty</label>
+                        <input type="number" name="ProcessQty" id="procQty" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Process %</label>
+                        <input type="text" name="ProcessPerc" id="procPerc" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">SMT Qty</label>
+                        <input type="number" name="SMTQty" id="smtQty" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">SMT %</label>
+                        <input type="text" name="SMTPerc" id="smtPerc" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">RMD %</label>
+                        <input type="text" name="RMD" id="rmdInput" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Prepared By</label>
+                        <input type="text" name="PreparedBy" id="prepBy" class="form-control" placeholder="Name">
+                    </div>
+                </div>
 
-  <!-- 2nd Floor -->
-  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#d96205;">2nd Floor (Line 9-16)</p>
-  <div class="kpi-container">
-     <div class="kpi-box bg-orange"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f2_fpy">--</div></div>
-     <div class="kpi-box bg-orange"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f2_rmd">--</div></div>
-     <div class="kpi-box bg-orange"><div class="kpi-title">Proc %</div><div class="kpi-val" id="f2_proc">--</div></div>
-     <div class="kpi-box bg-orange"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f2_smt">--</div></div>
-  </div>
+                <!-- Defect 1 Details (Example from screenshot) -->
+                <h6 class="mt-3 text-primary border-bottom pb-1">Defect 1 Details</h6>
+                <div class="row g-3">
+                    <div class="col-md-3"><input type="text" name="Defect1" id="def1" class="form-control" placeholder="Defect Name"></div>
+                    <div class="col-md-2"><input type="number" name="Qty1" id="qty1" class="form-control" placeholder="Qty"></div>
+                    <div class="col-md-3"><input type="text" name="Cause1" id="cause1" class="form-control" placeholder="Root Cause"></div>
+                    <div class="col-md-4"><input type="text" name="Action1" id="act1" class="form-control" placeholder="Action Taken"></div>
+                </div>
 
-  <!-- Basement -->
-  <p style="margin:5px 0; font-weight:bold; font-size:12px; color:#553098;">Basement (Line 17-24)</p>
-  <div class="kpi-container">
-     <div class="kpi-box bg-purple"><div class="kpi-title">FPY %</div><div class="kpi-val" id="fb_fpy">--</div></div>
-     <div class="kpi-box bg-purple"><div class="kpi-title">RMD %</div><div class="kpi-val" id="fb_rmd">--</div></div>
-     <div class="kpi-box bg-purple"><div class="kpi-title">Proc %</div><div class="kpi-val" id="fb_proc">--</div></div>
-     <div class="kpi-box bg-purple"><div class="kpi-title">SMT %</div><div class="kpi-val" id="fb_smt">--</div></div>
-  </div>
-</div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-warning w-100" id="submitBtn">SAVE DATA</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<!-- 2. DATA ENTRY FORM -->
-<div class="card" id="entryForm">
-  <div style="display:flex; justify-content:space-between;">
-    <h3>📝 Data Entry</h3>
-    <button onclick="resetForm()" style="background:#6c757d; font-size:11px; padding:5px 10px;">Clear Form</button>
-  </div>
-
-<div class="form-row">
-<div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
-<div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
-<div class="form-group"><label>Line No</label><input type="number" id="f_line" placeholder="1-24"></div>
-<div class="form-group"><label>Model</label><input id="f_model"></div>
-<div class="form-group"><label>Input Qty</label><input id="f_input" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>Defect Qty</label><input id="f_def" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>Rej %</label><input id="f_rej" readonly></div>
-<div class="form-group"><label>FPY %</label><input id="f_fpy" readonly></div>
-</div>
-
-<h4>Detailed Bifurcation</h4>
-<div class="form-row">
-<div class="form-group"><label>RMD Qty</label><input id="rmd" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>RMD %</label><input id="rmd_r" readonly></div>
-<div class="form-group"><label>Process Qty</label><input id="proc" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>Process %</label><input id="proc_r" readonly></div>
-<div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
-<div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
-</div>
-
-<h4>Top 3 Defects</h4>
-<div class="form-row">
-<div class="form-group"><label>Top-1 Defect</label><input id="d1"><input id="q1" placeholder="Qty" type="number"><input id="c1" placeholder="Cause"><input id="a1" placeholder="Action"></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label>Top-2 Defect</label><input id="d2"><input id="q2" placeholder="Qty" type="number"><input id="c2" placeholder="Cause"><input id="a2" placeholder="Action"></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label>Top-3 Defect</label><input id="d3"><input id="q3" placeholder="Qty" type="number"><input id="c3" placeholder="Cause"><input id="a3" placeholder="Action"></div>
-</div>
-
-<div class="form-row">
-<div class="form-group"><label>Prepared By</label><input id="prep"></div>
-<button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:10px;">SAVE DATA</button>
-</div>
-</div>
-
-<!-- 3. TABLE SECTION -->
-<div class="card">
-<h3>📂 Records</h3>
-<div class="form-row">
-    <div class="form-group"><label>Filter Date</label><input type="date" id="flt_date" onchange="load()"></div>
-    <div class="form-group"><label>&nbsp;</label><button onclick="load()">Refresh</button></div>
-</div>
-
-<div class="table-responsive">
-<table class="table">
-<thead><tr id="thead"></tr></thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-</div>
-
-<!-- 4. DETAILED PREVIEW MODAL -->
-<div class="overlay" id="overlay"></div>
-<div class="modal" id="previewModal">
-  <div class="modal-header">
-    <h3 style="margin:0; color:#fff;">✅ Submission Successful</h3>
-    <button onclick="closeModal()" style="background:transparent; border:1px solid #fff;">✕</button>
-  </div>
-  <div class="modal-body" id="previewContent">
-    <!-- Dynamic Content Here -->
-  </div>
-  <div style="padding:0 20px 20px 20px; text-align:right;">
-    <button onclick="closeModal()">Close & Clear</button>
-  </div>
+    <!-- Records Table -->
+    <div class="card">
+        <div class="card-header"><i class="bi bi-folder"></i> Records</div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <input type="date" id="filterDate" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" onclick="loadData()">Refresh</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Top-3 Defect</th>
+                            <th>Proc Qty</th>
+                            <th>SMT Qty</th>
+                            <th>RMD %</th>
+                            <th>Defect 1</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="7">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-// ⚠️ PASTE YOUR NEW SCRIPT URL HERE
-const API = "https://script.google.com/macros/s/AKfycbyxl7XlRDxHhQ64dh6ZHOrctvufFmQeM3rjaS7_90JmuXJw8kG-PRS08Kh3VtaaU0fGAg/exec";
+    // --- 1. CONFIGURATION ---
+    // Yahan apna Naya Web App URL dalein
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkY9T8l7JsqBFp7nNk3gYZdVjcBikgkZoHUP4IYEPNSKXbOjUUxPeypBiMqrqR6l-BiQ/exec'; 
 
-let allData = []; // Store data locally for filtering
-let editingRowIndex = null; // Track if we are editing
+    let globalData = []; // Store data for editing
 
-// 1. Calculation Logic
-function autoCalc(){
- let i = +f_input.value || 0;
- let d = +f_def.value || 0;
- 
- if(i > 0){
-  f_rej.value = ((d/i)*100).toFixed(2);
-  f_fpy.value = (100 - (d/i*100)).toFixed(2);
- } else {
-  f_rej.value = ""; f_fpy.value = "";
- }
- 
- rmd_r.value = i ? ((+rmd.value||0)/i*100).toFixed(2) : '';
- proc_r.value = i ? ((+proc.value||0)/i*100).toFixed(2) : '';
- smt_r.value = i ? ((+smt.value||0)/i*100).toFixed(2) : '';
-}
-
-// 2. Save / Edit Logic
-async function saveData(){
-  if(!f_line.value || !f_input.value) { alert("⚠️ Line and Input Qty required!"); return; }
-
-  const row = [
-   f_date.value, f_shift.value, f_line.value, f_model.value,
-   f_input.value, f_def.value, f_rej.value, f_fpy.value,
-   rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value,
-   d1.value, q1.value, c1.value, a1.value,
-   d2.value, q2.value, c2.value, a2.value,
-   d3.value, q3.value, c3.value, a3.value,
-   prep.value
-  ];
-
-  const btn = document.getElementById("saveBtn");
-  btn.innerText = editingRowIndex !== null ? "UPDATING..." : "SAVING...";
-  btn.disabled = true;
-
-  try {
-     // Check if Edit or Append
-     const action = editingRowIndex !== null ? "edit" : "append";
-     const bodyData = { action: action, row: row };
-     if(action === "edit") bodyData.rowIndex = editingRowIndex;
-
-     const res = await fetch(API, { method: "POST", body: JSON.stringify(bodyData) });
-     const result = await res.json();
-
-     if(result.status === "saved" || result.status === "updated"){
-       showDetailedPreview(row); // Show nice preview
-       load(); // Reload table
-     } else {
-       alert("❌ Failed: " + JSON.stringify(result));
-     }
-
-  } catch(e) {
-     console.error(e);
-     alert("❌ Error. Check Internet.");
-  } finally {
-     btn.innerText = "SAVE DATA";
-     btn.disabled = false;
-  }
-}
-
-// 3. Edit Function (Corrected with Date Fix)
-function editRow(index, r) {
-  editingRowIndex = index; // Store global index
-  
-  // Page ko upar scroll karein taaki form dikhe
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // --- DATE FIX HELPER ---
-  // Ye function date ko sahi format (YYYY-MM-DD) mein badalta hai
-  function formatDate(isoDate) {
-    if (!isoDate) return '';
-    var d = new Date(isoDate);
-    if (isNaN(d.getTime())) return ''; // Agar date invalid hai to khali chhod de
-    return d.toISOString().split('T')[0]; // Sirf Date return karega Time hata ke
-  }
-
-  // --- FORM POPULATE KAREIN ---
-  // NOTE: Niche 'id_ka_naam' ko apne HTML input ke ID se replace karein
-  
-  // 1. Date Field (Jahan Error aa raha tha)
-  // Maan lijiye aapka Date column r[1] par hai aur Input ID 'Date' hai:
-  document.querySelector('input[type="date"]').value = formatDate(r[1]); // Yahan r[INDEX] check karein
-
-  // 2. Baki Normal Fields (Jo Date nahi hain unhe direct daalein)
-  // Example:
-  // document.getElementById('Model').value = r[2];
-  // document.getElementById('Line').value = r[3];
-  
-  // Agar aapke paas datetime-local input hai (jaise MC Date), to ye use karein:
-  // if(r[15]) document.getElementById('MC_Date').value = new Date(r[15]).toISOString().slice(0,16);
-
-  // Button ka text badal kar 'Update' karein
-  var saveBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
-  if(saveBtn) saveBtn.innerText = "Update Data";
-}
-  
-  // Fill Form
-  f_date.value=r[0]; f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
-  f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
-  rmd.value=r[8]; rmd_r.value=r[9];
-  proc.value=r[10]; proc_r.value=r[11];
-  smt.value=r[12]; smt_r.value=r[13];
-  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17];
-  d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21];
-  d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25];
-  prep.value=r[26];
-
-  // Change Button
-  document.getElementById("saveBtn").innerText = "UPDATE RECORD (Row " + (index+1) + ")";
-  document.getElementById("saveBtn").style.background = "#ffc107";
-  document.getElementById("saveBtn").style.color = "#000";
-  
-  // Scroll to form
-  document.getElementById("entryForm").scrollIntoView({behavior: "smooth"});
-}
-
-// 4. Reset Form
-function resetForm(){
-  document.querySelectorAll('input').forEach(i => i.value = '');
-  document.getElementById('f_shift').value = 'A';
-  editingRowIndex = null;
-  const btn = document.getElementById("saveBtn");
-  btn.innerText = "SAVE DATA";
-  btn.style.background = "#0b66d2";
-  btn.style.color = "#fff";
-}
-
-// 5. Detailed Preview Modal
-function showDetailedPreview(r){
-  const content = document.getElementById("previewContent");
-  const floor = getFloorName(r[2]);
-  
-  content.innerHTML = `
-    <table class="preview-table">
-      <tr><td class="preview-label">Date / Shift</td><td class="preview-val">${r[0]} (${r[1]})</td></tr>
-      <tr><td class="preview-label">Floor / Line</td><td class="preview-val">${floor} / Line-${r[2]}</td></tr>
-      <tr><td class="preview-label">Model</td><td class="preview-val">${r[3]}</td></tr>
-      <tr><td class="preview-label">Input / Defects</td><td class="preview-val">${r[4]} / <span class="status-ng">${r[5]}</span></td></tr>
-      <tr><td class="preview-label">FPY %</td><td class="preview-val status-ok" style="font-size:16px;">${r[7]}%</td></tr>
-    </table>
-    
-    <h4 style="margin:10px 0 5px 0;">Defect Breakdown</h4>
-    <table class="preview-table">
-      <tr><td>RMD: <b>${r[8]}</b> (${r[9]}%)</td><td>Proc: <b>${r[10]}</b> (${r[11]}%)</td><td>SMT: <b>${r[12]}</b> (${r[13]}%)</td></tr>
-    </table>
-
-    <h4 style="margin:10px 0 5px 0;">Top Defects</h4>
-    <div style="font-size:13px; color:#444;">
-      ${r[14] ? `1. <b>${r[14]}</b> (Qty: ${r[15]}) - ${r[16]}<br>` : ''}
-      ${r[18] ? `2. <b>${r[18]}</b> (Qty: ${r[19]}) - ${r[20]}<br>` : ''}
-      ${r[22] ? `3. <b>${r[22]}</b> (Qty: ${r[23]}) - ${r[24]}` : ''}
-    </div>
-  `;
-  
-  document.getElementById("overlay").style.display = 'block';
-  document.getElementById("previewModal").style.display = 'block';
-}
-
-function closeModal(){
-  document.getElementById("overlay").style.display = 'none';
-  document.getElementById("previewModal").style.display = 'none';
-  resetForm(); // ✅ Clear form after closing modal
-}
-
-// 6. Load & Floor Logic
-async function load(){
- try {
-   const res = await fetch(API);
-   const j = await res.json();
-   allData = j.rows; // Save raw data
-
-   const t = tbody; const h = thead;
-   t.innerHTML = ""; h.innerHTML = "";
-   
-   if(allData && allData.length > 0) {
-     // Header
-     allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`);
-     h.innerHTML += `<th>Floor</th><th style="min-width:100px;">Actions</th>`;
-
-     // Filter Logic (Simple Date Filter)
-     let fDate = document.getElementById("flt_date").value;
-     
-     allData.slice(1).forEach((r, i) => {
-        // Date Check
-        if(fDate && r[0] !== fDate) return;
-
-        let tr = document.createElement("tr");
-        r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
-        tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`;
+    // --- 2. LOAD DATA ---
+    function loadData() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '<tr><td colspan="7">Loading...</td></tr>';
         
-        // Buttons: Edit passes actual index 'i'
-        tr.innerHTML += `<td>
-          <button class="action-btn btn-edit" onclick='editRow(${i+1}, ${JSON.stringify(r)})'>✎</button>
-          <button class="action-btn btn-danger" onclick="deleteRow(${i+1})">🗑</button>
-        </td>`;
-        t.appendChild(tr);
-     });
-     
-     updateDashboard(allData.slice(1));
-   }
- } catch(e) { console.error(e); }
-}
+        fetch(SCRIPT_URL)
+        .then(response => response.json())
+        .then(json => {
+            if(json.result === 'success') {
+                globalData = json.data; // Save for editing
+                renderTable(globalData);
+            } else {
+                tbody.innerHTML = '<tr><td colspan="7">Error loading data</td></tr>';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            tbody.innerHTML = '<tr><td colspan="7">Connection Failed (Check CORS/URL)</td></tr>';
+        });
+    }
 
-function getFloorName(l){
-  l = parseInt(l);
-  if(l>=1 && l<=8) return "1st Floor";
-  if(l>=9 && l<=16) return "2nd Floor";
-  if(l>=17 && l<=24) return "Basement";
-  return "Other";
-}
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        
+        // Filter Logic
+        const filterVal = document.getElementById('filterDate').value;
+        
+        // Assuming Column mapping based on screenshot:
+        // 0: ID, 1: Date, 2: Top3Defect, 3: ProcQty, 4: Proc%, 5: SMTQty, 6: SMT%, 7: RMD, 8: PrepBy, 9: Def1, 10: Qty1...
+        
+        data.forEach((row, index) => {
+            let rowDate = formatDate(row[1]); // Format date for display
+            
+            if(filterVal && rowDate !== filterVal) return;
 
-function updateDashboard(rows){
-  let stats = {
-    g: {i:0, d:0, r:0, p:0, s:0},
-    f1: {i:0, d:0, r:0, p:0, s:0},
-    f2: {i:0, d:0, r:0, p:0, s:0},
-    fb: {i:0, d:0, r:0, p:0, s:0}
-  };
+            let tr = `
+                <tr>
+                    <td>${rowDate}</td>
+                    <td>${row[2]}</td>
+                    <td>${row[3]}</td>
+                    <td>${row[5]}</td>
+                    <td>${row[7]}</td>
+                    <td>${row[9]}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editRow(${index})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteRow('${row[0]}')">Del</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += tr;
+        });
+        
+        if(tbody.innerHTML === '') tbody.innerHTML = '<tr><td colspan="7">No Records Found</td></tr>';
+    }
 
-  rows.forEach(r => {
-    let line = parseInt(r[2]) || 0;
-    let inp = +r[4]||0; let def = +r[5]||0;
-    let rmd = +r[8]||0; let proc = +r[10]||0; let smt = +r[12]||0;
+    // --- 3. EDIT FUNCTION (FIXED) ---
+    function editRow(index) {
+        // Data get karo global array se
+        let r = globalData[index];
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Helper to add
-    const add = (k) => {
-      stats[k].i += inp; stats[k].d += def;
-      stats[k].r += rmd; stats[k].p += proc; stats[k].s += smt;
-    };
+        // Change Button Text
+        document.getElementById('submitBtn').innerText = "UPDATE DATA";
+        document.getElementById('submitBtn').classList.remove('btn-warning');
+        document.getElementById('submitBtn').classList.add('btn-success');
 
-    add('g'); // Global
-    if(line>=1 && line<=8) add('f1');
-    else if(line>=9 && line<=16) add('f2');
-    else if(line>=17 && line<=24) add('fb');
-  });
+        // --- FORM FILLING ---
+        document.getElementById('rowId').value = r[0]; // Hidden ID
+        
+        // Date Fix: Date object ko YYYY-MM-DD string mein convert karna padta hai
+        document.getElementById('dateInput').value = formatDate(r[1]); 
 
-  // Render function
-  const render = (p, data) => {
-    const calc = (n, total) => total>0 ? (n/total*100).toFixed(2)+"%" : "--";
-    document.getElementById(p+"_fpy").innerText = data.i>0 ? (100-(data.d/data.i*100)).toFixed(2)+"%" : "--";
-    if(document.getElementById(p+"_inp")) document.getElementById(p+"_inp").innerText = data.i;
-    if(document.getElementById(p+"_rej")) document.getElementById(p+"_rej").innerText = calc(data.d, data.i);
-    
-    // New KPIs
-    if(document.getElementById(p+"_rmd")) document.getElementById(p+"_rmd").innerText = calc(data.r, data.i);
-    if(document.getElementById(p+"_proc")) document.getElementById(p+"_proc").innerText = calc(data.p, data.i);
-    if(document.getElementById(p+"_smt")) document.getElementById(p+"_smt").innerText = calc(data.s, data.i);
-  };
+        // Baki Fields populate karo
+        document.getElementById('top3Input').value = r[2];
+        document.getElementById('procQty').value = r[3];
+        document.getElementById('procPerc').value = r[4];
+        document.getElementById('smtQty').value = r[5];
+        document.getElementById('smtPerc').value = r[6];
+        document.getElementById('rmdInput').value = r[7];
+        document.getElementById('prepBy').value = r[8];
+        
+        // Defect 1 Details
+        document.getElementById('def1').value = r[9] || '';
+        document.getElementById('qty1').value = r[10] || '';
+        document.getElementById('cause1').value = r[11] || '';
+        document.getElementById('act1').value = r[12] || '';
+    }
 
-  render('g', stats.g);
-  render('f1', stats.f1);
-  render('f2', stats.f2);
-  render('fb', stats.fb);
-}
+    // --- 4. DATE FORMATTER HELPER ---
+    function formatDate(isoDate) {
+        if (!isoDate) return '';
+        let d = new Date(isoDate);
+        if (isNaN(d.getTime())) return isoDate; // Agar already string hai to wahi return karo
+        return d.toISOString().split('T')[0]; // YYYY-MM-DD
+    }
 
-async function deleteRow(i){
- if(confirm("Are you sure?")){
-   await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})});
-   load();
- }
-}
+    // --- 5. SAVE / UPDATE DATA ---
+    const form = document.getElementById('qaForm');
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const originalText = btn.innerText;
+        btn.innerText = "Saving...";
+        btn.disabled = true;
 
-load();
+        const fd = new FormData(form);
+        
+        // Check mode: Update or New
+        const id = document.getElementById('rowId').value;
+        if(id) {
+            fd.append('action', 'edit');
+            fd.append('editRowId', id);
+        } else {
+            fd.append('action', 'save');
+        }
+
+        fetch(SCRIPT_URL, { method: 'POST', body: fd })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message);
+            form.reset();
+            document.getElementById('rowId').value = '';
+            document.getElementById('submitBtn').innerText = "SAVE DATA";
+            document.getElementById('submitBtn').classList.add('btn-warning');
+            document.getElementById('submitBtn').classList.remove('btn-success');
+            btn.disabled = false;
+            loadData(); // Refresh table
+        })
+        .catch(err => {
+            alert("Error saving data. Check Console.");
+            console.error(err);
+            btn.innerText = originalText;
+            btn.disabled = false;
+        });
+    });
+
+    // --- 6. DELETE FUNCTION ---
+    function deleteRow(id) {
+        if(confirm("Are you sure you want to delete this?")) {
+            const fd = new FormData();
+            fd.append('action', 'delete');
+            fd.append('rowIndex', id);
+            
+            fetch(SCRIPT_URL, { method: 'POST', body: fd })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                loadData();
+            });
+        }
+    }
+
+    // Load data on start
+    loadData();
+
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
