@@ -249,9 +249,41 @@ async function saveData(){
   }
 }
 
-// 3. Edit Function
-function editRow(index, r){
+// 3. Edit Function (Corrected with Date Fix)
+function editRow(index, r) {
   editingRowIndex = index; // Store global index
+  
+  // Page ko upar scroll karein taaki form dikhe
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // --- DATE FIX HELPER ---
+  // Ye function date ko sahi format (YYYY-MM-DD) mein badalta hai
+  function formatDate(isoDate) {
+    if (!isoDate) return '';
+    var d = new Date(isoDate);
+    if (isNaN(d.getTime())) return ''; // Agar date invalid hai to khali chhod de
+    return d.toISOString().split('T')[0]; // Sirf Date return karega Time hata ke
+  }
+
+  // --- FORM POPULATE KAREIN ---
+  // NOTE: Niche 'id_ka_naam' ko apne HTML input ke ID se replace karein
+  
+  // 1. Date Field (Jahan Error aa raha tha)
+  // Maan lijiye aapka Date column r[1] par hai aur Input ID 'Date' hai:
+  document.querySelector('input[type="date"]').value = formatDate(r[1]); // Yahan r[INDEX] check karein
+
+  // 2. Baki Normal Fields (Jo Date nahi hain unhe direct daalein)
+  // Example:
+  // document.getElementById('Model').value = r[2];
+  // document.getElementById('Line').value = r[3];
+  
+  // Agar aapke paas datetime-local input hai (jaise MC Date), to ye use karein:
+  // if(r[15]) document.getElementById('MC_Date').value = new Date(r[15]).toISOString().slice(0,16);
+
+  // Button ka text badal kar 'Update' karein
+  var saveBtn = document.getElementById('submitBtn') || document.querySelector('button[type="submit"]');
+  if(saveBtn) saveBtn.innerText = "Update Data";
+}
   
   // Fill Form
   f_date.value=r[0]; f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
