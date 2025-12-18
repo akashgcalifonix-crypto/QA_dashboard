@@ -28,7 +28,8 @@ button:hover{background:#0954b0;}
 button:disabled{background:#ccc;}
 .btn-danger{background:#dc3545;} .btn-danger:hover{background:#bd2130;}
 .btn-edit{background:#ffc107; color:#333;} .btn-edit:hover{background:#e0a800;}
-.action-btn{padding:5px 10px; font-size:11px; margin-right:3px;}
+.btn-view{background:#17a2b8; color:#fff;} .btn-view:hover{background:#138496;} /* NEW PREVIEW BTN STYLE */
+.action-btn{padding:5px 10px; font-size:14px; margin-right:3px;}
 
 /* KPI GRID */
 .kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
@@ -172,7 +173,7 @@ button:disabled{background:#ccc;}
 <div class="overlay" id="overlay"></div>
 <div class="modal" id="previewModal">
   <div class="modal-header">
-    <h3 style="margin:0; color:#fff;">✅ Submission Successful</h3>
+    <h3 style="margin:0; color:#fff;" id="modalTitle">✅ Submission Successful</h3>
     <button onclick="closeModal()" style="background:transparent; border:1px solid #fff;">✕</button>
   </div>
   <div class="modal-body" id="previewContent">
@@ -235,7 +236,7 @@ async function saveData(){
      const result = await res.json();
 
      if(result.status === "saved" || result.status === "updated"){
-       showDetailedPreview(row); // Show nice preview
+       showDetailedPreview(row, true); // Show nice preview with success msg
        load(); // Reload table
      } else {
        alert("❌ Failed: " + JSON.stringify(result));
@@ -286,11 +287,18 @@ function resetForm(){
 }
 
 // 5. Detailed Preview Modal
-function showDetailedPreview(r){
+function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
   const floor = getFloorName(r[2]);
   
+  // Change Modal Title based on action
+  document.getElementById("modalTitle").innerText = isSubmit ? "✅ Submission Successful" : "📄 Record Details";
+
   content.innerHTML = `
+    <div style="text-align:center; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid #eee;">
+        <img src="https://i.postimg.cc/5y7SN4xc/logo.png" style="height:45px;" alt="Logo">
+    </div>
+    
     <table class="preview-table">
       <tr><td class="preview-label">Date / Shift</td><td class="preview-val">${r[0]} (${r[1]})</td></tr>
       <tr><td class="preview-label">Floor / Line</td><td class="preview-val">${floor} / Line-${r[2]}</td></tr>
@@ -335,7 +343,7 @@ async function load(){
    if(allData && allData.length > 0) {
      // Header
      allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`);
-     h.innerHTML += `<th>Floor</th><th style="min-width:100px;">Actions</th>`;
+     h.innerHTML += `<th>Floor</th><th style="min-width:120px;">Actions</th>`;
 
      // Filter Logic (Simple Date Filter)
      let fDate = document.getElementById("flt_date").value;
@@ -348,10 +356,11 @@ async function load(){
         r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
         tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`;
         
-        // Buttons: Edit passes actual index 'i'
+        // Buttons: Added Preview Button Here
         tr.innerHTML += `<td>
-          <button class="action-btn btn-edit" onclick='editRow(${i+1}, ${JSON.stringify(r)})'>✎</button>
-          <button class="action-btn btn-danger" onclick="deleteRow(${i+1})">🗑</button>
+          <button class="action-btn btn-view" title="Preview" onclick='showDetailedPreview(${JSON.stringify(r)}, false)'>👁️</button>
+          <button class="action-btn btn-edit" title="Edit" onclick='editRow(${i+1}, ${JSON.stringify(r)})'>✎</button>
+          <button class="action-btn btn-danger" title="Delete" onclick="deleteRow(${i+1})">🗑</button>
         </td>`;
         t.appendChild(tr);
      });
