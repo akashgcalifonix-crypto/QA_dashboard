@@ -8,24 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. MODERN THEME --- */
+/* --- 1. MODERN THEME VARIABLES --- */
 :root {
     --primary: #2563eb; /* Royal Blue */
-    --secondary: #1e40af;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --bg: #f3f4f6;
-    --card: #ffffff;
-    --text: #1f2937;
-    --glass: rgba(255, 255, 255, 0.9);
+    --secondary: #1e40af; /* Darker Blue */
+    --success: #10b981; /* Green */
+    --danger: #ef4444; /* Red */
+    --warning: #f59e0b; /* Orange */
+    --bg: #f3f4f6; /* Light Grey Background */
+    --card: #ffffff; /* White Card Background */
+    --text: #1f2937; /* Dark Text */
+    --light-text: #6b7280; /* Lighter Text */
+    --border: #e5e7eb; /* Light Border */
 }
 
 body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
 
 /* --- 2. HEADER --- */
 .header-box {
-    background: white; padding: 12px 20px; border-radius: 12px;
+    background: var(--card); padding: 12px 20px; border-radius: 12px;
     display: flex; align-items: center; justify-content: space-between;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
     border-left: 5px solid var(--primary);
@@ -37,7 +38,7 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #e5e7eb; padding: 5px; border-radius: 30px; width: fit-content; margin-left: auto; margin-right: auto; }
 .tab-btn {
     padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer;
-    font-weight: 600; color: #6b7280; background: transparent; transition: 0.3s;
+    font-weight: 600; color: var(--light-text); background: transparent; transition: 0.3s;
 }
 .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
 
@@ -48,8 +49,8 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
     background: var(--card); padding: 25px; border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
 }
-h3 { margin-top: 0; color: var(--secondary); font-size: 18px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; }
-h4 { font-size: 14px; text-transform: uppercase; color: #6b7280; margin-top: 25px; margin-bottom: 15px; letter-spacing: 1px; }
+h3 { margin-top: 0; color: var(--secondary); font-size: 18px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 20px; }
+h4 { font-size: 14px; text-transform: uppercase; color: var(--light-text); margin-top: 25px; margin-bottom: 15px; letter-spacing: 1px; }
 
 .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
 .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
@@ -91,57 +92,142 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 /* --- 7. TABLE --- */
 .table-responsive { overflow-x: auto; border-radius: 10px; }
 .table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
-.table th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+.table th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid var(--border); }
 .table td { padding: 12px; border-bottom: 1px solid #f3f4f6; color: #4b5563; }
 .table tr:hover { background: #f9fafb; }
 
-/* --- 8. ATTRACTIVE PREVIEW MODAL --- */
+/* --- 8. PREVIEW MODAL --- */
 .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 999; }
 .modal {
     display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
     width: 95%; max-width: 650px; background: white; border-radius: 20px; z-index: 1000;
     box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: slideUp 0.3s ease-out;
 }
-
-/* Custom Report Card Header */
-.report-card-header {
+.report-modal-header { /* Renamed from report-header to avoid conflict */
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    padding: 20px 25px; color: white; display: flex; align-items: center; justify-content: space-between;
-    border-top-left-radius: 20px; border-top-right-radius: 20px;
+    padding: 20px; color: white; display: flex; align-items: center; justify-content: space-between;
 }
-.report-card-header .logo { height: 40px; margin-right: 15px; filter: brightness(0) invert(1); }
-.report-card-header .title { font-size: 18px; font-weight: 700; }
-.report-card-header .subtitle { font-size: 12px; opacity: 0.9; }
-
 .report-body { padding: 25px; max-height: 75vh; overflow-y: auto; }
 
-/* Preview Grid System */
-.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-.report-item { background: #f8fafc; padding: 10px 15px; border-radius: 8px; border-left: 4px solid var(--primary); }
-.report-label { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 600; }
-.report-value { font-size: 14px; font-weight: 600; color: #334155; margin-top: 2px; }
+/* Report Card Sections */
+.report-section {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #e2e8f0;
+}
+.section-heading {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-top: 0;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--primary);
+    padding-left: 10px;
+}
+
+/* Grid for summary info */
+.report-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+.report-kpi-card {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.kpi-icon {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--primary);
+}
+.kpi-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #64748b;
+}
+.kpi-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 3px;
+}
+.kpi-value-lg {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-top: 3px;
+}
+
+/* Specific background colors for KPI cards */
+.bg-primary-light { background: #e0e7ff; color: #3730a3; }
+.bg-blue-light { background: #eff6ff; color: #2563eb; }
+.bg-red-light { background: #fef2f2; color: #ef4444; }
+.bg-green-light { background: #ecfdf5; color: #10b981; }
 
 .status-badge {
-    display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    display: inline-block; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: 700;
+    margin-left: 5px;
 }
-.badge-pass { background: #d1fae5; color: #065f46; }
-.badge-fail { background: #fee2e2; color: #991b1b; }
+.badge-good { background: #d1fae5; color: #065f46; } /* FPY 90-99 */
+.badge-excellent { background: #a7f3d0; color: #047857; } /* FPY >= 99 */
+.badge-fail { background: #fee2e2; color: #991b1b; } /* FPY < 90 */
 
-.kpi-summary-box {
-    background: #eff6ff; border-radius:12px; padding:15px; display:flex; 
-    justify-content:space-around; align-items:center; margin-bottom:20px; border:1px solid #dbeafe;
+.report-table {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
 }
-.kpi-summary-item { text-align:center; flex:1; }
-.kpi-summary-item .value { font-size:20px; font-weight:700; }
-.kpi-summary-item .label { font-size:11px; text-transform:uppercase; color:#64748b; }
+.report-table th, .report-table td {
+    padding: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: left;
+}
+.report-table th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+}
+.report-table tbody tr:last-child td {
+    border-bottom: none;
+}
 
-.data-section-title { font-size: 14px; font-weight: 600; color: var(--secondary); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; }
-
-.defect-table { width: 100%; font-size: 13px; border-collapse: collapse; margin-top: 10px; }
-.defect-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; font-weight: 600; }
-.defect-table td { border-bottom: 1px solid #f1f5f9; padding: 8px; color: #334155; }
-.defect-table tr:last-child td { border-bottom: none; } /* Remove bottom border for last row */
-
+/* Defect specific styling */
+.defect-item {
+    background: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #e2e8f0;
+}
+.defect-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 5px;
+}
+.defect-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+}
+.tag-cause, .tag-action {
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+.tag-cause { background: #fffbeb; color: #b45309; border: 1px solid #fed7aa; }
+.tag-action { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
@@ -152,11 +238,10 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 <!-- HEADER -->
 <div class="header-box">
     <div style="display:flex; align-items:center;">
-        <!-- Logo Image -->
-        <img id="mainLogo" src="" class="app-logo" alt="Logo"> 
+        <img id="mainLogo" src="" class="app-logo" alt="Califonix Logo"> 
         <div class="app-title">PQC Performance Dashboard</div>
     </div>
-    <div style="font-size:12px; color:#6b7280;">Date: <span id="curDate"></span></div>
+    <div style="font-size:12px; color:var(--light-text);">Date: <span id="curDate"></span></div>
 </div>
 
 <!-- TABS -->
@@ -172,7 +257,7 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
         <div class="dash-header">
             <div>
                 <h3 style="margin:0; border:none; color:var(--secondary);">📅 Monthly Overview</h3>
-                <small style="color:#6b7280;">Select month to view performance</small>
+                <small style="color:var(--light-text);">Select month to view performance</small>
             </div>
             <input type="month" id="dash_month" style="padding:8px;" onchange="filterDashboard()">
         </div>
@@ -282,7 +367,7 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
     <div class="card">
         <h3>📂 Recorded Database</h3>
         
-        <div style="background:#f9fafb; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #e5e7eb;">
+        <div style="background:#f9fafb; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid var(--border);">
             <h4 style="margin:0 0 10px 0; border:none; color:var(--primary); font-size:13px;">🔎 Filter Options</h4>
             <div class="form-row">
                 <div class="form-group" style="max-width: 140px;">
@@ -316,22 +401,22 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 <div class="overlay" id="overlay"></div>
 <div class="modal" id="previewModal">
   <!-- Modal Header -->
-  <div class="report-card-header">
-      <div style="display:flex; align-items:center;">
-          <img src="" id="modalLogo" class="logo" alt="Company Logo">
+  <div class="report-modal-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+          <img id="modalLogo" src="" style="height:35px; border-radius:4px;">
           <div>
-            <div class="title">PQC Detailed Report</div>
-            <div class="subtitle">Quality Control Performance Overview</div>
+            <div style="font-size:18px; font-weight:700; line-height:1;" id="modalTitle">PQC Report</div>
+            <div style="font-size:11px; opacity:0.8;">Detailed Record View</div>
           </div>
       </div>
-      <button onclick="closeModal()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:50%; width:30px; height:30px; padding:0; display:flex; align-items:center; justify-content:center; color:white; font-size:18px;">✕</button>
+      <button onclick="closeModal()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:50%; width:30px; height:30px; padding:0; display:flex; align-items:center; justify-content:center; color:white;">✕</button>
   </div>
 
   <!-- Modal Content -->
-  <div class="report-body" id="previewContent"></div>
+  <div class="modal-body" id="previewContent"></div>
 
   <!-- Modal Footer -->
-  <div style="padding:15px 25px; background:#f9fafb; text-align:right; border-top:1px solid #e5e7eb;">
+  <div style="padding:15px 25px; background:#f9fafb; text-align:right; border-top:1px solid var(--border);">
     <button onclick="closeModal()" style="background:#6b7280; font-size:13px; padding:8px 20px;">Close Report</button>
   </div>
 </div>
@@ -340,13 +425,13 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 // --- CONFIGURATION ---
 const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
 
-// ⚠️ YOUR LOGO URL HERE (Replaced with your provided logo)
+// ⚠️ YOUR LOGO URL HERE (Replace this with the direct link you provided)
 const LOGO_URL = "https://i.postimg.cc/kRSbTd6w/logo.png"; 
 
 // Update Logo on Load
 document.getElementById('mainLogo').src = LOGO_URL;
-document.getElementById('modalLogo').src = LOGO_URL; // Also for the modal
-document.getElementById('curDate').innerText = new Date().toLocaleDateString();
+document.getElementById('modalLogo').src = LOGO_URL; // Also update logo in modal header
+document.getElementById('curDate').innerText = new Date().toLocaleDateString('en-IN'); // Display current date in Indian format
 
 let allData = []; 
 let filteredData = []; 
@@ -369,24 +454,29 @@ function init() {
 }
 init();
 
-// --- DATE FIX FUNCTION (Solves the -1 Day Issue from Google Sheets UTC) ---
-function fixDate(dateString) {
-    if (!dateString) return "";
-    try {
-        // Try to parse as an ISO string (e.g., 2025-12-18T18:30:00.000Z)
-        let d = new Date(dateString);
-        if (!isNaN(d.getTime())) { // Check if date is valid
-            // Convert to a local date string in YYYY-MM-DD format
-            // Using en-CA locale formats dates as YYYY-MM-DD
-            return d.toLocaleDateString('en-CA');
-        }
-    } catch (e) {
-        // Fallback for simple YYYY-MM-DD strings that don't need parsing
-        if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
-            return dateString;
-        }
+// --- DATE FIX FUNCTION (Solves the -1 Day Issue) ---
+function fixDate(dateValue) {
+    if (!dateValue) return "";
+
+    // If it's already a valid 'YYYY-MM-DD' string, return it directly
+    if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return dateValue;
     }
-    return dateString; // Return original if unable to parse/fix
+
+    // Attempt to parse as a Date object
+    let d = new Date(dateValue);
+
+    // If parsing fails or date is invalid, return original value (or empty string)
+    if (isNaN(d.getTime())) {
+        return dateValue; // Or ""
+    }
+
+    // Get date components in local timezone
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 }
 
 
@@ -414,7 +504,7 @@ function autoCalc(){
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Qty required!"); return; }
 
-  // Use raw value from input (YYYY-MM-DD) to avoid timezone shift on saving
+  // Use raw value from input (YYYY-MM-DD) for consistency with Sheets
   const dateVal = f_date.value; 
 
   const row = [
@@ -447,95 +537,112 @@ async function saveData(){
   finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-// --- ATTRACTIVE PREVIEW FUNCTION (UPDATED) ---
+// --- ATTRACTIVE PREVIEW FUNCTION ---
 function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
-  const d = fixDate(r[0]); // Fix the date display
+  const d = fixDate(r[0]); // Fix the date display from Sheets
 
-  let fpyValue = parseFloat(r[7]);
-  let fpyClass = (fpyValue >= 90) ? "badge-pass" : "badge-fail";
-  let fpyLabel = (fpyValue >= 90) ? "Excellent" : "Needs Attention";
+  let fpyValue = parseFloat(r[7]) || 0;
+  let fpyClass = fpyValue >= 99 ? "badge-excellent" : (fpyValue >= 90 ? "badge-good" : "badge-fail");
+  let fpyLabel = fpyValue >= 99 ? "EXCELLENT" : (fpyValue >= 90 ? "GOOD" : "LOW");
 
   content.innerHTML = `
-    <!-- General Information -->
-    <div class="report-grid">
-       <div class="report-item"><div class="report-label">Date</div><div class="report-value">${d}</div></div>
-       <div class="report-item"><div class="report-label">Shift</div><div class="report-value">${r[1]}</div></div>
-       <div class="report-item"><div class="report-label">Line No</div><div class="report-value">L-${r[2]} (${getFloorName(r[2])})</div></div>
-       <div class="report-item"><div class="report-label">Model</div><div class="report-value">${r[3]}</div></div>
+    <!-- General Info Section -->
+    <div class="report-section report-summary">
+        <div style="text-align:center; margin-bottom:15px;">
+            <img src="${LOGO_URL}" style="height:55px; margin-bottom:8px; border-radius:5px;">
+            <div style="font-size:18px; font-weight:700; color:var(--secondary);">PQC INSPECTION REPORT</div>
+            <div style="font-size:12px; color:var(--light-text); margin-top:3px;">Submission Date: <b>${d}</b> | Shift: <b>${r[1]}</b></div>
+        </div>
+        <hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">
+
+        <div class="report-grid-3">
+            <div class="report-kpi-card bg-primary-light">
+                <div class="kpi-icon">📋</div>
+                <div class="kpi-label">MODEL</div>
+                <div class="kpi-value">${r[3]||'N/A'}</div>
+            </div>
+            <div class="report-kpi-card bg-primary-light">
+                <div class="kpi-icon">🏭</div>
+                <div class="kpi-label">LINE / FLOOR</div>
+                <div class="kpi-value">L-${r[2]||'N/A'} (${getFloorName(r[2]||'N/A')})</div>
+            </div>
+            <div class="report-kpi-card bg-primary-light">
+                <div class="kpi-icon">📝</div>
+                <div class="kpi-label">PREPARED BY</div>
+                <div class="kpi-value">${r[26]||'N/A'}</div>
+            </div>
+        </div>
     </div>
 
-    <!-- KPI Summary -->
-    <div class="kpi-summary-box">
-        <div class="kpi-summary-item" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--primary')}">
-             <div class="value">${r[4]}</div>
-             <div class="label">TOTAL INPUT</div>
-        </div>
-        <div class="kpi-summary-item" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--danger')}">
-             <div class="value">${r[5]}</div>
-             <div class="label">TOTAL DEFECTS</div>
-        </div>
-        <div class="kpi-summary-item">
-             <div class="value" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--success')};">${r[7]}%</div>
-             <div class="label">FPY RATE</div>
-             <div class="status-badge ${fpyClass}" style="margin-top:5px;">${fpyLabel}</div>
+    <!-- Performance Overview Section -->
+    <div class="report-section report-performance">
+        <h4 class="section-heading">Performance Overview</h4>
+        <div class="report-grid-3">
+            <div class="report-kpi-card bg-blue-light">
+                <div class="kpi-icon">📦</div>
+                <div class="kpi-label">TOTAL INPUT</div>
+                <div class="kpi-value-lg">${r[4]||0}</div>
+            </div>
+            <div class="report-kpi-card bg-red-light">
+                <div class="kpi-icon">❌</div>
+                <div class="kpi-label">DEFECT QUANTITY</div>
+                <div class="kpi-value-lg">${r[5]||0}</div>
+            </div>
+            <div class="report-kpi-card bg-green-light">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-label">FPY STATUS</div>
+                <div class="kpi-value-lg">${r[7]||'--'}% <span class="status-badge ${fpyClass}" style="font-size:10px; padding:3px 8px;">${fpyLabel}</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- Process Breakdown -->
-    <div class="data-section-title">Process Breakdown</div>
-    <table class="defect-table">
-        <tr><th>Stage</th><th>Defect Qty</th><th>Rate (%)</th></tr>
-        <tr><td>RMD</td><td>${r[8] || '0'}</td><td>${r[9] || '0.00'}%</td></tr>
-        <tr><td>Process</td><td>${r[10] || '0'}</td><td>${r[11] || '0.00'}%</td></tr>
-        <tr><td>SMT</td><td>${r[12] || '0'}</td><td>${r[13] || '0.00'}%</td></tr>
-    </table>
+    <!-- Process Breakdown Section -->
+    <div class="report-section report-process">
+        <h4 class="section-heading">Process Breakdown</h4>
+        <table class="report-table">
+            <thead><tr><th>Process</th><th>Defect Qty</th><th>Rate (%)</th></tr></thead>
+            <tbody>
+                <tr><td>RMD</td><td>${r[8]||0}</td><td>${r[9]||'--'}%</td></tr>
+                <tr><td>Process</td><td>${r[10]||0}</td><td>${r[11]||'--'}%</td></tr>
+                <tr><td>SMT</td><td>${r[12]||0}</td><td>${r[13]||'--'}%</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Top Defects -->
-    <div class="data-section-title">Top 3 Defects Analysis</div>
-    <table class="defect-table">
-        <thead>
-            <tr><th>#</th><th>Defect Name</th><th>Qty</th><th style="width:40%;">Cause & Action</th></tr>
-        </thead>
-        <tbody>
-        ${r[14] ? `
-            <tr>
-                <td>1</td>
-                <td><b>${r[14]}</b></td>
-                <td>${r[15]}</td>
-                <td>
-                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[16] || 'N/A'}</div>
-                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[17] || 'N/A'}</div>
-                </td>
-            </tr>` : ''}
-        ${r[18] ? `
-            <tr>
-                <td>2</td>
-                <td><b>${r[18]}</b></td>
-                <td>${r[19]}</td>
-                <td>
-                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[20] || 'N/A'}</div>
-                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[21] || 'N/A'}</div>
-                </td>
-            </tr>` : ''}
-        ${r[22] ? `
-            <tr>
-                <td>3</td>
-                <td><b>${r[22]}</b></td>
-                <td>${r[23]}</td>
-                <td>
-                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[24] || 'N/A'}</div>
-                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[25] || 'N/A'}</div>
-                </td>
-            </tr>` : ''}
-        ${!r[14] && !r[18] && !r[22] ? `<tr><td colspan="4" style="text-align:center; color:#999;">No Major Defects Reported</td></tr>` : ''}
-        </tbody>
-    </table>
-
-    <div style="text-align:right; font-size:12px; margin-top:25px; color:#64748b;">
-        Report Prepared By: <span style="font-weight:700; color:#334155;">${r[26] || 'N/A'}</span>
+    <!-- Top 3 Defects Analysis Section -->
+    <div class="report-section report-defects">
+        <h4 class="section-heading">Top 3 Defects Analysis</h4>
+        ${r[14] && r[14].trim() !== '' ? `
+            <div class="defect-item">
+                <div class="defect-name">1. <b>${r[14]}</b> (${r[15]||0} Qty)</div>
+                <div class="defect-details">
+                    <span class="tag tag-cause">Cause: ${r[16]||'N/A'}</span>
+                    <span class="tag tag-action">Action: ${r[17]||'N/A'}</span>
+                </div>
+            </div>
+        ` : `<div style="text-align:center; color:#9ca3af; padding:10px;">No Top Defects Recorded</div>`}
+        ${r[18] && r[18].trim() !== '' ? `
+            <div class="defect-item">
+                <div class="defect-name">2. <b>${r[18]}</b> (${r[19]||0} Qty)</div>
+                <div class="defect-details">
+                    <span class="tag tag-cause">Cause: ${r[20]||'N/A'}</span>
+                    <span class="tag tag-action">Action: ${r[21]||'N/A'}</span>
+                </div>
+            </div>
+        ` : ''}
+        ${r[22] && r[22].trim() !== '' ? `
+            <div class="defect-item">
+                <div class="defect-name">3. <b>${r[22]}</b> (${r[23]||0} Qty)</div>
+                <div class="defect-details">
+                    <span class="tag tag-cause">Cause: ${r[24]||'N/A'}</span>
+                    <span class="tag tag-action">Action: ${r[25]||'N/A'}</span>
+                </div>
+            </div>
+        ` : ''}
     </div>
   `;
+  document.getElementById("modalTitle").innerText = isSubmit ? "✅ Record Submitted" : "Detailed PQC Report"; // Set modal's title
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
 }
@@ -547,6 +654,7 @@ function generateSummaryPreview() {
         tInp += (+r[4]||0); tDef += (+r[5]||0);
         if(r[14]) defs[r[14]] = (defs[r[14]]||0) + (+r[15]||0);
         if(r[18]) defs[r[18]] = (defs[r[18]]||0) + (+r[19]||0);
+        if(r[22]) defs[r[22]] = (defs[r[22]]||0) + (+r[23]||0); // Added for Defect 3
     });
     let avgFpy = tInp>0 ? (100-(tDef/tInp*100)).toFixed(2) : "0.00";
     let sortedDefs = Object.entries(defs).sort((a,b)=>b[1]-a[1]).slice(0,5);
@@ -556,22 +664,30 @@ function generateSummaryPreview() {
         <div style="text-align:center; margin-bottom:20px;">
            <img src="${LOGO_URL}" style="height:40px;">
            <h3 style="margin:5px 0; border:none; color:var(--secondary);">SUMMARY REPORT</h3>
-           <div style="font-size:12px; color:#6b7280;">Records Found: ${filteredData.length}</div>
+           <div style="font-size:12px; color:var(--light-text);">Records Found: <b>${filteredData.length}</b></div>
         </div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-           <div style="flex:1; background:#eff6ff; padding:15px; border-radius:10px; text-align:center;">
-              <div style="font-size:18px; font-weight:700; color:#2563eb;">${tInp}</div><div class="report-label">TOTAL INPUT</div>
+           <div class="report-kpi-card bg-blue-light" style="flex:1;">
+              <div class="kpi-icon">📦</div>
+              <div class="kpi-label">TOTAL INPUT</div>
+              <div class="kpi-value-lg">${tInp}</div>
            </div>
-           <div style="flex:1; background:#ecfdf5; padding:15px; border-radius:10px; text-align:center;">
-              <div style="font-size:18px; font-weight:700; color:#10b981;">${avgFpy}%</div><div class="report-label">AVG FPY</div>
+           <div class="report-kpi-card bg-green-light" style="flex:1;">
+              <div class="kpi-icon">📈</div>
+              <div class="kpi-label">AVG FPY</div>
+              <div class="kpi-value-lg">${avgFpy}%</div>
            </div>
         </div>
-        <div class="data-section-title">TOP 5 DEFECTS</div>
-        <table class="defect-table">
-           ${sortedDefs.map(d => `<tr><td>${d[0]}</td><td style="font-weight:700;">${d[1]}</td></tr>`).join('')}
-           ${sortedDefs.length===0?'<tr><td colspan="2" style="text-align:center; color:#999;">No defects found</td></tr>':''}
+        <h4 class="section-heading">Top 5 Defects</h4>
+        <table class="report-table">
+           <thead><tr><th>Defect Name</th><th>Total Qty</th></tr></thead>
+           <tbody>
+           ${sortedDefs.map(d => `<tr><td><b>${d[0]}</b></td><td style="font-weight:700;">${d[1]}</td></tr>`).join('')}
+           ${sortedDefs.length===0?'<tr><td colspan="2" style="text-align:center; color:#999;">No defects found in selection.</td></tr>':''}
+           </tbody>
         </table>
     `;
+    document.getElementById("modalTitle").innerText = "📊 Filtered Summary"; // Set modal's title
     document.getElementById("overlay").style.display = 'block';
     document.getElementById("previewModal").style.display = 'block';
 }
@@ -580,7 +696,7 @@ function closeModal(){ document.getElementById("overlay").style.display='none'; 
 
 function editRow(index, r){
   editingRowIndex = index;
-  // Use raw date for input value
+  // Use fixDate for input value to ensure correct day is displayed
   f_date.value=fixDate(r[0]); 
   f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
   f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
@@ -629,7 +745,7 @@ function applyFilters() {
 
     filteredData = []; 
     allData.slice(1).forEach((r, index) => {
-        let rDate = fixDate(r[0]); // Fix Date for comparison
+        let rDate = fixDate(r[0]); // Fix Date from Sheet
         let rLine = r[2].toString();
         let match = true;
         if(dFrom && rDate < dFrom) match = false;
