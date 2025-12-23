@@ -58,7 +58,7 @@ input, select {
     padding: 10px; border-radius: 8px; border: 1px solid #d1d5db;
     font-family: 'Poppins'; outline: none; transition: 0.2s;
 }
-input:focus, select:focus { border-color: var(--primary); ring: 2px solid var(--primary); }
+input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
 input[readonly] { background: #f9fafb; color: #9ca3af; }
 
 /* --- 5. BUTTONS --- */
@@ -102,10 +102,17 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
     width: 95%; max-width: 650px; background: white; border-radius: 20px; z-index: 1000;
     box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: slideUp 0.3s ease-out;
 }
-.report-header {
+
+/* Custom Report Card Header */
+.report-card-header {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    padding: 20px; color: white; display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 25px; color: white; display: flex; align-items: center; justify-content: space-between;
+    border-top-left-radius: 20px; border-top-right-radius: 20px;
 }
+.report-card-header .logo { height: 40px; margin-right: 15px; filter: brightness(0) invert(1); }
+.report-card-header .title { font-size: 18px; font-weight: 700; }
+.report-card-header .subtitle { font-size: 12px; opacity: 0.9; }
+
 .report-body { padding: 25px; max-height: 75vh; overflow-y: auto; }
 
 /* Preview Grid System */
@@ -120,9 +127,21 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 .badge-pass { background: #d1fae5; color: #065f46; }
 .badge-fail { background: #fee2e2; color: #991b1b; }
 
+.kpi-summary-box {
+    background: #eff6ff; border-radius:12px; padding:15px; display:flex; 
+    justify-content:space-around; align-items:center; margin-bottom:20px; border:1px solid #dbeafe;
+}
+.kpi-summary-item { text-align:center; flex:1; }
+.kpi-summary-item .value { font-size:20px; font-weight:700; }
+.kpi-summary-item .label { font-size:11px; text-transform:uppercase; color:#64748b; }
+
+.data-section-title { font-size: 14px; font-weight: 600; color: var(--secondary); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #e5e7eb; padding-bottom: 5px; }
+
 .defect-table { width: 100%; font-size: 13px; border-collapse: collapse; margin-top: 10px; }
 .defect-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; font-weight: 600; }
 .defect-table td { border-bottom: 1px solid #f1f5f9; padding: 8px; color: #334155; }
+.defect-table tr:last-child td { border-bottom: none; } /* Remove bottom border for last row */
+
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
@@ -297,19 +316,19 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 <div class="overlay" id="overlay"></div>
 <div class="modal" id="previewModal">
   <!-- Modal Header -->
-  <div class="report-header">
-      <div style="display:flex; align-items:center; gap:10px;">
-          <span style="font-size:24px;">📄</span>
+  <div class="report-card-header">
+      <div style="display:flex; align-items:center;">
+          <img src="" id="modalLogo" class="logo" alt="Company Logo">
           <div>
-            <div style="font-size:18px; font-weight:700; line-height:1;">PQC Report</div>
-            <div style="font-size:11px; opacity:0.8;">Detailed Record View</div>
+            <div class="title">PQC Detailed Report</div>
+            <div class="subtitle">Quality Control Performance Overview</div>
           </div>
       </div>
-      <button onclick="closeModal()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:50%; width:30px; height:30px; padding:0; display:flex; align-items:center; justify-content:center;">✕</button>
+      <button onclick="closeModal()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:50%; width:30px; height:30px; padding:0; display:flex; align-items:center; justify-content:center; color:white; font-size:18px;">✕</button>
   </div>
 
   <!-- Modal Content -->
-  <div class="modal-body" id="previewContent"></div>
+  <div class="report-body" id="previewContent"></div>
 
   <!-- Modal Footer -->
   <div style="padding:15px 25px; background:#f9fafb; text-align:right; border-top:1px solid #e5e7eb;">
@@ -321,11 +340,12 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 // --- CONFIGURATION ---
 const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
 
-// ⚠️ YOUR LOGO URL HERE (Replace this if you have a specific link)
-const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/2920/2920323.png"; 
+// ⚠️ YOUR LOGO URL HERE (Replaced with your provided logo)
+const LOGO_URL = "https://i.postimg.cc/kRSbTd6w/logo.png"; 
 
 // Update Logo on Load
 document.getElementById('mainLogo').src = LOGO_URL;
+document.getElementById('modalLogo').src = LOGO_URL; // Also for the modal
 document.getElementById('curDate').innerText = new Date().toLocaleDateString();
 
 let allData = []; 
@@ -349,22 +369,26 @@ function init() {
 }
 init();
 
-// --- DATE FIX FUNCTION (Solves the -1 Day Issue) ---
+// --- DATE FIX FUNCTION (Solves the -1 Day Issue from Google Sheets UTC) ---
 function fixDate(dateString) {
-    if(!dateString) return "";
-    // If input is YYYY-MM-DD
-    if(dateString.match(/^\d{4}-\d{2}-\d{2}$/)) return dateString;
-    
-    // If it's ISO string from Google Sheets (e.g. 2025-12-18T18:30:00.000Z)
-    // We convert it to local Date string to get correct Day
-    let d = new Date(dateString);
-    if(isNaN(d)) return dateString; // If invalid, return orig
-    
-    // Return format YYYY-MM-DD using Local Time
-    // Adjust logic: Just getting YYYY-MM-DD from the string is safest if user is in India
-    // But better: use toLocaleDateString('en-CA') gives YYYY-MM-DD
-    return d.toLocaleDateString('en-CA'); 
+    if (!dateString) return "";
+    try {
+        // Try to parse as an ISO string (e.g., 2025-12-18T18:30:00.000Z)
+        let d = new Date(dateString);
+        if (!isNaN(d.getTime())) { // Check if date is valid
+            // Convert to a local date string in YYYY-MM-DD format
+            // Using en-CA locale formats dates as YYYY-MM-DD
+            return d.toLocaleDateString('en-CA');
+        }
+    } catch (e) {
+        // Fallback for simple YYYY-MM-DD strings that don't need parsing
+        if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            return dateString;
+        }
+    }
+    return dateString; // Return original if unable to parse/fix
 }
+
 
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -390,7 +414,7 @@ function autoCalc(){
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Qty required!"); return; }
 
-  // Use raw value from input (YYYY-MM-DD) to avoid timezone shift
+  // Use raw value from input (YYYY-MM-DD) to avoid timezone shift on saving
   const dateVal = f_date.value; 
 
   const row = [
@@ -423,22 +447,17 @@ async function saveData(){
   finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-// --- ATTRACTIVE PREVIEW FUNCTION ---
+// --- ATTRACTIVE PREVIEW FUNCTION (UPDATED) ---
 function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
   const d = fixDate(r[0]); // Fix the date display
 
-  let fpyClass = r[7] >= 90 ? "badge-pass" : "badge-fail";
-  let fpyLabel = r[7] >= 90 ? "GOOD" : "LOW";
+  let fpyValue = parseFloat(r[7]);
+  let fpyClass = (fpyValue >= 90) ? "badge-pass" : "badge-fail";
+  let fpyLabel = (fpyValue >= 90) ? "Excellent" : "Needs Attention";
 
   content.innerHTML = `
-    <!-- Logo Header in Modal -->
-    <div style="text-align:center; margin-bottom:20px;">
-        <img src="${LOGO_URL}" style="height:50px; margin-bottom:5px;">
-        <div style="font-weight:700; color:#1e40af; font-size:16px;">CALIFONIX PQC REPORT</div>
-    </div>
-
-    <!-- Info Grid -->
+    <!-- General Information -->
     <div class="report-grid">
        <div class="report-item"><div class="report-label">Date</div><div class="report-value">${d}</div></div>
        <div class="report-item"><div class="report-label">Shift</div><div class="report-value">${r[1]}</div></div>
@@ -446,41 +465,76 @@ function showDetailedPreview(r, isSubmit = false){
        <div class="report-item"><div class="report-label">Model</div><div class="report-value">${r[3]}</div></div>
     </div>
 
-    <!-- KPI Section -->
-    <div style="background:#eff6ff; border-radius:12px; padding:15px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border:1px solid #dbeafe;">
-        <div style="text-align:center;">
-             <div class="report-label">TOTAL INPUT</div>
-             <div style="font-size:20px; font-weight:700; color:#2563eb;">${r[4]}</div>
+    <!-- KPI Summary -->
+    <div class="kpi-summary-box">
+        <div class="kpi-summary-item" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--primary')}">
+             <div class="value">${r[4]}</div>
+             <div class="label">TOTAL INPUT</div>
         </div>
-        <div style="text-align:center;">
-             <div class="report-label">DEFECTS</div>
-             <div style="font-size:20px; font-weight:700; color:#ef4444;">${r[5]}</div>
+        <div class="kpi-summary-item" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--danger')}">
+             <div class="value">${r[5]}</div>
+             <div class="label">TOTAL DEFECTS</div>
         </div>
-        <div style="text-align:center;">
-             <div class="report-label">FPY STATUS</div>
-             <div class="status-badge ${fpyClass}" style="margin-top:5px;">${r[7]}% ${fpyLabel}</div>
+        <div class="kpi-summary-item">
+             <div class="value" style="color:${getComputedStyle(document.documentElement).getPropertyValue('--success')};">${r[7]}%</div>
+             <div class="label">FPY RATE</div>
+             <div class="status-badge ${fpyClass}" style="margin-top:5px;">${fpyLabel}</div>
         </div>
     </div>
 
-    <!-- Process Table -->
-    <div class="report-label" style="margin-bottom:5px;">PROCESS BREAKDOWN</div>
-    <table class="defect-table" style="margin-bottom:20px;">
-        <tr><th>Stage</th><th>Qty</th><th>%</th></tr>
-        <tr><td>RMD</td><td>${r[8]}</td><td>${r[9]}%</td></tr>
-        <tr><td>Process</td><td>${r[10]}</td><td>${r[11]}%</td></tr>
-        <tr><td>SMT</td><td>${r[12]}</td><td>${r[13]}%</td></tr>
-    </table>
-
-    <!-- Defect Table -->
-    <div class="report-label" style="margin-bottom:5px;">TOP DEFECT ANALYSIS</div>
+    <!-- Process Breakdown -->
+    <div class="data-section-title">Process Breakdown</div>
     <table class="defect-table">
-        <tr><th>#</th><th>Defect</th><th>Qty</th><th>Root Cause & Action</th></tr>
-        ${r[14] ? `<tr><td>1</td><td><b>${r[14]}</b></td><td>${r[15]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[16]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[17]}</div></td></tr>` : '<tr><td colspan="4" style="text-align:center; color:#999;">No Defects Recorded</td></tr>'}
-        ${r[18] ? `<tr><td>2</td><td><b>${r[18]}</b></td><td>${r[19]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[20]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[21]}</div></td></tr>` : ''}
-        ${r[22] ? `<tr><td>3</td><td><b>${r[22]}</b></td><td>${r[23]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[24]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[25]}</div></td></tr>` : ''}
+        <tr><th>Stage</th><th>Defect Qty</th><th>Rate (%)</th></tr>
+        <tr><td>RMD</td><td>${r[8] || '0'}</td><td>${r[9] || '0.00'}%</td></tr>
+        <tr><td>Process</td><td>${r[10] || '0'}</td><td>${r[11] || '0.00'}%</td></tr>
+        <tr><td>SMT</td><td>${r[12] || '0'}</td><td>${r[13] || '0.00'}%</td></tr>
     </table>
 
-    <div style="text-align:right; font-size:11px; margin-top:15px; color:#64748b;">Prepared by: <b>${r[26]}</b></div>
+    <!-- Top Defects -->
+    <div class="data-section-title">Top 3 Defects Analysis</div>
+    <table class="defect-table">
+        <thead>
+            <tr><th>#</th><th>Defect Name</th><th>Qty</th><th style="width:40%;">Cause & Action</th></tr>
+        </thead>
+        <tbody>
+        ${r[14] ? `
+            <tr>
+                <td>1</td>
+                <td><b>${r[14]}</b></td>
+                <td>${r[15]}</td>
+                <td>
+                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[16] || 'N/A'}</div>
+                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[17] || 'N/A'}</div>
+                </td>
+            </tr>` : ''}
+        ${r[18] ? `
+            <tr>
+                <td>2</td>
+                <td><b>${r[18]}</b></td>
+                <td>${r[19]}</td>
+                <td>
+                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[20] || 'N/A'}</div>
+                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[21] || 'N/A'}</div>
+                </td>
+            </tr>` : ''}
+        ${r[22] ? `
+            <tr>
+                <td>3</td>
+                <td><b>${r[22]}</b></td>
+                <td>${r[23]}</td>
+                <td>
+                    <div style="font-size:11px; margin-bottom:2px;"><b>Cause:</b> ${r[24] || 'N/A'}</div>
+                    <div style="font-size:11px; color:var(--success);"><b>Action:</b> ${r[25] || 'N/A'}</div>
+                </td>
+            </tr>` : ''}
+        ${!r[14] && !r[18] && !r[22] ? `<tr><td colspan="4" style="text-align:center; color:#999;">No Major Defects Reported</td></tr>` : ''}
+        </tbody>
+    </table>
+
+    <div style="text-align:right; font-size:12px; margin-top:25px; color:#64748b;">
+        Report Prepared By: <span style="font-weight:700; color:#334155;">${r[26] || 'N/A'}</span>
+    </div>
   `;
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
@@ -501,7 +555,7 @@ function generateSummaryPreview() {
     content.innerHTML = `
         <div style="text-align:center; margin-bottom:20px;">
            <img src="${LOGO_URL}" style="height:40px;">
-           <h3 style="margin:5px 0; border:none;">SUMMARY REPORT</h3>
+           <h3 style="margin:5px 0; border:none; color:var(--secondary);">SUMMARY REPORT</h3>
            <div style="font-size:12px; color:#6b7280;">Records Found: ${filteredData.length}</div>
         </div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
@@ -512,10 +566,10 @@ function generateSummaryPreview() {
               <div style="font-size:18px; font-weight:700; color:#10b981;">${avgFpy}%</div><div class="report-label">AVG FPY</div>
            </div>
         </div>
-        <div class="report-label" style="margin-bottom:5px;">TOP 5 DEFECTS</div>
+        <div class="data-section-title">TOP 5 DEFECTS</div>
         <table class="defect-table">
            ${sortedDefs.map(d => `<tr><td>${d[0]}</td><td style="font-weight:700;">${d[1]}</td></tr>`).join('')}
-           ${sortedDefs.length===0?'<tr><td>No defects</td></tr>':''}
+           ${sortedDefs.length===0?'<tr><td colspan="2" style="text-align:center; color:#999;">No defects found</td></tr>':''}
         </table>
     `;
     document.getElementById("overlay").style.display = 'block';
@@ -575,7 +629,7 @@ function applyFilters() {
 
     filteredData = []; 
     allData.slice(1).forEach((r, index) => {
-        let rDate = fixDate(r[0]); // Fix Date
+        let rDate = fixDate(r[0]); // Fix Date for comparison
         let rLine = r[2].toString();
         let match = true;
         if(dFrom && rDate < dFrom) match = false;
