@@ -369,9 +369,7 @@ function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
   const d = fixDate(r[0]); 
   let fpy = parseFloat(r[7]) || 0;
-  let statusText = fpy >= 90 ? "PASSED" : "FAILED";
-  let statusClass = fpy >= 90 ? "pvc-pass" : "pvc-red";
-
+ 
   content.innerHTML = `
     <!-- 1. Info Strip -->
     <div class="pv-info-strip">
