@@ -15,10 +15,10 @@
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
-    --bg: #f3f4f6;
+    --bg: #f8fafc;
     --card: #ffffff;
-    --text: #1f2937;
-    --border: #e5e7eb;
+    --text: #1e293b;
+    --border: #e2e8f0;
 }
 
 body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
@@ -45,28 +45,68 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .tab-content.active { display: block; }
 .card {
     background: var(--card); padding: 25px; border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid var(--border);
 }
 .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
 .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
 label { font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #4b5563; }
-input, select { padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; outline: none; transition: 0.2s; font-family: 'Poppins'; }
-input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2); }
-input[readonly] { background: #f9fafb; color: #9ca3af; }
+input, select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; transition: 0.2s; font-family: 'Poppins'; }
+input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
+input[readonly] { background: #f1f5f9; color: #94a3b8; }
 
 /* --- BUTTONS --- */
 button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white; transition: 0.2s; }
-button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
 .btn-danger { background: var(--danger); } .btn-edit { background: var(--warning); } .btn-view { background: #3b82f6; }
 
-/* --- DASHBOARD KPI --- */
-.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
-.kpi-box { padding: 15px; border-radius: 12px; text-align: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.bg-green { background: linear-gradient(135deg, #10b981, #047857); }
-.bg-orange { background: linear-gradient(135deg, #f59e0b, #b45309); }
-.bg-purple { background: linear-gradient(135deg, #8b5cf6, #5b21b6); }
-.kpi-val { font-size: 22px; font-weight: 700; margin-top: 5px; } .kpi-title { font-size: 11px; text-transform: uppercase; opacity: 0.9; }
+/* --- NEW DASHBOARD STYLES --- */
+.dash-header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(135deg, #eff6ff, #fff); padding: 15px 20px;
+    border-radius: 12px; border: 1px solid #bfdbfe; margin-bottom: 25px;
+}
+.dash-h-title { font-size: 18px; font-weight: 700; color: var(--secondary); margin: 0; }
+.dash-h-sub { font-size: 12px; color: #64748b; }
+
+/* Top Global Stats */
+.global-stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px; margin-bottom: 30px;
+}
+.stat-box {
+    background: white; padding: 15px; border-radius: 12px; text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-bottom: 4px solid var(--primary);
+    transition: transform 0.2s;
+}
+.stat-box:hover { transform: translateY(-3px); }
+.sb-icon { font-size: 20px; margin-bottom: 5px; }
+.sb-val { font-size: 24px; font-weight: 700; color: #1e293b; }
+.sb-lbl { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; }
+
+/* Floor Cards Layout */
+.floors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.floor-card {
+    background: white; border-radius: 12px; padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f5f9;
+    position: relative; overflow: hidden;
+}
+.floor-card::before { content: ''; position: absolute; top:0; left:0; width: 4px; height: 100%; }
+.fc-green::before { background: var(--success); }
+.fc-orange::before { background: var(--warning); }
+.fc-purple::before { background: #8b5cf6; }
+
+.fc-header { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #e2e8f0; }
+.fc-title { font-weight: 700; font-size: 15px; color: #334155; }
+.fc-badge { font-size: 10px; padding: 3px 8px; border-radius: 10px; font-weight: 600; }
+.bg-g-soft { background: #ecfdf5; color: #047857; }
+.bg-o-soft { background: #fff7ed; color: #c2410c; }
+.bg-p-soft { background: #f5f3ff; color: #6d28d9; }
+
+/* Mini Grid inside Floor Card */
+.mini-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mk-box { background: #f8fafc; padding: 10px; border-radius: 8px; text-align: center; }
+.mk-val { font-size: 16px; font-weight: 700; color: #0f172a; }
+.mk-lbl { font-size: 10px; color: #64748b; font-weight: 600; }
 
 /* --- TABLE --- */
 .table-responsive { overflow-x: auto; border-radius: 10px; }
@@ -78,42 +118,27 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); z-index: 999; }
 .modal-lg {
     display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 90%; max-width: 950px; /* Wide Landscape Mode */
+    width: 90%; max-width: 950px;
     background: #fff; border-radius: 12px; z-index: 1000;
     box-shadow: 0 25px 50px rgba(0,0,0,0.3); overflow: hidden; animation: slideUp 0.3s;
 }
-
-.prev-header {
-    background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #e2e8f0;
-    display: flex; align-items: center; justify-content: space-between;
-}
+.prev-header { background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; }
 .prev-body { padding: 25px; max-height: 85vh; overflow-y: auto; }
-
-/* Preview Layout Grid */
-.prev-grid-main { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; } /* Left Content 60%, Right Content 40% */
-.prev-section { margin-bottom: 20px; }
+.prev-grid-main { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; } 
 .prev-title { font-size: 14px; font-weight: 700; color: var(--secondary); margin-bottom: 10px; border-left: 4px solid var(--primary); padding-left: 8px; text-transform: uppercase; }
-
-/* Info Bar */
 .info-bar { display: flex; gap: 10px; margin-bottom: 20px; background: #eff6ff; padding: 10px; border-radius: 8px; border: 1px solid #dbeafe; }
 .info-col { flex: 1; text-align: center; border-right: 1px solid #dbeafe; }
 .info-col:last-child { border-right: none; }
 .lbl { font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 600; }
 .val { font-size: 14px; font-weight: 700; color: #1e293b; }
-
-/* KPI Row */
 .kpi-row-prev { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
 .kpi-card-prev { padding: 10px; border-radius: 8px; text-align: center; color: white; }
 .kp-blue { background: #3b82f6; } .kp-red { background: #ef4444; } .kp-green { background: #10b981; } .kp-dark { background: #475569; }
 .kp-num { font-size: 18px; font-weight: bold; } .kp-txt { font-size: 10px; opacity: 0.9; }
-
-/* Detailed Table */
 .dt-table { width: 100%; border-collapse: collapse; font-size: 12px; }
 .dt-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; }
 .dt-table td { border-bottom: 1px solid #e2e8f0; padding: 8px; color: #334155; }
 .total-row { background: #f8fafc; font-weight: bold; }
-
-/* Defect Cards */
 .defect-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 8px; border-left: 3px solid var(--warning); }
 .def-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 5px; }
 .def-body { font-size: 11px; color: #64748b; display: flex; flex-direction: column; gap: 2px; }
@@ -141,37 +166,106 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
     <button class="tab-btn" onclick="switchTab('report')">📂 Records</button>
 </div>
 
-<!-- DASHBOARD -->
+<!-- TAB 1: DASHBOARD (REDESIGNED) -->
 <div id="dashboard" class="tab-content active">
-    <div class="card">
-        <h3 style="color:var(--secondary);">📅 Monthly Overview</h3>
-        <div class="form-row" style="align-items:center; margin-bottom:20px;">
-             <label>Select Month:</label>
-             <input type="month" id="dash_month" onchange="filterDashboard()">
+    
+    <!-- Header & Month Filter -->
+    <div class="dash-header">
+        <div>
+            <h3 class="dash-h-title">📊 Overall Performance</h3>
+            <span class="dash-h-sub">Monthly Production Overview</span>
+        </div>
+        <div>
+            <label style="font-size:11px; font-weight:bold; color:#64748b;">FILTER MONTH:</label>
+            <input type="month" id="dash_month" onchange="filterDashboard()" style="padding:5px 10px; border:1px solid #cbd5e1;">
+        </div>
+    </div>
+
+    <!-- 1. Global Stats Cards -->
+    <div class="global-stats-grid">
+        <div class="stat-box">
+            <div class="sb-icon">📦</div>
+            <div class="sb-val" id="g_inp">0</div>
+            <div class="sb-lbl">Total Input</div>
+        </div>
+        <div class="stat-box" style="border-bottom-color:var(--success);">
+            <div class="sb-icon">✅</div>
+            <div class="sb-val" id="g_fpy">--</div>
+            <div class="sb-lbl">Overall FPY %</div>
+        </div>
+        <div class="stat-box" style="border-bottom-color:var(--danger);">
+            <div class="sb-icon">❌</div>
+            <div class="sb-val" id="g_rej">--</div>
+            <div class="sb-lbl">Rejection %</div>
+        </div>
+        <div class="stat-box" style="border-bottom-color:var(--warning);">
+            <div class="sb-icon">⚙️</div>
+            <div class="sb-val" id="g_rmd">--</div>
+            <div class="sb-lbl">RMD Rej %</div>
+        </div>
+        <div class="stat-box" style="border-bottom-color:#8b5cf6;">
+            <div class="sb-icon">🔩</div>
+            <div class="sb-val" id="g_proc">--</div>
+            <div class="sb-lbl">Process Rej %</div>
+        </div>
+        <div class="stat-box" style="border-bottom-color:#3b82f6;">
+            <div class="sb-icon">🔌</div>
+            <div class="sb-val" id="g_smt">--</div>
+            <div class="sb-lbl">SMT Rej %</div>
+        </div>
+    </div>
+
+    <!-- 2. Floor Wise Details (Fixed & Attractive) -->
+    <h4 style="margin-bottom:20px; color:#475569; border-left:4px solid var(--secondary); padding-left:10px;">🏢 FLOOR WISE BREAKDOWN</h4>
+    
+    <div class="floors-grid">
+        
+        <!-- Floor 1 Card -->
+        <div class="floor-card fc-green">
+            <div class="fc-header">
+                <span class="fc-title">1st Floor (L1-L8)</span>
+                <span class="fc-badge bg-g-soft">Production</span>
+            </div>
+            <div class="mini-kpi-grid">
+                <div class="mk-box"><div class="mk-val" id="f1_fpy">--</div><div class="mk-lbl">FPY %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f1_rmd">--</div><div class="mk-lbl">RMD %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f1_proc">--</div><div class="mk-lbl">PROC %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f1_smt">--</div><div class="mk-lbl">SMT %</div></div>
+            </div>
         </div>
 
-        <div class="kpi-container">
-           <div class="kpi-box bg-blue"><div class="kpi-title">Total Input</div><div class="kpi-val" id="g_inp">0</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">FPY %</div><div class="kpi-val" id="g_fpy">--</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">Rej %</div><div class="kpi-val" id="g_rej">--</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">RMD %</div><div class="kpi-val" id="g_rmd">--</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">Proc %</div><div class="kpi-val" id="g_proc">--</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">SMT %</div><div class="kpi-val" id="g_smt">--</div></div>
+        <!-- Floor 2 Card -->
+        <div class="floor-card fc-orange">
+            <div class="fc-header">
+                <span class="fc-title">2nd Floor (L9-L16)</span>
+                <span class="fc-badge bg-o-soft">Assembly</span>
+            </div>
+            <div class="mini-kpi-grid">
+                <div class="mk-box"><div class="mk-val" id="f2_fpy">--</div><div class="mk-lbl">FPY %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f2_rmd">--</div><div class="mk-lbl">RMD %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f2_proc">--</div><div class="mk-lbl">PROC %</div></div>
+                <div class="mk-box"><div class="mk-val" id="f2_smt">--</div><div class="mk-lbl">SMT %</div></div>
+            </div>
         </div>
-      
-        <h4 style="margin-top:30px; color:var(--success);">🏢 1st Floor (Line 1-8)</h4>
-        <div class="kpi-container">
-           <div class="kpi-box bg-green"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f1_fpy">--</div></div>
-           <div class="kpi-box bg-green"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f1_rmd">--</div></div>
-           <div class="kpi-box bg-green"><div class="kpi-title">Proc %</div><div class="kpi-val" id="f1_proc">--</div></div>
-           <div class="kpi-box bg-green"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f1_smt">--</div></div>
+
+        <!-- Basement Card -->
+        <div class="floor-card fc-purple">
+            <div class="fc-header">
+                <span class="fc-title">Basement (L17-L24)</span>
+                <span class="fc-badge bg-p-soft">Special</span>
+            </div>
+            <div class="mini-kpi-grid">
+                <div class="mk-box"><div class="mk-val" id="fb_fpy">--</div><div class="mk-lbl">FPY %</div></div>
+                <div class="mk-box"><div class="mk-val" id="fb_rmd">--</div><div class="mk-lbl">RMD %</div></div>
+                <div class="mk-box"><div class="mk-val" id="fb_proc">--</div><div class="mk-lbl">PROC %</div></div>
+                <div class="mk-box"><div class="mk-val" id="fb_smt">--</div><div class="mk-lbl">SMT %</div></div>
+            </div>
         </div>
-        
-        <!-- Other floors can be added similarly -->
+
     </div>
 </div>
 
-<!-- DATA ENTRY -->
+<!-- TAB 2: DATA ENTRY -->
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -235,7 +329,6 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
 <!-- LANDSCAPE PREVIEW MODAL -->
 <div class="overlay" id="overlay"></div>
 <div class="modal-lg" id="previewModal">
-  <!-- Header -->
   <div class="prev-header">
       <div style="display:flex; align-items:center; gap:15px;">
           <img id="modalLogo" src="" style="height:40px;">
@@ -246,11 +339,7 @@ button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.
       </div>
       <button onclick="closeModal()" style="background:#f1f5f9; color:#334155; padding:8px 15px; font-size:13px;">✕ Close</button>
   </div>
-
-  <!-- Body -->
-  <div class="prev-body" id="previewContent">
-      <!-- Dynamic Content Injection -->
-  </div>
+  <div class="prev-body" id="previewContent"></div>
 </div>
 
 <script>
@@ -317,18 +406,14 @@ async function saveData(){
   } catch(e) { alert("Error"); } finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-// --- LANDSCAPE PREVIEW LOGIC ---
 function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
   const d = fixDate(r[0]); 
-
-  // Calculate Status
   let fpy = parseFloat(r[7]) || 0;
   let statusColor = fpy >= 90 ? "#10b981" : "#ef4444";
   let statusText = fpy >= 90 ? "PASSED" : "ATTENTION";
 
   content.innerHTML = `
-    <!-- 1. GENERAL INFO BAR -->
     <div class="info-bar">
         <div class="info-col"><div class="lbl">Date</div><div class="val">${d}</div></div>
         <div class="info-col"><div class="lbl">Shift</div><div class="val">${r[1]}</div></div>
@@ -336,142 +421,63 @@ function showDetailedPreview(r, isSubmit = false){
         <div class="info-col"><div class="lbl">Model</div><div class="val" style="color:var(--primary);">${r[3]}</div></div>
         <div class="info-col"><div class="lbl">Prepared By</div><div class="val">${r[26]}</div></div>
     </div>
-
-    <!-- 2. KPI CARDS -->
     <div class="kpi-row-prev">
-        <div class="kpi-card-prev kp-blue">
-            <div class="kp-num">${r[4]}</div><div class="kp-txt">TOTAL INPUT</div>
-        </div>
-        <div class="kpi-card-prev kp-red">
-            <div class="kp-num">${r[5]}</div><div class="kp-txt">DEFECT QTY</div>
-        </div>
-        <div class="kpi-card-prev kp-green">
-            <div class="kp-num">${r[7]}%</div><div class="kp-txt">FPY RATE</div>
-        </div>
-        <div class="kpi-card-prev kp-dark" style="background:${statusColor}">
-            <div class="kp-num">${statusText}</div><div class="kp-txt">OVERALL STATUS</div>
-        </div>
+        <div class="kpi-card-prev kp-blue"><div class="kp-num">${r[4]}</div><div class="kp-txt">TOTAL INPUT</div></div>
+        <div class="kpi-card-prev kp-red"><div class="kp-num">${r[5]}</div><div class="kp-txt">DEFECT QTY</div></div>
+        <div class="kpi-card-prev kp-green"><div class="kp-num">${r[7]}%</div><div class="kp-txt">FPY RATE</div></div>
+        <div class="kpi-card-prev kp-dark" style="background:${statusColor}"><div class="kp-num">${statusText}</div><div class="kp-txt">OVERALL STATUS</div></div>
     </div>
-
-    <!-- 3. SPLIT VIEW: PROCESS & DEFECTS -->
     <div class="prev-grid-main">
-        
-        <!-- LEFT: PROCESS DETAILS -->
         <div>
             <div class="prev-title">Process Bifurcation Details</div>
             <table class="dt-table">
                 <thead><tr><th>Process Stage</th><th>Rejected Qty</th><th>Rejection %</th></tr></thead>
                 <tbody>
-                    <tr><td>RMD (Raw Material)</td><td>${r[8]||0}</td><td>${r[9]||0}%</td></tr>
-                    <tr><td>Process / Assembly</td><td>${r[10]||0}</td><td>${r[11]||0}%</td></tr>
+                    <tr><td>RMD</td><td>${r[8]||0}</td><td>${r[9]||0}%</td></tr>
+                    <tr><td>Process</td><td>${r[10]||0}</td><td>${r[11]||0}%</td></tr>
                     <tr><td>SMT</td><td>${r[12]||0}</td><td>${r[13]||0}%</td></tr>
                     <tr class="total-row"><td>TOTAL</td><td>${r[5]}</td><td>${r[6]}%</td></tr>
                 </tbody>
             </table>
         </div>
-
-        <!-- RIGHT: DEFECT ANALYSIS -->
         <div>
             <div class="prev-title">Top 3 Defect Analysis</div>
-            
-            ${r[14] ? `
-            <div class="defect-card">
-                <div class="def-head"><span>1. ${r[14]}</span> <span style="color:#ef4444;">${r[15]} Nos</span></div>
-                <div class="def-body">
-                    <div><span class="tag">Cause:</span> ${r[16] || 'N/A'}</div>
-                    <div><span class="tag">Action:</span> ${r[17] || 'N/A'}</div>
-                </div>
-            </div>` : '<div style="color:#999; font-size:12px;">No defects recorded.</div>'}
-
-            ${r[18] ? `
-            <div class="defect-card">
-                <div class="def-head"><span>2. ${r[18]}</span> <span style="color:#ef4444;">${r[19]} Nos</span></div>
-                <div class="def-body">
-                    <div><span class="tag">Cause:</span> ${r[20] || 'N/A'}</div>
-                    <div><span class="tag">Action:</span> ${r[21] || 'N/A'}</div>
-                </div>
-            </div>` : ''}
-
-            ${r[22] ? `
-            <div class="defect-card">
-                <div class="def-head"><span>3. ${r[22]}</span> <span style="color:#ef4444;">${r[23]} Nos</span></div>
-                <div class="def-body">
-                    <div><span class="tag">Cause:</span> ${r[24] || 'N/A'}</div>
-                    <div><span class="tag">Action:</span> ${r[25] || 'N/A'}</div>
-                </div>
-            </div>` : ''}
-
+            ${r[14] ? `<div class="defect-card"><div class="def-head"><span>1. ${r[14]}</span> <span style="color:#ef4444;">${r[15]} Nos</span></div><div class="def-body"><div><span class="tag">Cause:</span> ${r[16] || 'N/A'}</div><div><span class="tag">Action:</span> ${r[17] || 'N/A'}</div></div></div>` : '<div style="color:#999; font-size:12px;">No defects recorded.</div>'}
+            ${r[18] ? `<div class="defect-card"><div class="def-head"><span>2. ${r[18]}</span> <span style="color:#ef4444;">${r[19]} Nos</span></div><div class="def-body"><div><span class="tag">Cause:</span> ${r[20] || 'N/A'}</div><div><span class="tag">Action:</span> ${r[21] || 'N/A'}</div></div></div>` : ''}
+            ${r[22] ? `<div class="defect-card"><div class="def-head"><span>3. ${r[22]}</span> <span style="color:#ef4444;">${r[23]} Nos</span></div><div class="def-body"><div><span class="tag">Cause:</span> ${r[24] || 'N/A'}</div><div><span class="tag">Action:</span> ${r[25] || 'N/A'}</div></div></div>` : ''}
         </div>
-    </div>
-  `;
-  
+    </div>`;
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
 }
 
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 
-function getFloorName(l){
-  l = parseInt(l);
-  if(l>=1 && l<=8) return "1st Floor";
-  if(l>=9 && l<=16) return "2nd Floor";
-  if(l>=17 && l<=24) return "Basement";
-  return "Other";
-}
+function getFloorName(l){ l = parseInt(l); if(l>=1 && l<=8) return "1st Floor"; if(l>=9 && l<=16) return "2nd Floor"; if(l>=17 && l<=24) return "Basement"; return "Other"; }
 
 function editRow(index, r){
   editingRowIndex = index;
-  f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
-  f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
+  f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
   rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
-  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17];
-  d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21];
-  d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25];
-  prep.value=r[26];
-  switchTab('entry');
-  const btn = document.getElementById("saveBtn"); btn.innerText = "UPDATE RECORD"; btn.style.background = "#f59e0b";
+  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17]; d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21]; d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25]; prep.value=r[26];
+  switchTab('entry'); document.getElementById("saveBtn").innerText = "UPDATE RECORD"; document.getElementById("saveBtn").style.background = "#f59e0b";
 }
 
-function resetForm(){
-  document.querySelectorAll('input').forEach(i => i.value = '');
-  document.getElementById('f_shift').value = 'A';
-  editingRowIndex = null;
-  const btn = document.getElementById("saveBtn"); btn.innerText = "SAVE RECORD"; btn.style.background = "var(--primary)";
-}
+function resetForm(){ document.querySelectorAll('input').forEach(i => i.value = ''); document.getElementById('f_shift').value = 'A'; editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; }
 
-async function load(){
- try {
-   const res = await fetch(API); const j = await res.json(); allData = j.rows; 
-   applyFilters(); filterDashboard();
- } catch(e) { console.error(e); }
-}
+async function load(){ try { const res = await fetch(API); const j = await res.json(); allData = j.rows; applyFilters(); filterDashboard(); } catch(e) { console.error(e); } }
 
 function applyFilters() {
     if(!allData || allData.length === 0) return;
-    const dFrom = document.getElementById("date_from").value;
-    const dTo = document.getElementById("date_to").value;
-    const checkboxes = document.querySelectorAll('.line-chk:checked');
-    const selectedLines = Array.from(checkboxes).map(cb => cb.value);
-
-    const t = document.getElementById('tbody'); const h = document.getElementById('thead');
-    t.innerHTML = ""; h.innerHTML = ""; document.getElementById("noDataMsg").style.display = 'none';
-
+    const dFrom = document.getElementById("date_from").value; const dTo = document.getElementById("date_to").value;
+    const checkboxes = document.querySelectorAll('.line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
+    const t = document.getElementById('tbody'); const h = document.getElementById('thead'); t.innerHTML = ""; h.innerHTML = ""; document.getElementById("noDataMsg").style.display = 'none';
     allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`); h.innerHTML += `<th>Floor</th><th>Action</th>`;
     filteredData = []; 
     allData.slice(1).forEach((r, index) => {
-        let rDate = fixDate(r[0]); let rLine = r[2].toString();
-        let match = true;
-        if(dFrom && rDate < dFrom) match = false;
-        if(dTo && rDate > dTo) match = false;
-        if(selectedLines.length > 0 && !selectedLines.includes(rLine)) match = false;
-
-        if(match) {
-            filteredData.push(r); let tr = document.createElement("tr");
-            r.forEach((c, i) => { if(i===0) tr.innerHTML += `<td>${fixDate(c)}</td>`; else tr.innerHTML += `<td>${c||""}</td>`; });
-            tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`;
-            tr.innerHTML += `<td><button class="btn-view" onclick='showDetailedPreview(${JSON.stringify(r)})' style="padding:5px 8px;">👁️</button> <button class="btn-edit" onclick='editRow(${index+1}, ${JSON.stringify(r)})' style="padding:5px 8px;">✎</button> <button class="btn-danger" onclick="deleteRow(${index+1})" style="padding:5px 8px;">🗑</button></td>`;
-            t.appendChild(tr);
-        }
+        let rDate = fixDate(r[0]); let rLine = r[2].toString(); let match = true;
+        if(dFrom && rDate < dFrom) match = false; if(dTo && rDate > dTo) match = false; if(selectedLines.length > 0 && !selectedLines.includes(rLine)) match = false;
+        if(match) { filteredData.push(r); let tr = document.createElement("tr"); r.forEach((c, i) => { if(i===0) tr.innerHTML += `<td>${fixDate(c)}</td>`; else tr.innerHTML += `<td>${c||""}</td>`; }); tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`; tr.innerHTML += `<td><button class="btn-view" onclick='showDetailedPreview(${JSON.stringify(r)})' style="padding:5px 8px;">👁️</button> <button class="btn-edit" onclick='editRow(${index+1}, ${JSON.stringify(r)})' style="padding:5px 8px;">✎</button> <button class="btn-danger" onclick="deleteRow(${index+1})" style="padding:5px 8px;">🗑</button></td>`; t.appendChild(tr); }
     });
     if(filteredData.length === 0) document.getElementById("noDataMsg").style.display = 'block';
 }
@@ -486,8 +492,7 @@ function filterDashboard() {
 function updateDashboard(rows){
   let stats = { g:{i:0,d:0,r:0,p:0,s:0}, f1:{i:0,d:0,r:0,p:0,s:0}, f2:{i:0,d:0,r:0,p:0,s:0}, fb:{i:0,d:0,r:0,p:0,s:0} };
   rows.forEach(r => {
-    let line = parseInt(r[2]) || 0;
-    let inp = +r[4]||0; let def = +r[5]||0; let rmd = +r[8]||0; let proc = +r[10]||0; let smt = +r[12]||0;
+    let line = parseInt(r[2]) || 0; let inp = +r[4]||0; let def = +r[5]||0; let rmd = +r[8]||0; let proc = +r[10]||0; let smt = +r[12]||0;
     const add = (k) => { stats[k].i += inp; stats[k].d += def; stats[k].r += rmd; stats[k].p += proc; stats[k].s += smt; };
     add('g'); if(line>=1 && line<=8) add('f1'); else if(line>=9 && line<=16) add('f2'); else if(line>=17 && line<=24) add('fb');
   });
@@ -495,22 +500,13 @@ function updateDashboard(rows){
     const calc = (n, t) => t>0 ? (n/t*100).toFixed(2)+"%" : "--";
     const el = (id) => document.getElementById(p+"_"+id);
     if(el("fpy")) el("fpy").innerText = d.i>0 ? (100-(d.d/d.i*100)).toFixed(2)+"%" : "--";
-    if(el("inp")) el("inp").innerText = d.i;
-    if(el("rej")) el("rej").innerText = calc(d.d, d.i);
-    if(el("rmd")) el("rmd").innerText = calc(d.r, d.i);
-    if(el("proc")) el("proc").innerText = calc(d.p, d.i);
-    if(el("smt")) el("smt").innerText = calc(d.s, d.i);
+    if(el("inp")) el("inp").innerText = d.i; if(el("rej")) el("rej").innerText = calc(d.d, d.i);
+    if(el("rmd")) el("rmd").innerText = calc(d.r, d.i); if(el("proc")) el("proc").innerText = calc(d.p, d.i); if(el("smt")) el("smt").innerText = calc(d.s, d.i);
   };
   render('g', stats.g); render('f1', stats.f1); render('f2', stats.f2); render('fb', stats.fb);
 }
 
-async function deleteRow(i){
- if(confirm("Delete this record permanently?")){
-   await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})});
-   load();
- }
-}
-
+async function deleteRow(i){ if(confirm("Delete?")){ await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})}); load(); } }
 load();
 </script>
 </body>
