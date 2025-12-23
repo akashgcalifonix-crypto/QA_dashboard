@@ -200,7 +200,8 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     <!-- Main Graphs -->
     <div class="chart-row">
         <div class="chart-card"><h4 style="margin:0 0 10px 0;">Quality Ratio</h4><div id="pie_chart"></div></div>
-        <div class="chart-card"><h4 style="margin:0 0 10px 0;">Defect Breakdown (%)</h4><div id="bar_chart"></div></div>
+        <!-- UPDATED TITLE TO SHOW IT IS DEFECT RATE -->
+        <div class="chart-card"><h4 style="margin:0 0 10px 0;">Process Defect Rate % (Against Input)</h4><div id="bar_chart"></div></div>
     </div>
 
     <!-- Floors -->
@@ -284,7 +285,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     </div>
 </div>
 
-<!-- LANDSCAPE PREVIEW MODAL (IMAGE REPLICA) -->
+<!-- LANDSCAPE PREVIEW MODAL -->
 <div class="overlay" id="overlay"></div>
 <div class="modal-lg" id="previewModal">
   <!-- 1. Header -->
@@ -300,9 +301,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
   </div>
 
   <!-- 2. Body -->
-  <div class="pv-body" id="previewContent">
-      <!-- Content Injected via JS -->
-  </div>
+  <div class="pv-body" id="previewContent"></div>
 </div>
 
 <script>
@@ -365,13 +364,11 @@ async function saveData(){
   } catch(e) { alert("Error"); } finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-// --- NEW PREVIEW FUNCTION (IMAGE REPLICA) ---
+// --- PREVIEW FUNCTION ---
 function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
   const d = fixDate(r[0]); 
   let fpy = parseFloat(r[7]) || 0;
-  
-  // Status Logic
   let statusText = fpy >= 90 ? "PASSED" : "FAILED";
   let statusClass = fpy >= 90 ? "pvc-pass" : "pvc-red";
 
@@ -387,32 +384,17 @@ function showDetailedPreview(r, isSubmit = false){
 
     <!-- 2. Big KPI Cards -->
     <div class="pv-kpi-row">
-        <div class="pv-card pvc-blue">
-            <div class="pvc-big-num">${r[4]}</div>
-            <div class="pvc-label">TOTAL INPUT</div>
-        </div>
-        <div class="pv-card pvc-red">
-            <div class="pvc-big-num">${r[5]}</div>
-            <div class="pvc-label">DEFECT QTY</div>
-            <div style="font-size:11px; opacity:0.8; margin-top:2px;">Rate: ${r[6]}%</div>
-        </div>
-        <div class="pv-card pvc-green">
-            <div class="pvc-big-num">${r[7]}%</div>
-            <div class="pvc-label">FPY RATE</div>
-        </div>
-        <div class="pv-card ${statusClass}">
-            <div class="pvc-big-num">${statusText}</div>
-            <div class="pvc-label">OVERALL STATUS</div>
-        </div>
+        <div class="pv-card pvc-blue"><div class="pvc-big-num">${r[4]}</div><div class="pvc-label">TOTAL INPUT</div></div>
+        <div class="pv-card pvc-red"><div class="pvc-big-num">${r[5]}</div><div class="pvc-label">DEFECT QTY</div><div style="font-size:11px; margin-top:2px;">Rej: ${r[6]}%</div></div>
+        <div class="pv-card pvc-green"><div class="pvc-big-num">${r[7]}%</div><div class="pvc-label">FPY RATE</div></div>
+        <div class="pv-card ${statusClass}"><div class="pvc-big-num">${statusText}</div><div class="pvc-label">OVERALL STATUS</div></div>
     </div>
 
     <!-- 3. Split Layout -->
     <div class="pv-split">
-        
-        <!-- Left: Table + Chart -->
+        <!-- Left -->
         <div>
             <div class="pv-sec-title">▌ Process Bifurcation Details</div>
-            
             <table class="pv-table">
                 <thead><tr><th>Process Stage</th><th>Rejected Qty</th><th>Rejection %</th></tr></thead>
                 <tbody>
@@ -422,79 +404,32 @@ function showDetailedPreview(r, isSubmit = false){
                     <tr><td>TOTAL</td><td>${r[5]}</td><td>${r[6]}%</td></tr>
                 </tbody>
             </table>
-
-            <!-- Mini Bar Chart Container -->
             <div class="pv-sec-title" style="margin-top:20px;">▌ Visual Breakdown</div>
             <div id="modal_mini_chart"></div>
         </div>
-
-        <!-- Right: Defect Analysis -->
+        <!-- Right -->
         <div>
             <div class="pv-sec-title">▌ Top 3 Defect Analysis</div>
-            
-            ${r[14] ? `
-            <div class="pv-defect-box">
-                <div class="pv-def-header">
-                    <span>1. ${r[14]}</span> <span class="pv-def-qty">${r[15]} Nos</span>
-                </div>
-                <div class="pv-cause-action">
-                    <div><span class="pv-ca-label">Cause:</span> ${r[16]||'-'}</div>
-                    <div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[17]||'-'}</div>
-                </div>
-            </div>` : '<div style="color:#999;font-size:12px;">No defects recorded</div>'}
-
-            ${r[18] ? `
-            <div class="pv-defect-box">
-                <div class="pv-def-header">
-                    <span>2. ${r[18]}</span> <span class="pv-def-qty">${r[19]} Nos</span>
-                </div>
-                <div class="pv-cause-action">
-                    <div><span class="pv-ca-label">Cause:</span> ${r[20]||'-'}</div>
-                    <div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[21]||'-'}</div>
-                </div>
-            </div>` : ''}
-
-            ${r[22] ? `
-            <div class="pv-defect-box">
-                <div class="pv-def-header">
-                    <span>3. ${r[22]}</span> <span class="pv-def-qty">${r[23]} Nos</span>
-                </div>
-                <div class="pv-cause-action">
-                    <div><span class="pv-ca-label">Cause:</span> ${r[24]||'-'}</div>
-                    <div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[25]||'-'}</div>
-                </div>
-            </div>` : ''}
-
+            ${r[14] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>1. ${r[14]}</span> <span class="pv-def-qty">${r[15]} Nos</span></div><div class="pv-cause-action"><div><span class="pv-ca-label">Cause:</span> ${r[16]||'-'}</div><div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[17]||'-'}</div></div></div>` : '<div style="color:#999;font-size:12px;">No defects recorded</div>'}
+            ${r[18] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>2. ${r[18]}</span> <span class="pv-def-qty">${r[19]} Nos</span></div><div class="pv-cause-action"><div><span class="pv-ca-label">Cause:</span> ${r[20]||'-'}</div><div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[21]||'-'}</div></div></div>` : ''}
+            ${r[22] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>3. ${r[22]}</span> <span class="pv-def-qty">${r[23]} Nos</span></div><div class="pv-cause-action"><div><span class="pv-ca-label">Cause:</span> ${r[24]||'-'}</div><div style="margin-top:4px;"><span class="pv-ca-label">Action:</span> ${r[25]||'-'}</div></div></div>` : ''}
         </div>
-    </div>
-  `;
+    </div>`;
   
-  // Show Modal
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
-
-  // Draw The Mini Chart (Must happen after modal is visible)
   setTimeout(() => { drawPreviewChart(r); }, 200);
 }
 
 function drawPreviewChart(r) {
     if(!google.visualization) return;
     var data = google.visualization.arrayToDataTable([
-        ['Stage', 'Rej %', { role: 'style' }, { role: 'annotation' }],
-        ['RMD', parseFloat(r[9])||0, '#3b82f6', (r[9]||0)+'%'],
-        ['Process', parseFloat(r[11])||0, '#8b5cf6', (r[11]||0)+'%'],
-        ['SMT', parseFloat(r[13])||0, '#f59e0b', (r[13]||0)+'%']
+        ['Stage', 'Qty', { role: 'style' }, { role: 'annotation' }],
+        ['RMD', parseInt(r[8])||0, '#3b82f6', (r[8]||0)],
+        ['Process', parseInt(r[10])||0, '#8b5cf6', (r[10]||0)],
+        ['SMT', parseInt(r[12])||0, '#f59e0b', (r[12]||0)]
     ]);
-
-    var options = {
-        title: null,
-        legend: { position: "none" },
-        hAxis: { textPosition: 'out' },
-        vAxis: { minValue: 0 },
-        chartArea: { width: '85%', height: '80%' },
-        bar: { groupWidth: "50%" }
-    };
-
+    var options = { title: null, legend: { position: "none" }, hAxis: { textPosition: 'out' }, vAxis: { minValue: 0 }, chartArea: { width: '85%', height: '80%' }, bar: { groupWidth: "50%" } };
     var chart = new google.visualization.ColumnChart(document.getElementById('modal_mini_chart'));
     chart.draw(data, options);
 }
@@ -547,22 +482,34 @@ function updateDashboard(rows){
   const calc = (n, t) => t>0 ? (n/t*100).toFixed(2) : "0.00";
   const el = (id, val) => { if(document.getElementById(id)) document.getElementById(id).innerText = val; };
   el("g_inp", stats.g.i); el("g_fpy", calc(stats.g.i-stats.g.d, stats.g.i) + "%"); el("g_def", stats.g.d); el("g_rej", calc(stats.g.d, stats.g.i) + "%");
+  
   const renderFloor = (p, d) => { el(p+"_fpy", calc(d.i-d.d, d.i) + "%"); };
   renderFloor('f1', stats.f1); renderFloor('f2', stats.f2); renderFloor('fb', stats.fb);
 
   if(google && google.visualization && stats.g.i > 0) {
-      // Pie
       var pieData = google.visualization.arrayToDataTable([['Type', 'Qty'], ['Good', stats.g.i-stats.g.d], ['Defects', stats.g.d]]);
       var pieChart = new google.visualization.PieChart(document.getElementById('pie_chart'));
       pieChart.draw(pieData, {colors:['#10b981','#ef4444'], pieHole: 0.4, chartArea:{width:'90%',height:'80%'}, legend:{position:'bottom'}});
-      // Bar
-      let totalBreakdown = stats.g.r + stats.g.p + stats.g.s;
-      let rmdPer = totalBreakdown > 0 ? (stats.g.r / totalBreakdown * 100) : 0;
-      let procPer = totalBreakdown > 0 ? (stats.g.p / totalBreakdown * 100) : 0;
-      let smtPer = totalBreakdown > 0 ? (stats.g.s / totalBreakdown * 100) : 0;
-      var barData = google.visualization.arrayToDataTable([['Type', 'Percentage', { role: 'style' }, { role: 'annotation' }], ['RMD', rmdPer, '#3b82f6', rmdPer.toFixed(1) + '%'], ['Process', procPer, '#8b5cf6', procPer.toFixed(1) + '%'], ['SMT', smtPer, '#f59e0b', smtPer.toFixed(1) + '%']]);
+
+      // --- FIX: DEFECT RATE % (Not Contribution) ---
+      let tInput = stats.g.i;
+      let rmdPer = tInput > 0 ? (stats.g.r / tInput * 100) : 0;
+      let procPer = tInput > 0 ? (stats.g.p / tInput * 100) : 0;
+      let smtPer = tInput > 0 ? (stats.g.s / tInput * 100) : 0;
+
+      var barData = google.visualization.arrayToDataTable([
+        ['Type', 'Defect Rate %', { role: 'style' }, { role: 'annotation' }], 
+        ['RMD', rmdPer, '#3b82f6', rmdPer.toFixed(2) + '%'], 
+        ['Process', procPer, '#8b5cf6', procPer.toFixed(2) + '%'], 
+        ['SMT', smtPer, '#f59e0b', smtPer.toFixed(2) + '%']
+      ]);
+      
       var barChart = new google.visualization.ColumnChart(document.getElementById('bar_chart'));
-      barChart.draw(barData, {legend: 'none', chartArea: {width:'85%',height:'75%'}, vAxis: {minValue: 0, format: '#\'%\''}});
+      barChart.draw(barData, {
+        legend: 'none', 
+        chartArea: {width:'85%',height:'75%'}, 
+        vAxis: {minValue: 0, format: '#\'%\''}
+      });
   }
 }
 
