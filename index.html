@@ -2,128 +2,128 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Modern PQC Dashboard</title>
+<title>PQC Dashboard System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* --- 1. MODERN THEME VARIABLES --- */
+/* --- 1. MODERN THEME --- */
 :root {
-    --primary: #4361ee;
-    --primary-dark: #3f37c9;
-    --success: #06d6a0;
-    --warning: #ffd166;
-    --danger: #ef476f;
-    --dark: #2b2d42;
-    --light: #f8f9fa;
-    --glass: rgba(255, 255, 255, 0.95);
-    --shadow: 0 10px 20px rgba(0,0,0,0.05);
+    --primary: #2563eb; /* Royal Blue */
+    --secondary: #1e40af;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --glass: rgba(255, 255, 255, 0.9);
 }
 
-body { font-family: 'Poppins', sans-serif; background: #e9ecef; margin: 0; padding: 20px; color: var(--dark); }
+body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--text); }
 
-/* --- 2. HEADER & TABS --- */
+/* --- 2. HEADER --- */
 .header-box {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    padding: 15px 25px; border-radius: 15px;
+    background: white; padding: 12px 20px; border-radius: 12px;
     display: flex; align-items: center; justify-content: space-between;
-    color: white; box-shadow: var(--shadow); margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
+    border-left: 5px solid var(--primary);
 }
-.app-title { font-size: 22px; font-weight: 600; letter-spacing: 0.5px; }
+.app-logo { height: 45px; object-fit: contain; }
+.app-title { font-size: 20px; font-weight: 700; color: var(--secondary); margin-left: 15px; }
 
-.nav-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+/* --- 3. TABS --- */
+.nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: #e5e7eb; padding: 5px; border-radius: 30px; width: fit-content; margin-left: auto; margin-right: auto; }
 .tab-btn {
-    background: white; border: none; padding: 12px 30px;
-    border-radius: 30px; cursor: pointer; font-weight: 600; color: #777;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s ease;
-    font-size: 14px;
+    padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer;
+    font-weight: 600; color: #6b7280; background: transparent; transition: 0.3s;
 }
-.tab-btn.active { background: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(67, 97, 238, 0.3); }
-.tab-btn:hover:not(.active) { transform: translateY(-2px); color: var(--primary); }
+.tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
 
-.tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+/* --- 4. CARDS & FORMS --- */
+.tab-content { display: none; animation: fadeIn 0.4s; }
 .tab-content.active { display: block; }
-
-/* --- 3. CARDS & SECTIONS --- */
 .card {
-    background: white; padding: 25px; border-radius: 16px;
-    box-shadow: var(--shadow); margin-bottom: 25px; position: relative;
-    border: 1px solid rgba(0,0,0,0.02);
+    background: var(--card); padding: 25px; border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px;
 }
-h3 { margin-top: 0; color: var(--primary-dark); font-size: 18px; display: flex; align-items: center; gap: 10px; }
-h4 { color: #555; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-top: 25px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+h3 { margin-top: 0; color: var(--secondary); font-size: 18px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; margin-bottom: 20px; }
+h4 { font-size: 14px; text-transform: uppercase; color: #6b7280; margin-top: 25px; margin-bottom: 15px; letter-spacing: 1px; }
 
-/* --- 4. DASHBOARD MONTH FILTER --- */
-.dash-filter-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    background: #eef2ff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #dae0ff;
+.form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+.form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
+label { font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #4b5563; }
+input, select {
+    padding: 10px; border-radius: 8px; border: 1px solid #d1d5db;
+    font-family: 'Poppins'; outline: none; transition: 0.2s;
 }
-.month-picker {
-    padding: 8px 15px; border: 1px solid #ccc; border-radius: 8px; font-family: 'Poppins'; outline: none; cursor: pointer;
-}
+input:focus, select:focus { border-color: var(--primary); ring: 2px solid var(--primary); }
+input[readonly] { background: #f9fafb; color: #9ca3af; }
 
-/* --- 5. KPI GRIDS (MODERNIZED) --- */
-.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px; }
+/* --- 5. BUTTONS --- */
+button {
+    padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;
+    background: var(--primary); color: white; transition: 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
+.btn-success { background: var(--success); }
+.btn-danger { background: var(--danger); }
+.btn-edit { background: var(--warning); color: #fff; }
+.btn-view { background: #3b82f6; }
+
+/* --- 6. KPI DASHBOARD --- */
+.dash-header { display: flex; justify-content: space-between; align-items: center; background: #eff6ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #dbeafe; }
+.kpi-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
 .kpi-box {
     padding: 15px; border-radius: 12px; text-align: center; color: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
-    transition: transform 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
 }
 .kpi-box:hover { transform: translateY(-5px); }
+.bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.bg-green { background: linear-gradient(135deg, #10b981, #047857); }
+.bg-orange { background: linear-gradient(135deg, #f59e0b, #b45309); }
+.bg-purple { background: linear-gradient(135deg, #8b5cf6, #5b21b6); }
+.kpi-val { font-size: 22px; font-weight: 700; margin-top: 5px; text-shadow: 0 2px 2px rgba(0,0,0,0.1); }
+.kpi-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
 
-/* KPI Gradients */
-.bg-blue { background: linear-gradient(135deg, #4361ee, #3a0ca3); }
-.bg-green { background: linear-gradient(135deg, #06d6a0, #00b4d8); }
-.bg-orange { background: linear-gradient(135deg, #fb8500, #e63946); }
-.bg-purple { background: linear-gradient(135deg, #7209b7, #560bad); }
-
-.kpi-title { font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; }
-.kpi-val { font-size: 24px; font-weight: 700; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-
-/* --- 6. FORMS & INPUTS --- */
-.form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-.form-group { display: flex; flex-direction: column; flex: 1; min-width: 150px; }
-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #555; }
-input, select {
-    padding: 10px; border-radius: 8px; border: 1px solid #dee2e6;
-    background: #fdfdfd; font-family: 'Poppins'; transition: 0.2s;
-}
-input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1); }
-input[readonly] { background: #e9ecef; color: #6c757d; cursor: not-allowed; }
-
-/* --- 7. BUTTONS --- */
-button {
-    padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
-    font-weight: 600; font-family: 'Poppins'; transition: all 0.2s;
-    background: var(--primary); color: white; box-shadow: 0 4px 6px rgba(67, 97, 238, 0.2);
-}
-button:hover { background: var(--primary-dark); transform: translateY(-1px); }
-.btn-danger { background: var(--danger); box-shadow: 0 4px 6px rgba(239, 71, 111, 0.2); }
-.btn-danger:hover { background: #d90429; }
-.btn-edit { background: var(--warning); color: #333; }
-.btn-view { background: #118ab2; }
-.btn-success { background: var(--success); }
-
-/* --- 8. TABLE & FILTERS --- */
-.table-responsive { overflow-x: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.03); }
+/* --- 7. TABLE --- */
+.table-responsive { overflow-x: auto; border-radius: 10px; }
 .table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
-.table th { background: #f1f3f5; color: #495057; padding: 12px; text-align: left; font-weight: 600; }
-.table td { padding: 12px; border-bottom: 1px solid #f1f3f5; color: #333; }
-.table tr:hover { background: #f8f9fa; }
+.table th { background: #f3f4f6; padding: 12px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+.table td { padding: 12px; border-bottom: 1px solid #f3f4f6; color: #4b5563; }
+.table tr:hover { background: #f9fafb; }
 
-/* Filter Box */
-.filter-box { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e9ecef; }
-.multi-select-box { border: 1px solid #ced4da; background: white; height: 100px; overflow-y: auto; padding: 8px; border-radius: 6px; }
-.checkbox-item { display: block; font-size: 13px; margin-bottom: 4px; cursor: pointer; }
+/* --- 8. ATTRACTIVE PREVIEW MODAL --- */
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 999; }
+.modal {
+    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 95%; max-width: 650px; background: white; border-radius: 20px; z-index: 1000;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25); overflow: hidden; animation: slideUp 0.3s ease-out;
+}
+.report-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 20px; color: white; display: flex; align-items: center; justify-content: space-between;
+}
+.report-body { padding: 25px; max-height: 75vh; overflow-y: auto; }
 
-/* --- 9. MODAL --- */
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(2px); z-index: 999; }
-.modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 600px; background: white; border-radius: 16px; z-index: 1000; box-shadow: 0 20px 50px rgba(0,0,0,0.2); overflow: hidden; animation: slideUp 0.3s; }
-.modal-header { background: var(--primary); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.modal-body { padding: 25px; max-height: 80vh; overflow-y: auto; }
+/* Preview Grid System */
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.report-item { background: #f8fafc; padding: 10px 15px; border-radius: 8px; border-left: 4px solid var(--primary); }
+.report-label { font-size: 11px; text-transform: uppercase; color: #64748b; font-weight: 600; }
+.report-value { font-size: 14px; font-weight: 600; color: #334155; margin-top: 2px; }
 
-/* Animations */
+.status-badge {
+    display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+.badge-pass { background: #d1fae5; color: #065f46; }
+.badge-fail { background: #fee2e2; color: #991b1b; }
+
+.defect-table { width: 100%; font-size: 13px; border-collapse: collapse; margin-top: 10px; }
+.defect-table th { background: #f1f5f9; padding: 8px; text-align: left; color: #475569; font-weight: 600; }
+.defect-table td { border-bottom: 1px solid #f1f5f9; padding: 8px; color: #334155; }
+
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translate(-50%, -40%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 </style>
@@ -133,10 +133,11 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
 <!-- HEADER -->
 <div class="header-box">
     <div style="display:flex; align-items:center;">
-        <img src="https://i.postimg.cc/5y7SN4xc/logo.png" style="height:45px; margin-right:15px; filter: brightness(0) invert(1);" alt="Logo">
+        <!-- Logo Image -->
+        <img id="mainLogo" src="" class="app-logo" alt="Logo"> 
         <div class="app-title">PQC Performance Dashboard</div>
     </div>
-    <div style="font-size:12px; opacity:0.8;">Ver 2.5 (Month Wise)</div>
+    <div style="font-size:12px; color:#6b7280;">Date: <span id="curDate"></span></div>
 </div>
 
 <!-- TABS -->
@@ -146,37 +147,27 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
     <button class="tab-btn" onclick="switchTab('report')">📂 Records</button>
 </div>
 
-<!-- ================= TAB 1: DASHBOARD ================= -->
+<!-- TAB 1: DASHBOARD -->
 <div id="dashboard" class="tab-content active">
     <div class="card">
-        <!-- MONTH FILTER OPTION -->
-        <div class="dash-filter-bar">
+        <div class="dash-header">
             <div>
-                <h3 style="margin:0; color:var(--primary);">📅 Monthly Performance</h3>
-                <small style="color:#777;">Select a month to filter KPIs</small>
+                <h3 style="margin:0; border:none; color:var(--secondary);">📅 Monthly Overview</h3>
+                <small style="color:#6b7280;">Select month to view performance</small>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <label style="margin:0;">Filter Month:</label>
-                <input type="month" id="dash_month" class="month-picker" onchange="filterDashboard()">
-            </div>
+            <input type="month" id="dash_month" style="padding:8px;" onchange="filterDashboard()">
         </div>
 
-        <!-- KPI GRID -->
         <div class="kpi-container">
            <div class="kpi-box bg-blue"><div class="kpi-title">Total Input</div><div class="kpi-val" id="g_inp">0</div></div>
            <div class="kpi-box bg-blue"><div class="kpi-title">FPY %</div><div class="kpi-val" id="g_fpy">--</div></div>
            <div class="kpi-box bg-blue"><div class="kpi-title">Rejection %</div><div class="kpi-val" id="g_rej">--</div></div>
            <div class="kpi-box bg-blue"><div class="kpi-title">RMD %</div><div class="kpi-val" id="g_rmd">--</div></div>
-           <div class="kpi-box bg-blue"><div class="kpi-title">Proc %</div><div class="kpi-val" id="g_proc">--</div></div>
+           <div class="kpi-box bg-blue"><div class="kpi-title">Process %</div><div class="kpi-val" id="g_proc">--</div></div>
            <div class="kpi-box bg-blue"><div class="kpi-title">SMT %</div><div class="kpi-val" id="g_smt">--</div></div>
         </div>
       
-        <h4 style="margin-top:30px;">🏢 Floor Wise KPIs Summary</h4>
-        
-        <!-- 1st Floor -->
-        <div style="display:flex; justify-content:space-between; margin-top:15px;">
-            <span style="font-weight:bold; color:var(--success);">1st Floor (Line 1-8)</span>
-        </div>
+        <h4 style="margin-top:30px; color:var(--success);">🏢 1st Floor (Line 1-8)</h4>
         <div class="kpi-container">
            <div class="kpi-box bg-green"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f1_fpy">--</div></div>
            <div class="kpi-box bg-green"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f1_rmd">--</div></div>
@@ -184,10 +175,7 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
            <div class="kpi-box bg-green"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f1_smt">--</div></div>
         </div>
       
-        <!-- 2nd Floor -->
-        <div style="display:flex; justify-content:space-between; margin-top:15px;">
-            <span style="font-weight:bold; color:var(--warning); color:#e85d04;">2nd Floor (Line 9-16)</span>
-        </div>
+        <h4 style="color:var(--warning);">🏢 2nd Floor (Line 9-16)</h4>
         <div class="kpi-container">
            <div class="kpi-box bg-orange"><div class="kpi-title">FPY %</div><div class="kpi-val" id="f2_fpy">--</div></div>
            <div class="kpi-box bg-orange"><div class="kpi-title">RMD %</div><div class="kpi-val" id="f2_rmd">--</div></div>
@@ -195,10 +183,7 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
            <div class="kpi-box bg-orange"><div class="kpi-title">SMT %</div><div class="kpi-val" id="f2_smt">--</div></div>
         </div>
       
-        <!-- Basement -->
-        <div style="display:flex; justify-content:space-between; margin-top:15px;">
-            <span style="font-weight:bold; color:var(--primary-dark);">Basement (Line 17-24)</span>
-        </div>
+        <h4 style="color:#8b5cf6;">🏢 Basement (Line 17-24)</h4>
         <div class="kpi-container">
            <div class="kpi-box bg-purple"><div class="kpi-title">FPY %</div><div class="kpi-val" id="fb_fpy">--</div></div>
            <div class="kpi-box bg-purple"><div class="kpi-title">RMD %</div><div class="kpi-val" id="fb_rmd">--</div></div>
@@ -208,23 +193,23 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
     </div>
 </div>
 
-<!-- ================= TAB 2: DATA ENTRY ================= -->
+<!-- TAB 2: ENTRY -->
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h3>📝 New Entry</h3>
-            <button onclick="resetForm()" style="background:#6c757d; font-size:12px; padding:8px 15px;">Reset Form</button>
+            <h3>📝 New PQC Entry</h3>
+            <button onclick="resetForm()" style="background:#9ca3af; font-size:12px; padding:6px 12px;">Reset</button>
         </div>
     
         <div class="form-row">
             <div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
             <div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
             <div class="form-group"><label>Line No</label><input type="number" id="f_line" placeholder="1-24"></div>
-            <div class="form-group"><label>Model</label><input id="f_model" placeholder="Model Name"></div>
+            <div class="form-group"><label>Model</label><input id="f_model" placeholder="Enter Model"></div>
             <div class="form-group"><label>Input Qty</label><input id="f_input" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>Defect Qty</label><input id="f_def" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>Rej %</label><input id="f_rej" readonly></div>
-            <div class="form-group"><label>FPY %</label><input id="f_fpy" readonly style="font-weight:bold; color:var(--success);"></div>
+            <div class="form-group"><label>FPY %</label><input id="f_fpy" readonly style="font-weight:700; color:var(--success);"></div>
         </div>
     
         <h4>Detailed Bifurcation</h4>
@@ -237,32 +222,32 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
             <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
         </div>
     
-        <h4>Top 3 Defects Analysis</h4>
+        <h4>Top 3 Defects</h4>
         <datalist id="defect_list">
             <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
         </datalist>
 
         <div class="form-row">
             <div class="form-group">
-                <label>Defect 1 (Highest)</label>
+                <label>Defect 1</label>
                 <input id="d1" list="defect_list" placeholder="Select Defect">
                 <input id="q1" placeholder="Qty" type="number" style="margin-top:5px;">
                 <input id="c1" placeholder="Root Cause" style="margin-top:5px;">
-                <input id="a1" placeholder="Corrective Action" style="margin-top:5px;">
+                <input id="a1" placeholder="Action" style="margin-top:5px;">
             </div>
             <div class="form-group">
                 <label>Defect 2</label>
                 <input id="d2" list="defect_list" placeholder="Select Defect">
                 <input id="q2" placeholder="Qty" type="number" style="margin-top:5px;">
                 <input id="c2" placeholder="Root Cause" style="margin-top:5px;">
-                <input id="a2" placeholder="Corrective Action" style="margin-top:5px;">
+                <input id="a2" placeholder="Action" style="margin-top:5px;">
             </div>
             <div class="form-group">
                 <label>Defect 3</label>
                 <input id="d3" list="defect_list" placeholder="Select Defect">
                 <input id="q3" placeholder="Qty" type="number" style="margin-top:5px;">
                 <input id="c3" placeholder="Root Cause" style="margin-top:5px;">
-                <input id="a3" placeholder="Corrective Action" style="margin-top:5px;">
+                <input id="a3" placeholder="Action" style="margin-top:5px;">
             </div>
         </div>
     
@@ -273,32 +258,27 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
     </div>
 </div>
 
-<!-- ================= TAB 3: RECORDS ================= -->
+<!-- TAB 3: RECORDS -->
 <div id="report" class="tab-content">
     <div class="card">
-        <h3>📂 Data Records</h3>
+        <h3>📂 Recorded Database</h3>
         
-        <div class="filter-box">
-            <h4 style="margin:0 0 15px 0; border:none; color:var(--primary);">🔎 Advanced Filter</h4>
+        <div style="background:#f9fafb; padding:15px; border-radius:10px; margin-bottom:20px; border:1px solid #e5e7eb;">
+            <h4 style="margin:0 0 10px 0; border:none; color:var(--primary); font-size:13px;">🔎 Filter Options</h4>
             <div class="form-row">
-                <div class="form-group" style="max-width: 150px;">
-                    <label>From Date</label>
-                    <input type="date" id="date_from">
+                <div class="form-group" style="max-width: 140px;">
+                    <label>From</label><input type="date" id="date_from">
                 </div>
-                <div class="form-group" style="max-width: 150px;">
-                    <label>To Date</label>
-                    <input type="date" id="date_to">
+                <div class="form-group" style="max-width: 140px;">
+                    <label>To</label><input type="date" id="date_to">
                 </div>
                 <div class="form-group" style="flex:2; min-width: 200px;">
                     <label>Select Lines</label>
-                    <div class="multi-select-box" id="lineSelectBox"></div>
-                    <div style="font-size:11px; color:var(--primary); text-align:right; margin-top:2px;">
-                        <span style="cursor:pointer;" onclick="toggleAllLines(true)">Select All</span> | <span style="cursor:pointer;" onclick="toggleAllLines(false)">Clear</span>
-                    </div>
+                    <div id="lineSelectBox" style="border:1px solid #d1d5db; background:white; height:42px; overflow-y:auto; padding:5px; border-radius:8px;"></div>
                 </div>
                 <div class="form-group" style="flex:1; justify-content: flex-end;">
-                    <button onclick="applyFilters()" style="margin-bottom:8px;">🔍 Search Data</button>
-                    <button onclick="generateSummaryPreview()" class="btn-success">📊 View Summary</button>
+                    <button onclick="applyFilters()" style="margin-bottom:5px;">🔍 Search</button>
+                    <button onclick="generateSummaryPreview()" class="btn-success">📊 Summary</button>
                 </div>
             </div>
         </div>
@@ -308,70 +288,96 @@ button:hover { background: var(--primary-dark); transform: translateY(-1px); }
             <thead><tr id="thead"></tr></thead>
             <tbody id="tbody"></tbody>
             </table>
-            <div id="noDataMsg" style="text-align:center; padding:30px; color:#999; display:none;">No records found for the selected criteria.</div>
+            <div id="noDataMsg" style="text-align:center; padding:30px; color:#999; display:none;">No records found.</div>
         </div>
     </div>
 </div>
 
-<!-- PREVIEW MODAL -->
+<!-- PREVIEW MODAL (ATTRACTIVE DESIGN) -->
 <div class="overlay" id="overlay"></div>
 <div class="modal" id="previewModal">
-  <div class="modal-header">
-    <h3 style="margin:0; color:#fff;" id="modalTitle">Details</h3>
-    <button onclick="closeModal()" style="background:transparent; border:1px solid #fff; cursor:pointer; color:white; font-size:18px; padding:5px 10px;">✕</button>
+  <!-- Modal Header -->
+  <div class="report-header">
+      <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-size:24px;">📄</span>
+          <div>
+            <div style="font-size:18px; font-weight:700; line-height:1;">PQC Report</div>
+            <div style="font-size:11px; opacity:0.8;">Detailed Record View</div>
+          </div>
+      </div>
+      <button onclick="closeModal()" style="background:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.4); border-radius:50%; width:30px; height:30px; padding:0; display:flex; align-items:center; justify-content:center;">✕</button>
   </div>
+
+  <!-- Modal Content -->
   <div class="modal-body" id="previewContent"></div>
-  <div style="padding:0 20px 20px 20px; text-align:center;">
-    <button onclick="closeModal()" style="width:100%; background:#6c757d;">Close</button>
+
+  <!-- Modal Footer -->
+  <div style="padding:15px 25px; background:#f9fafb; text-align:right; border-top:1px solid #e5e7eb;">
+    <button onclick="closeModal()" style="background:#6b7280; font-size:13px; padding:8px 20px;">Close Report</button>
   </div>
 </div>
 
-<!-- JAVASCRIPT LOGIC -->
 <script>
+// --- CONFIGURATION ---
 const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
+
+// ⚠️ YOUR LOGO URL HERE (Replace this if you have a specific link)
+const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/2920/2920323.png"; 
+
+// Update Logo on Load
+document.getElementById('mainLogo').src = LOGO_URL;
+document.getElementById('curDate').innerText = new Date().toLocaleDateString();
 
 let allData = []; 
 let filteredData = []; 
 let editingRowIndex = null; 
 
-// --- INIT: Line Checkboxes & Default Date ---
+// --- INIT ---
 function init() {
-    // 1. Line Checkboxes
+    // Populate Line Checkboxes
     const box = document.getElementById('lineSelectBox');
-    let html = '';
+    let html = '<div style="display:flex; gap:10px; flex-wrap:wrap;">';
     for(let i=1; i<=24; i++){
-        html += `<label class="checkbox-item"><input type="checkbox" value="${i}" class="line-chk"> Line ${i}</label>`;
+        html += `<label style="font-size:11px; display:flex; align-items:center; gap:3px;"><input type="checkbox" value="${i}" class="line-chk"> L${i}</label>`;
     }
+    html += '</div>';
     box.innerHTML = html;
-
-    // 2. Default Month in Dashboard (Current Month)
+    
+    // Set Current Month
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
-    document.getElementById('dash_month').value = `${yyyy}-${mm}`;
+    document.getElementById('dash_month').value = today.toISOString().slice(0,7);
 }
 init();
 
-function toggleAllLines(select) {
-    document.querySelectorAll('.line-chk').forEach(c => c.checked = select);
+// --- DATE FIX FUNCTION (Solves the -1 Day Issue) ---
+function fixDate(dateString) {
+    if(!dateString) return "";
+    // If input is YYYY-MM-DD
+    if(dateString.match(/^\d{4}-\d{2}-\d{2}$/)) return dateString;
+    
+    // If it's ISO string from Google Sheets (e.g. 2025-12-18T18:30:00.000Z)
+    // We convert it to local Date string to get correct Day
+    let d = new Date(dateString);
+    if(isNaN(d)) return dateString; // If invalid, return orig
+    
+    // Return format YYYY-MM-DD using Local Time
+    // Adjust logic: Just getting YYYY-MM-DD from the string is safest if user is in India
+    // But better: use toLocaleDateString('en-CA') gives YYYY-MM-DD
+    return d.toLocaleDateString('en-CA'); 
 }
 
-// --- TABS ---
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    
     const btns = document.querySelectorAll('.tab-btn');
     if(tabId === 'dashboard') btns[0].classList.add('active');
     if(tabId === 'entry') btns[1].classList.add('active');
     if(tabId === 'report') btns[2].classList.add('active');
 }
 
-// --- CALCULATIONS ---
 function autoCalc(){
- let i = +f_input.value || 0;
- let d = +f_def.value || 0;
+ let i = +f_input.value || 0; let d = +f_def.value || 0;
  if(i > 0){
   f_rej.value = ((d/i)*100).toFixed(2);
   f_fpy.value = (100 - (d/i*100)).toFixed(2);
@@ -381,12 +387,14 @@ function autoCalc(){
  smt_r.value = i ? ((+smt.value||0)/i*100).toFixed(2) : '';
 }
 
-// --- SAVE DATA ---
 async function saveData(){
-  if(!f_line.value || !f_input.value) { alert("⚠️ Line and Input Qty required!"); return; }
+  if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Qty required!"); return; }
+
+  // Use raw value from input (YYYY-MM-DD) to avoid timezone shift
+  const dateVal = f_date.value; 
 
   const row = [
-   f_date.value, f_shift.value, f_line.value, f_model.value,
+   dateVal, f_shift.value, f_line.value, f_model.value,
    f_input.value, f_def.value, f_rej.value, f_fpy.value,
    rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value,
    d1.value, q1.value, c1.value, a1.value,
@@ -396,8 +404,7 @@ async function saveData(){
   ];
 
   const btn = document.getElementById("saveBtn");
-  btn.innerText = editingRowIndex !== null ? "UPDATING..." : "⏳ SAVING...";
-  btn.disabled = true;
+  btn.innerText = "⏳ SAVING..."; btn.disabled = true;
 
   try {
      const action = editingRowIndex !== null ? "edit" : "append";
@@ -411,95 +418,104 @@ async function saveData(){
        showDetailedPreview(row, true);
        load(); 
        resetForm();
-     } else {
-       alert("❌ Failed: " + JSON.stringify(result));
-     }
+     } else { alert("❌ Failed: " + JSON.stringify(result)); }
   } catch(e) { console.error(e); alert("❌ Network Error"); } 
   finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-// --- EDIT ---
-function editRow(index, r){
-  editingRowIndex = index;
-  f_date.value=r[0]; f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
-  f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
-  rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
-  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17];
-  d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21];
-  d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25];
-  prep.value=r[26];
-
-  switchTab('entry');
-  const btn = document.getElementById("saveBtn");
-  btn.innerText = "UPDATE RECORD (Row " + (index+1) + ")";
-  btn.style.background = "#ffd166"; btn.style.color = "#333";
-}
-
-function resetForm(){
-  document.querySelectorAll('input').forEach(i => i.value = '');
-  document.getElementById('f_shift').value = 'A';
-  editingRowIndex = null;
-  const btn = document.getElementById("saveBtn");
-  btn.innerText = "SAVE RECORD"; btn.style.background = "var(--primary)"; btn.style.color = "white";
-}
-
-// --- PREVIEWS ---
+// --- ATTRACTIVE PREVIEW FUNCTION ---
 function showDetailedPreview(r, isSubmit = false){
   const content = document.getElementById("previewContent");
-  document.getElementById("modalTitle").innerText = isSubmit ? "✅ Success" : "📄 Record Details";
+  const d = fixDate(r[0]); // Fix the date display
+
+  let fpyClass = r[7] >= 90 ? "badge-pass" : "badge-fail";
+  let fpyLabel = r[7] >= 90 ? "GOOD" : "LOW";
 
   content.innerHTML = `
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px; font-size:14px;">
-       <div><b>Date:</b> ${r[0]}</div>
-       <div><b>Line:</b> ${getFloorName(r[2])} / L-${r[2]}</div>
-       <div><b>Model:</b> ${r[3]}</div>
-       <div><b>Shift:</b> ${r[1]}</div>
+    <!-- Logo Header in Modal -->
+    <div style="text-align:center; margin-bottom:20px;">
+        <img src="${LOGO_URL}" style="height:50px; margin-bottom:5px;">
+        <div style="font-weight:700; color:#1e40af; font-size:16px;">CALIFONIX PQC REPORT</div>
     </div>
-    <div style="background:#f8f9fa; padding:15px; border-radius:8px; display:flex; justify-content:space-around; text-align:center; margin-bottom:15px;">
-       <div><div style="font-size:12px;color:#777;">INPUT</div><div style="font-size:18px;font-weight:bold;color:var(--primary);">${r[4]}</div></div>
-       <div><div style="font-size:12px;color:#777;">FPY</div><div style="font-size:18px;font-weight:bold;color:var(--success);">${r[7]}%</div></div>
-       <div><div style="font-size:12px;color:#777;">DEFECT</div><div style="font-size:18px;font-weight:bold;color:var(--danger);">${r[5]}</div></div>
+
+    <!-- Info Grid -->
+    <div class="report-grid">
+       <div class="report-item"><div class="report-label">Date</div><div class="report-value">${d}</div></div>
+       <div class="report-item"><div class="report-label">Shift</div><div class="report-value">${r[1]}</div></div>
+       <div class="report-item"><div class="report-label">Line No</div><div class="report-value">L-${r[2]} (${getFloorName(r[2])})</div></div>
+       <div class="report-item"><div class="report-label">Model</div><div class="report-value">${r[3]}</div></div>
     </div>
-    <h5>Top Defects:</h5>
-    <ul style="padding-left:20px; font-size:13px; margin:0;">
-        ${r[14] ? `<li><b>${r[14]}</b>: ${r[15]} qty</li>` : '<li style="color:#999;">None</li>'}
-        ${r[18] ? `<li><b>${r[18]}</b>: ${r[19]} qty</li>` : ''}
-        ${r[22] ? `<li><b>${r[22]}</b>: ${r[23]} qty</li>` : ''}
-    </ul>
+
+    <!-- KPI Section -->
+    <div style="background:#eff6ff; border-radius:12px; padding:15px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border:1px solid #dbeafe;">
+        <div style="text-align:center;">
+             <div class="report-label">TOTAL INPUT</div>
+             <div style="font-size:20px; font-weight:700; color:#2563eb;">${r[4]}</div>
+        </div>
+        <div style="text-align:center;">
+             <div class="report-label">DEFECTS</div>
+             <div style="font-size:20px; font-weight:700; color:#ef4444;">${r[5]}</div>
+        </div>
+        <div style="text-align:center;">
+             <div class="report-label">FPY STATUS</div>
+             <div class="status-badge ${fpyClass}" style="margin-top:5px;">${r[7]}% ${fpyLabel}</div>
+        </div>
+    </div>
+
+    <!-- Process Table -->
+    <div class="report-label" style="margin-bottom:5px;">PROCESS BREAKDOWN</div>
+    <table class="defect-table" style="margin-bottom:20px;">
+        <tr><th>Stage</th><th>Qty</th><th>%</th></tr>
+        <tr><td>RMD</td><td>${r[8]}</td><td>${r[9]}%</td></tr>
+        <tr><td>Process</td><td>${r[10]}</td><td>${r[11]}%</td></tr>
+        <tr><td>SMT</td><td>${r[12]}</td><td>${r[13]}%</td></tr>
+    </table>
+
+    <!-- Defect Table -->
+    <div class="report-label" style="margin-bottom:5px;">TOP DEFECT ANALYSIS</div>
+    <table class="defect-table">
+        <tr><th>#</th><th>Defect</th><th>Qty</th><th>Root Cause & Action</th></tr>
+        ${r[14] ? `<tr><td>1</td><td><b>${r[14]}</b></td><td>${r[15]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[16]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[17]}</div></td></tr>` : '<tr><td colspan="4" style="text-align:center; color:#999;">No Defects Recorded</td></tr>'}
+        ${r[18] ? `<tr><td>2</td><td><b>${r[18]}</b></td><td>${r[19]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[20]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[21]}</div></td></tr>` : ''}
+        ${r[22] ? `<tr><td>3</td><td><b>${r[22]}</b></td><td>${r[23]}</td><td><div style="font-size:11px;"><b>C:</b> ${r[24]}</div><div style="font-size:11px;color:#10b981;"><b>A:</b> ${r[25]}</div></td></tr>` : ''}
+    </table>
+
+    <div style="text-align:right; font-size:11px; margin-top:15px; color:#64748b;">Prepared by: <b>${r[26]}</b></div>
   `;
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
 }
 
 function generateSummaryPreview() {
-    if(filteredData.length === 0) { alert("Please apply filters to view data first."); return; }
-
+    if(filteredData.length === 0) { alert("Apply filters first!"); return; }
     let tInp=0, tDef=0; let defs={};
     filteredData.forEach(r => {
         tInp += (+r[4]||0); tDef += (+r[5]||0);
         if(r[14]) defs[r[14]] = (defs[r[14]]||0) + (+r[15]||0);
         if(r[18]) defs[r[18]] = (defs[r[18]]||0) + (+r[19]||0);
     });
-
     let avgFpy = tInp>0 ? (100-(tDef/tInp*100)).toFixed(2) : "0.00";
     let sortedDefs = Object.entries(defs).sort((a,b)=>b[1]-a[1]).slice(0,5);
 
-    document.getElementById("modalTitle").innerText = "📊 Filtered Summary";
-    document.getElementById("previewContent").innerHTML = `
-        <div style="text-align:center; margin-bottom:15px;">
-            <div style="font-size:12px; color:#777;">Total Records: ${filteredData.length}</div>
+    const content = document.getElementById("previewContent");
+    content.innerHTML = `
+        <div style="text-align:center; margin-bottom:20px;">
+           <img src="${LOGO_URL}" style="height:40px;">
+           <h3 style="margin:5px 0; border:none;">SUMMARY REPORT</h3>
+           <div style="font-size:12px; color:#6b7280;">Records Found: ${filteredData.length}</div>
         </div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-           <div style="flex:1; background:#e3f2fd; padding:10px; border-radius:8px; text-align:center; color:#0d47a1;">
-              <div style="font-size:20px; font-weight:bold;">${tInp}</div><div style="font-size:10px;">TOTAL INPUT</div>
+           <div style="flex:1; background:#eff6ff; padding:15px; border-radius:10px; text-align:center;">
+              <div style="font-size:18px; font-weight:700; color:#2563eb;">${tInp}</div><div class="report-label">TOTAL INPUT</div>
            </div>
-           <div style="flex:1; background:#e8f5e9; padding:10px; border-radius:8px; text-align:center; color:#1b5e20;">
-              <div style="font-size:20px; font-weight:bold;">${avgFpy}%</div><div style="font-size:10px;">AVG FPY</div>
+           <div style="flex:1; background:#ecfdf5; padding:15px; border-radius:10px; text-align:center;">
+              <div style="font-size:18px; font-weight:700; color:#10b981;">${avgFpy}%</div><div class="report-label">AVG FPY</div>
            </div>
         </div>
-        <h5>Top 5 Defects</h5>
-        <table class="table" style="font-size:12px;">
-           ${sortedDefs.map(d => `<tr><td>${d[0]}</td><td style="font-weight:bold;">${d[1]}</td></tr>`).join('')}
+        <div class="report-label" style="margin-bottom:5px;">TOP 5 DEFECTS</div>
+        <table class="defect-table">
+           ${sortedDefs.map(d => `<tr><td>${d[0]}</td><td style="font-weight:700;">${d[1]}</td></tr>`).join('')}
+           ${sortedDefs.length===0?'<tr><td>No defects</td></tr>':''}
         </table>
     `;
     document.getElementById("overlay").style.display = 'block';
@@ -508,34 +524,40 @@ function generateSummaryPreview() {
 
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 
-// --- CORE: LOAD & FILTER ---
+function editRow(index, r){
+  editingRowIndex = index;
+  // Use raw date for input value
+  f_date.value=fixDate(r[0]); 
+  f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3];
+  f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
+  rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
+  d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17];
+  d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21];
+  d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25];
+  prep.value=r[26];
+  switchTab('entry');
+  const btn = document.getElementById("saveBtn");
+  btn.innerText = "UPDATE RECORD"; btn.style.background = "#f59e0b";
+}
+
+function resetForm(){
+  document.querySelectorAll('input').forEach(i => i.value = '');
+  document.getElementById('f_shift').value = 'A';
+  editingRowIndex = null;
+  const btn = document.getElementById("saveBtn");
+  btn.innerText = "SAVE RECORD"; btn.style.background = "var(--primary)";
+}
+
 async function load(){
  try {
    const res = await fetch(API);
    const j = await res.json();
    allData = j.rows; 
-   
-   // Apply Filters (Records Tab)
    applyFilters(); 
-   
-   // Apply Dashboard Filter (Default Month)
    filterDashboard();
-
  } catch(e) { console.error(e); }
 }
 
-// 1. Dashboard Filter (Month Wise)
-function filterDashboard() {
-    const monthInput = document.getElementById('dash_month').value; // yyyy-mm
-    if(!allData || allData.length < 2) return;
-
-    // Filter rows where Date (Column 0) starts with "yyyy-mm"
-    const dashboardRows = allData.slice(1).filter(r => r[0].startsWith(monthInput));
-    
-    updateDashboard(dashboardRows);
-}
-
-// 2. Records Filter (Advanced)
 function applyFilters() {
     if(!allData || allData.length === 0) return;
     const dFrom = document.getElementById("date_from").value;
@@ -552,9 +574,9 @@ function applyFilters() {
     h.innerHTML += `<th>Floor</th><th>Action</th>`;
 
     filteredData = []; 
-
     allData.slice(1).forEach((r, index) => {
-        let rDate = r[0]; let rLine = r[2].toString();
+        let rDate = fixDate(r[0]); // Fix Date
+        let rLine = r[2].toString();
         let match = true;
         if(dFrom && rDate < dFrom) match = false;
         if(dTo && rDate > dTo) match = false;
@@ -563,33 +585,39 @@ function applyFilters() {
         if(match) {
             filteredData.push(r);
             let tr = document.createElement("tr");
-            r.forEach(c => tr.innerHTML += `<td>${c||""}</td>`);
+            // Display Fixed Date in Table
+            r.forEach((c, i) => {
+                if(i===0) tr.innerHTML += `<td>${fixDate(c)}</td>`; 
+                else tr.innerHTML += `<td>${c||""}</td>`;
+            });
             tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`;
             tr.innerHTML += `<td>
-              <button class="action-btn btn-view" onclick='showDetailedPreview(${JSON.stringify(r)})'>👁️</button>
-              <button class="action-btn btn-edit" onclick='editRow(${index+1}, ${JSON.stringify(r)})'>✎</button>
-              <button class="action-btn btn-danger" onclick="deleteRow(${index+1})">🗑</button>
+              <button class="btn-view" onclick='showDetailedPreview(${JSON.stringify(r)})' style="padding:5px 8px;">👁️</button>
+              <button class="btn-edit" onclick='editRow(${index+1}, ${JSON.stringify(r)})' style="padding:5px 8px;">✎</button>
+              <button class="btn-danger" onclick="deleteRow(${index+1})" style="padding:5px 8px;">🗑</button>
             </td>`;
             t.appendChild(tr);
         }
     });
-
     if(filteredData.length === 0) document.getElementById("noDataMsg").style.display = 'block';
+}
+
+function filterDashboard() {
+    const monthInput = document.getElementById('dash_month').value; 
+    if(!allData || allData.length < 2) return;
+    const dashboardRows = allData.slice(1).filter(r => fixDate(r[0]).startsWith(monthInput));
+    updateDashboard(dashboardRows);
 }
 
 function updateDashboard(rows){
   let stats = { g:{i:0,d:0,r:0,p:0,s:0}, f1:{i:0,d:0,r:0,p:0,s:0}, f2:{i:0,d:0,r:0,p:0,s:0}, fb:{i:0,d:0,r:0,p:0,s:0} };
-
   rows.forEach(r => {
     let line = parseInt(r[2]) || 0;
     let inp = +r[4]||0; let def = +r[5]||0; let rmd = +r[8]||0; let proc = +r[10]||0; let smt = +r[12]||0;
     const add = (k) => { stats[k].i += inp; stats[k].d += def; stats[k].r += rmd; stats[k].p += proc; stats[k].s += smt; };
     add('g'); 
-    if(line>=1 && line<=8) add('f1');
-    else if(line>=9 && line<=16) add('f2');
-    else if(line>=17 && line<=24) add('fb');
+    if(line>=1 && line<=8) add('f1'); else if(line>=9 && line<=16) add('f2'); else if(line>=17 && line<=24) add('fb');
   });
-
   const render = (p, d) => {
     const calc = (n, t) => t>0 ? (n/t*100).toFixed(2)+"%" : "--";
     const el = (id) => document.getElementById(p+"_"+id);
@@ -618,7 +646,6 @@ async function deleteRow(i){
  }
 }
 
-// Start
 load();
 </script>
 </body>
