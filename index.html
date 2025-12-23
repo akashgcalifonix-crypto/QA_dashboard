@@ -44,7 +44,7 @@ body { font-family: 'Poppins', sans-serif; background: #f8fafc; margin: 0; paddi
 }
 .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4); }
 
-/* --- DASHBOARD STYLES (NEW) --- */
+/* --- DASHBOARD STYLES --- */
 .tab-content { display: none; animation: fadeIn 0.5s; }
 .tab-content.active { display: block; }
 
@@ -85,7 +85,7 @@ body { font-family: 'Poppins', sans-serif; background: #f8fafc; margin: 0; paddi
 .f-title { font-size: 16px; font-weight: 700; color: var(--dark); }
 .f-icon { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
 
-/* Progress Bar Style for FPY */
+/* Progress Bar Style */
 .progress-container { background: #e2e8f0; height: 8px; border-radius: 5px; margin: 10px 0 20px 0; overflow: hidden; }
 .progress-bar { height: 100%; border-radius: 5px; transition: width 1s; }
 
@@ -95,7 +95,7 @@ body { font-family: 'Poppins', sans-serif; background: #f8fafc; margin: 0; paddi
 .ms-val { font-size: 15px; font-weight: 700; color: var(--dark); }
 .ms-lbl { font-size: 10px; color: #64748b; font-weight: 600; }
 
-/* --- OTHER ELEMENTS (Forms, Tables) --- */
+/* --- OTHER ELEMENTS --- */
 .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
 .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
 .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
@@ -109,7 +109,7 @@ button:hover { transform: translateY(-2px); }
 .table th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; color: #475569; }
 .table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
 
-/* Responsive Charts */
+/* Responsive */
 @media (max-width: 768px) { .chart-row { grid-template-columns: 1fr; } }
 
 /* Modal */
@@ -177,7 +177,8 @@ button:hover { transform: translateY(-2px); }
             <div id="pie_chart"></div>
         </div>
         <div class="chart-card">
-            <div class="chart-title"><i class="fas fa-chart-bar" style="color:var(--warning);"></i> Defect Breakdown (Process Wise)</div>
+            <!-- UPDATED TITLE -->
+            <div class="chart-title"><i class="fas fa-chart-bar" style="color:var(--warning);"></i> Defect Breakdown (Percentage %)</div>
             <div id="bar_chart"></div>
         </div>
     </div>
@@ -245,7 +246,7 @@ button:hover { transform: translateY(-2px); }
             <h3>📝 New PQC Entry</h3>
             <button onclick="resetForm()" style="background:#94a3b8; font-size:12px; padding:6px 15px;">Clear</button>
         </div>
-        <!-- Form Fields (Same as before) -->
+        <!-- Form Fields -->
         <div class="form-row">
             <div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
             <div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
@@ -300,7 +301,7 @@ button:hover { transform: translateY(-2px); }
     </div>
 </div>
 
-<!-- LANDSCAPE PREVIEW MODAL (Previous Design) -->
+<!-- LANDSCAPE PREVIEW MODAL -->
 <div class="overlay" id="overlay"></div>
 <div class="modal-lg" id="previewModal">
   <div style="background:#f8fafc; padding:15px; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
@@ -350,7 +351,6 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    // Simple way to highlight correct tab
     const btns = document.querySelectorAll('.tab-btn');
     if(tabId === 'dashboard') btns[0].classList.add('active');
     if(tabId === 'entry') btns[1].classList.add('active');
@@ -473,10 +473,8 @@ function updateDashboard(rows){
   const calc = (n, t) => t>0 ? (n/t*100).toFixed(2) : "0.00";
   const el = (id, val) => { if(document.getElementById(id)) document.getElementById(id).innerText = val; };
   
-  // Global
   el("g_inp", stats.g.i); el("g_fpy", calc(stats.g.i-stats.g.d, stats.g.i) + "%"); el("g_def", stats.g.d); el("g_rej", calc(stats.g.d, stats.g.i) + "%");
   
-  // Floors (Update Text and Progress Bar)
   const renderFloor = (p, d) => {
       let fpy = calc(d.i-d.d, d.i);
       el(p+"_fpy", fpy + "%");
@@ -489,23 +487,37 @@ function updateDashboard(rows){
   
   renderFloor('f1', stats.f1); renderFloor('f2', stats.f2); renderFloor('fb', stats.fb);
 
-  // Draw Google Charts
   if(google && google.visualization && stats.g.i > 0) {
-      // Pie Chart
+      // Pie
       var pieData = google.visualization.arrayToDataTable([['Type', 'Qty'], ['Good', stats.g.i-stats.g.d], ['Defects', stats.g.d]]);
       var pieChart = new google.visualization.PieChart(document.getElementById('pie_chart'));
       pieChart.draw(pieData, {colors:['#10b981','#ef4444'], pieHole: 0.4, chartArea:{width:'90%',height:'80%'}, legend:{position:'bottom'}});
 
-      // Bar Chart
-      var barData = google.visualization.arrayToDataTable([['Type', 'Qty', { role: 'style' }], ['RMD', stats.g.r, '#3b82f6'], ['Process', stats.g.p, '#8b5cf6'], ['SMT', stats.g.s, '#f59e0b']]);
+      // Bar with Percentage
+      let totalBreakdown = stats.g.r + stats.g.p + stats.g.s;
+      let rmdPer = totalBreakdown > 0 ? (stats.g.r / totalBreakdown * 100) : 0;
+      let procPer = totalBreakdown > 0 ? (stats.g.p / totalBreakdown * 100) : 0;
+      let smtPer = totalBreakdown > 0 ? (stats.g.s / totalBreakdown * 100) : 0;
+
+      var barData = google.visualization.arrayToDataTable([
+        ['Type', 'Percentage', { role: 'style' }, { role: 'annotation' }], 
+        ['RMD', rmdPer, '#3b82f6', rmdPer.toFixed(1) + '%'], 
+        ['Process', procPer, '#8b5cf6', procPer.toFixed(1) + '%'], 
+        ['SMT', smtPer, '#f59e0b', smtPer.toFixed(1) + '%']
+      ]);
+      
       var barChart = new google.visualization.ColumnChart(document.getElementById('bar_chart'));
-      barChart.draw(barData, {legend:'none', chartArea:{width:'80%',height:'75%'}, vAxis:{minValue:0}});
+      barChart.draw(barData, {
+        legend: 'none', 
+        chartArea: {width:'85%',height:'75%'}, 
+        vAxis: {minValue: 0, format: '#\'%\''}
+      });
   }
 }
 
 function getFloorName(l){ l = parseInt(l); if(l>=1 && l<=8) return "1st Floor"; if(l>=9 && l<=16) return "2nd Floor"; if(l>=17 && l<=24) return "Basement"; return "Other"; }
 async function deleteRow(i){ if(confirm("Delete?")){ await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})}); load(); } }
-window.onresize = function(){ filterDashboard(); }; // Redraw charts on resize
+window.onresize = function(){ filterDashboard(); }; 
 load();
 </script>
 </body>
