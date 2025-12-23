@@ -191,14 +191,64 @@ button:disabled { background:#ccc; }
         </div>
     
         <h4>Top 3 Defects</h4>
+        
+        <!-- Defect List Dropdown Data -->
+        <datalist id="defect_list">
+            <option value="Not On">
+            <option value="Mic Fail">
+            <option value="Speaker Fail">
+            <option value="Channel Detection">
+            <option value="Hard Glue">
+            <option value="Body Sensor">
+            <option value="RF Fail">
+            <option value="Sensor Fail">
+            <option value="Cavity Crack">
+            <option value="Dut Mode">
+            <option value="Dent, Scratch">
+            <option value="Pogo Pin Issue">
+            <option value="LED Issue">
+            <option value="BT not connect">
+            <option value="Buds Heating">
+            <option value="Battery Drain">
+            <option value="High Current">
+            <option value="Inquiry Fail">
+            <option value="Low Current">
+            <option value="Low Sound">
+            <option value="Electric Sound">
+            <option value="Software PCBA">
+            <option value="Polarity Reverse">
+            <option value="Distortion">
+            <option value="Key Issue">
+            <option value="ANC Fail">
+        </datalist>
+
         <div class="form-row">
-            <div class="form-group"><label>Top-1 Defect</label><input id="d1"><input id="q1" placeholder="Qty" type="number"><input id="c1" placeholder="Cause"><input id="a1" placeholder="Action"></div>
+            <div class="form-group">
+                <label>Top-1 Defect</label>
+                <!-- Added List Attribute Here -->
+                <input id="d1" list="defect_list" placeholder="Select or Type Defect">
+                <input id="q1" placeholder="Qty" type="number">
+                <input id="c1" placeholder="Cause">
+                <input id="a1" placeholder="Action">
+            </div>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Top-2 Defect</label><input id="d2"><input id="q2" placeholder="Qty" type="number"><input id="c2" placeholder="Cause"><input id="a2" placeholder="Action"></div>
+            <div class="form-group">
+                <label>Top-2 Defect</label>
+                <input id="d2" list="defect_list" placeholder="Select or Type Defect">
+                <input id="q2" placeholder="Qty" type="number">
+                <input id="c2" placeholder="Cause">
+                <input id="a2" placeholder="Action">
+            </div>
         </div>
         <div class="form-row">
-            <div class="form-group"><label>Top-3 Defect</label><input id="d3"><input id="q3" placeholder="Qty" type="number"><input id="c3" placeholder="Cause"><input id="a3" placeholder="Action"></div>
+            <div class="form-group">
+                <label>Top-3 Defect</label>
+                <input id="d3" list="defect_list" placeholder="Select or Type Defect">
+                <input id="q3" placeholder="Qty" type="number">
+                <input id="c3" placeholder="Cause">
+                <input id="a3" placeholder="Action">
+            </div>
         </div>
     
         <div class="form-row">
@@ -213,7 +263,7 @@ button:disabled { background:#ccc; }
     <div class="card">
         <h3>📂 Recorded Data Report</h3>
         
-        <!-- NEW ADVANCED FILTER SECTION -->
+        <!-- ADVANCED FILTER SECTION -->
         <div class="filter-box">
             <h4 style="margin:0 0 10px 0; border:none; color:#0b66d2;">🔎 Advanced Search & Filter</h4>
             <div class="form-row">
@@ -276,7 +326,7 @@ button:disabled { background:#ccc; }
 const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
 
 let allData = []; 
-let filteredData = []; // Store filtered result for preview
+let filteredData = []; 
 let editingRowIndex = null; 
 
 // --- INIT: Populate Line Checkboxes ---
@@ -548,7 +598,7 @@ function applyFilters() {
         document.getElementById("noDataMsg").style.display = 'block';
     }
     
-    updateDashboard(allData.slice(1)); // Keep dashboard showing all data or filtered? Usually Dashboard shows Realtime/All. Keeping All.
+    updateDashboard(allData.slice(1)); 
 }
 
 function getFloorName(l){
