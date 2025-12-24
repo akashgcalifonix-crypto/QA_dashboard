@@ -90,13 +90,41 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 .k-red .kpi-icon { background: #fef2f2; color: #ef4444; } .k-red:hover { border-color: #ef4444; }
 .k-purple .kpi-icon { background: #f5f3ff; color: #8b5cf6; } .k-purple:hover { border-color: #8b5cf6; }
 
-/* 4. Charts Section (Big Fonts) */
-.mgmt-chart-row { display: grid; grid-template-columns: 1fr; gap: 25px; margin-bottom: 30px; } /* Full width charts for readability */
+/* 4. Charts/Boxes Section */
+.mgmt-chart-row { display: grid; grid-template-columns: 1fr; gap: 25px; margin-bottom: 30px; } 
 .mgmt-card { background: white; border-radius: 18px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; }
 .mc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; }
 .mc-title { font-size: 20px; font-weight: 800; color: #334155; display: flex; align-items: center; gap: 10px; }
 
-/* 5. Tables (Big Fonts) */
+/* 5. NEW LINE CARD GRID STYLES */
+.line-box-container {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+    gap: 15px; 
+    max-height: 450px; 
+    overflow-y: auto; 
+    padding: 5px;
+}
+.line-card {
+    background: white; border-radius: 12px; padding: 15px 10px; text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;
+    transition: transform 0.2s; position: relative;
+    border-top-width: 6px; border-top-style: solid;
+}
+.line-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+/* Color coding for line cards */
+.lc-good { border-top-color: #10b981; } /* Green */
+.lc-avg { border-top-color: #f59e0b; }  /* Orange */
+.lc-bad { border-top-color: #ef4444; }  /* Red */
+
+.lc-title { font-size: 14px; font-weight: 700; color: #64748b; margin-bottom: 5px; text-transform: uppercase; }
+.lc-main-val { font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 5px; }
+.lc-sub-box { background: #f5f3ff; border-radius: 6px; padding: 4px; display: inline-block; }
+.lc-sub-lbl { font-size: 10px; font-weight: 600; color: #8b5cf6; text-transform: uppercase; }
+.lc-sub-val { font-size: 13px; font-weight: 700; color: #7c3aed; }
+
+/* 6. Tables (Big Fonts) */
 .mgmt-table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .mgmt-table th { text-align: left; padding: 15px; color: #64748b; font-weight: 700; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #e2e8f0; }
 .mgmt-table td { padding: 15px; color: #334155; font-weight: 600; border-bottom: 1px solid #f8fafc; }
@@ -105,10 +133,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 /* Progress Bars */
 .prog-track { width: 100%; height: 10px; background: #f1f5f9; border-radius: 10px; margin-top: 8px; overflow: hidden; }
 .prog-fill { height: 100%; border-radius: 10px; }
-
-/* Badges (Big) */
 .badge-rate { padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 800; background: #fef2f2; color: #ef4444; }
-.badge-rate.green { background: #ecfdf5; color: #10b981; }
 
 /* Double Column for Bottom */
 .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
@@ -171,7 +196,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 </div>
 
 <!-- ============================================== -->
-<!-- TAB 1: DASHBOARD (BIG FONTS + NEW CHART)       -->
+<!-- TAB 1: DASHBOARD (BIG FONTS + BOX GRID)        -->
 <!-- ============================================== -->
 <div id="dashboard" class="tab-content active">
     <div class="dash-container">
@@ -224,13 +249,16 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             </div>
         </div>
 
-        <!-- Charts (NEW LINE WISE CHART) -->
+        <!-- NO GRAPH - LINE WISE BOX GRID -->
         <div class="mgmt-chart-row">
             <div class="mgmt-card">
                 <div class="mc-header">
-                    <div class="mc-title"><i class="fa fa-chart-bar" style="color:#3b82f6;"></i> Line-wise FPY & Process Defect Rate</div>
+                    <div class="mc-title"><i class="fa fa-th-large" style="color:#3b82f6;"></i> Line Wise FPY & Process Rate</div>
                 </div>
-                <div id="d_line_combo" style="width:100%; height:300px;"></div>
+                <!-- Box Grid Container -->
+                <div id="line_performance_grid" class="line-box-container">
+                    <!-- Javascript will inject boxes here -->
+                </div>
             </div>
             <div class="mgmt-card">
                  <div class="mc-header">
@@ -415,7 +443,7 @@ function filterDashboard() {
     renderDashboardStats(dashRows);
 }
 
-// --- UPDATED DASHBOARD LOGIC (Line Chart & Big Fonts) ---
+// --- UPDATED DASHBOARD LOGIC (Line Boxes + Big Fonts) ---
 function renderDashboardStats(rows) {
     let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
     let defectMap = {};
@@ -478,38 +506,32 @@ function renderDashboardStats(rows) {
     });
     document.getElementById('d_defect_list').innerHTML = defHtml;
 
-    if(google && google.visualization && tInp > 0) {
+    // --- GENERATE LINE BOXES ---
+    let boxHtml = "";
+    Object.keys(lineData).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(l => {
+        let d = lineData[l];
+        let lFpy = d.inp > 0 ? (100 - (d.def/d.inp*100)).toFixed(1) : "-";
+        let lProcRate = d.inp > 0 ? (d.proc/d.inp*100).toFixed(2) + "%" : "-";
         
-        // 1. NEW CHART: Line-wise FPY & Process Rate
-        // Prepare Data
-        let chartArr = [['Line', 'FPY %', 'Process Defect Rate %']];
-        // Sort lines numerically
-        Object.keys(lineData).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(l => {
-            let d = lineData[l];
-            let lFpy = d.inp > 0 ? (100 - (d.def/d.inp*100)) : 0;
-            let lProcRate = d.inp > 0 ? (d.proc/d.inp*100) : 0;
-            chartArr.push(['L'+l, lFpy, lProcRate]);
-        });
+        let colorClass = "lc-good"; // Default Green
+        if(lFpy !== "-" && lFpy < 95) colorClass = "lc-bad";
+        else if(lFpy !== "-" && lFpy < 98) colorClass = "lc-avg";
+        
+        boxHtml += `
+        <div class="line-card ${colorClass}">
+            <div class="lc-title">L-${l}</div>
+            <div class="lc-main-val">${lFpy}%</div>
+            <div class="lc-sub-box">
+                <div class="lc-sub-lbl">Process Rate</div>
+                <div class="lc-sub-val">${lProcRate}</div>
+            </div>
+        </div>`;
+    });
+    document.getElementById('line_performance_grid').innerHTML = boxHtml || "<div style='text-align:center; padding:30px; color:#999;'>No Data</div>";
 
-        if(chartArr.length > 1) {
-            var comboData = google.visualization.arrayToDataTable(chartArr);
-            var comboOptions = {
-                seriesType: 'bars',
-                series: {1: {type: 'line', color: '#8b5cf6', lineWidth: 3}}, // Purple Line for Process Rate
-                colors: ['#10b981'], // Green for FPY
-                legend: { position: 'bottom' },
-                chartArea: {width:'85%', height:'75%'},
-                vAxes: {
-                    0: {title: 'FPY %', maxValue: 100},
-                    1: {title: 'Process Rate %', textStyle: {color: '#8b5cf6'}}
-                }
-            };
-            new google.visualization.ComboChart(document.getElementById('d_line_combo')).draw(comboData, comboOptions);
-        } else {
-             document.getElementById('d_line_combo').innerHTML = "<div style='text-align:center; padding:50px;'>No Line Data Available</div>";
-        }
-        
-        // 2. Bar Chart (Stage Rates against Input)
+
+    if(google && google.visualization && tInp > 0) {
+        // Bar Chart (Rates against Input)
         let rmdR = getRateVal(tRMD); let procR = getRateVal(tProc); let smtR = getRateVal(tSMT);
         var barData = google.visualization.arrayToDataTable([
             ['Stage', 'Defect Rate %', { role: 'style' }, { role: 'annotation' }], 
