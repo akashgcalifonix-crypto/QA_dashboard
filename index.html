@@ -131,6 +131,13 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 .pv-cause-action { background: #f1f5f9; padding: 8px; border-radius: 6px; font-size: 11px; color: #64748b; line-height: 1.5; }
 .pv-ca-label { font-weight: 600; color: #94a3b8; margin-right: 4px; }
 
+/* --- RECORD PREVIEW STYLES (NEW) --- */
+.rec-preview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+.rec-pre-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; text-align: center; border-bottom: 4px solid #cbd5e1; }
+.rpc-lbl { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+.rpc-val { font-size: 20px; font-weight: 800; color: #1e293b; }
+.c-blue { border-bottom-color: var(--ref-blue); } .c-red { border-bottom-color: var(--ref-red); } .c-green { border-bottom-color: var(--ref-green); } .c-purple { border-bottom-color: #8b5cf6; }
+
 @keyframes slideUp { from { transform: translate(-50%, -45%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
@@ -275,6 +282,15 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
                 <div class="form-group" style="flex:1; justify-content: flex-end;"><button onclick="applyFilters()" style="margin-bottom:5px;">Search</button></div>
             </div>
         </div>
+
+        <!-- NEW SEARCH PREVIEW SECTION -->
+        <div id="search_preview_summary" class="rec-preview-grid" style="display:none;">
+            <div class="rec-pre-card c-green"><div class="rpc-lbl">Average FPY</div><div class="rpc-val" id="rp_fpy">0%</div></div>
+            <div class="rec-pre-card c-red"><div class="rpc-lbl">Defect Rate</div><div class="rpc-val" id="rp_def">0%</div></div>
+            <div class="rec-pre-card c-blue"><div class="rpc-lbl">SMT Def. Rate</div><div class="rpc-val" id="rp_smt">0%</div></div>
+            <div class="rec-pre-card c-purple"><div class="rpc-lbl">RMD Def. Rate</div><div class="rpc-val" id="rp_rmd">0%</div></div>
+        </div>
+
         <div class="table-responsive">
             <table class="table"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table>
             <div id="noDataMsg" style="text-align:center; padding:30px; display:none; color:#64748b;">No records found.</div>
@@ -545,14 +561,48 @@ function applyFilters() {
     const dFrom = document.getElementById("date_from").value; const dTo = document.getElementById("date_to").value;
     const checkboxes = document.querySelectorAll('.line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
     const t = document.getElementById('tbody'); const h = document.getElementById('thead'); t.innerHTML = ""; h.innerHTML = ""; document.getElementById("noDataMsg").style.display = 'none';
+    
+    // Variables for calculation
+    let totalInp = 0, totalDef = 0, totalSMT = 0, totalRMD = 0;
+
     allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`); h.innerHTML += `<th>Floor</th><th>Action</th>`;
     filteredData = []; 
     allData.slice(1).forEach((r, index) => {
         let rDate = fixDate(r[0]); let rLine = r[2].toString(); let match = true;
         if(dFrom && rDate < dFrom) match = false; if(dTo && rDate > dTo) match = false; if(selectedLines.length > 0 && !selectedLines.includes(rLine)) match = false;
-        if(match) { filteredData.push(r); let tr = document.createElement("tr"); r.forEach((c, i) => { if(i===0) tr.innerHTML += `<td>${fixDate(c)}</td>`; else tr.innerHTML += `<td>${c||""}</td>`; }); tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`; tr.innerHTML += `<td><button onclick='showDetailedPreview(${JSON.stringify(r)})' style="margin-right:5px;">👁️</button> <button onclick='editRow(${index+1}, ${JSON.stringify(r)})' style="margin-right:5px;">✎</button> <button onclick="deleteRow(${index+1})" style="color:red;">🗑</button></td>`; t.appendChild(tr); }
+        if(match) { 
+            filteredData.push(r); 
+            // Add to totals
+            totalInp += (+r[4]||0);
+            totalDef += (+r[5]||0);
+            totalRMD += (+r[8]||0);
+            totalSMT += (+r[12]||0);
+
+            let tr = document.createElement("tr"); 
+            r.forEach((c, i) => { if(i===0) tr.innerHTML += `<td>${fixDate(c)}</td>`; else tr.innerHTML += `<td>${c||""}</td>`; }); 
+            tr.innerHTML += `<td><b>${getFloorName(r[2])}</b></td>`; 
+            tr.innerHTML += `<td><button onclick='showDetailedPreview(${JSON.stringify(r)})' style="margin-right:5px;">👁️</button> <button onclick='editRow(${index+1}, ${JSON.stringify(r)})' style="margin-right:5px;">✎</button> <button onclick="deleteRow(${index+1})" style="color:red;">🗑</button></td>`; 
+            t.appendChild(tr); 
+        }
     });
-    if(filteredData.length === 0) document.getElementById("noDataMsg").style.display = 'block';
+
+    // --- UPDATE PREVIEW SUMMARY ---
+    const summaryBox = document.getElementById("search_preview_summary");
+    if(filteredData.length > 0) {
+        summaryBox.style.display = 'grid';
+        let defRate = totalInp > 0 ? (totalDef/totalInp*100).toFixed(2) : 0;
+        let smtRate = totalInp > 0 ? (totalSMT/totalInp*100).toFixed(2) : 0;
+        let rmdRate = totalInp > 0 ? (totalRMD/totalInp*100).toFixed(2) : 0;
+        let fpyRate = (100 - defRate).toFixed(2);
+
+        document.getElementById("rp_fpy").innerText = fpyRate + "%";
+        document.getElementById("rp_def").innerText = defRate + "%";
+        document.getElementById("rp_smt").innerText = smtRate + "%";
+        document.getElementById("rp_rmd").innerText = rmdRate + "%";
+    } else {
+        summaryBox.style.display = 'none';
+        document.getElementById("noDataMsg").style.display = 'block';
+    }
 }
 
 async function deleteRow(i){ if(confirm("Delete?")){ await fetch(API, {method:'POST', body:JSON.stringify({action:'delete', rowIndex:i})}); load(); } }
