@@ -1,683 +1,558 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="utf-8">
-<title>PQC Executive Dashboard</title>
+<title>PQC Dashboard System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- FontAwesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<!-- Charts -->
+<!-- Google Charts -->
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
 <style>
-/* --- THEME CONFIGURATION --- */
+/* --- CORE STYLES (SAME AS ORIGINAL) --- */
 :root {
-    --primary: #4f46e5; /* Indigo */
-    --secondary: #6366f1;
-    --accent: #0ea5e9; /* Sky */
-    --bg-body: #f3f4f6;
-    --bg-card: #ffffff;
-    --text-main: #111827;
-    --text-muted: #6b7280;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --sidebar-width: 260px;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --glass: rgba(255, 255, 255, 0.95);
+    --primary: #2563eb;
+    --dark: #1e293b;
+    --bg: #f1f5f9;
+    --card-bg: #ffffff;
+    --ref-blue: #3b82f6;
+    --ref-red: #ef4444;
+    --ref-green: #10b981; 
 }
 
-* { box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: var(--bg-body); margin: 0; color: var(--text-main); height: 100vh; display: flex; overflow: hidden; }
+body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--dark); }
 
-/* --- SIDEBAR --- */
-.sidebar {
-    width: var(--sidebar-width); background: white; height: 100%; border-right: 1px solid #e5e7eb;
-    display: flex; flex-direction: column; padding: 20px; z-index: 10;
+/* --- HEADER --- */
+.header-box {
+    background: white; padding: 15px 25px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid var(--primary);
 }
-.logo-area { display: flex; align-items: center; gap: 10px; margin-bottom: 40px; }
-.logo-icon { width: 40px; height: 40px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
-.brand-text { font-size: 18px; font-weight: 800; color: #1f2937; letter-spacing: -0.5px; }
+.app-logo { height: 45px; }
+.app-title { font-size: 20px; font-weight: 700; margin-left: 15px; }
 
-.nav-links { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.nav-item {
-    padding: 12px 15px; border-radius: 10px; cursor: pointer; color: var(--text-muted); font-weight: 500;
-    transition: all 0.2s; display: flex; align-items: center; gap: 12px;
+/* --- TABS --- */
+.nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 25px auto; }
+.tab-btn {
+    padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer;
+    font-weight: 600; color: #64748b; background: transparent; transition: 0.3s;
 }
-.nav-item:hover { background: #f9fafb; color: var(--primary); }
-.nav-item.active { background: #eef2ff; color: var(--primary); font-weight: 700; box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1); }
-.nav-icon { width: 20px; text-align: center; }
+.tab-btn.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); }
+.tab-content { display: none; animation: fadeIn 0.4s; }
+.tab-content.active { display: block; }
+.card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
 
-.sb-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af; }
+/* =========================================
+   NEW DASHBOARD STYLES (IMPROVED)
+   ========================================= */
+.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.filter-group { display: flex; gap: 10px; align-items: center; }
+.d-date { padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
 
-/* --- MAIN CONTENT AREA --- */
-.main-content { flex: 1; overflow-y: auto; padding: 25px; position: relative; }
-.top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-.page-title h2 { margin: 0; font-size: 24px; font-weight: 700; }
-.page-title span { font-size: 13px; color: var(--text-muted); }
-.date-controls { display: flex; gap: 10px; background: white; padding: 8px; border-radius: 10px; box-shadow: var(--shadow); }
-.date-input { border: 1px solid #e5e7eb; padding: 8px; border-radius: 6px; font-family: inherit; font-size: 13px; outline: none; }
-.btn-primary { background: var(--primary); color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-.btn-primary:hover { background: #4338ca; }
-
-/* --- DASHBOARD GRIDS --- */
-.section-title { font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
-
-/* KPI Cards */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
-.kpi-card { background: white; padding: 20px; border-radius: 16px; box-shadow: var(--shadow); position: relative; overflow: hidden; border: 1px solid #f3f4f6; }
-.kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.kpi-icon { width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-.icon-blue { background: #e0e7ff; color: var(--primary); }
-.icon-green { background: #d1fae5; color: var(--success); }
-.icon-red { background: #fee2e2; color: var(--danger); }
-.icon-orange { background: #fef3c7; color: var(--warning); }
-.kpi-val { font-size: 28px; font-weight: 800; color: #111827; }
-.kpi-label { font-size: 13px; color: #6b7280; font-weight: 500; }
-.trend-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 5px; }
-.trend-up { background: #dcfce7; color: #166534; }
-.trend-down { background: #fee2e2; color: #991b1b; }
-
-/* Charts & Heatmap Row */
-.charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 30px; }
-.card-box { background: white; border-radius: 16px; padding: 20px; box-shadow: var(--shadow); height: 100%; display: flex; flex-direction: column; }
-.chart-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
-.ch-title { font-weight: 700; color: #374151; }
-#trend_chart, #pie_chart { flex: 1; width: 100%; min-height: 250px; }
-
-/* Heatmap Grid */
-.heatmap-container { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-.hm-box { 
-    aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; 
-    align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s;
-    background: #f3f4f6; border: 1px solid transparent;
+/* Modern KPI Cards */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
+.kpi-modern { 
+    background: white; padding: 20px; border-radius: 12px; position: relative; overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 4px solid transparent; transition: transform 0.2s;
 }
-.hm-box:hover { transform: scale(1.05); z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.hm-line { font-size: 10px; font-weight: 700; opacity: 0.7; }
-.hm-val { font-size: 14px; font-weight: 800; }
+.kpi-modern:hover { transform: translateY(-3px); }
+.kpi-icon { position: absolute; top: 15px; right: 15px; font-size: 24px; opacity: 0.2; }
+.kpi-label { font-size: 13px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-value { font-size: 28px; font-weight: 800; color: #1e293b; margin: 5px 0; }
+.kpi-sub { font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+
+/* Colors for KPI */
+.k-blue { border-bottom-color: #3b82f6; } .k-blue .kpi-icon { color: #3b82f6; }
+.k-green { border-bottom-color: #10b981; } .k-green .kpi-icon { color: #10b981; }
+.k-red { border-bottom-color: #ef4444; } .k-red .kpi-icon { color: #ef4444; }
+.k-purple { border-bottom-color: #8b5cf6; } .k-purple .kpi-icon { color: #8b5cf6; }
+
+/* Middle Section: Charts & Heatmap */
+.chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; }
+.dash-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+.dc-title { font-size: 15px; font-weight: 700; color: #334155; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; display: flex; justify-content: space-between; }
+#trend_chart, #pie_chart { width: 100%; min-height: 250px; }
+
+/* Line Heatmap Grid */
+.heatmap-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.hm-cell { 
+    background: #f8fafc; border-radius: 6px; padding: 10px 5px; text-align: center; 
+    border: 1px solid #e2e8f0; transition: 0.2s; cursor: pointer;
+}
+.hm-cell:hover { transform: scale(1.05); z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.hm-lbl { font-size: 10px; color: #64748b; font-weight: 700; }
+.hm-val { font-size: 12px; font-weight: 800; color: #333; }
 /* Heatmap Colors */
-.hm-good { background: #dcfce7; color: #14532d; border-color: #86efac; }
-.hm-warn { background: #fef9c3; color: #854d0e; border-color: #fde047; }
-.hm-bad { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.hm-ok { background: #dcfce7; border-color: #86efac; color: #166534; }
+.hm-warn { background: #fef9c3; border-color: #fde047; color: #854d0e; }
+.hm-err { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
 
-/* Bottom Row */
-.details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.table-slim { width: 100%; border-collapse: collapse; font-size: 13px; }
-.table-slim th { text-align: left; padding: 10px; color: #9ca3af; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #f3f4f6; }
-.table-slim td { padding: 12px 10px; border-bottom: 1px solid #f9fafb; color: #374151; font-weight: 500; }
-.progress-bg { background: #f3f4f6; height: 6px; border-radius: 3px; width: 60px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
-.progress-fill { height: 100%; border-radius: 3px; }
+/* Details Table Section */
+.details-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+.st-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.st-table th { text-align: left; padding: 10px; background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; }
+.st-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; color: #334155; font-weight: 500; }
+.prog-bar { height: 6px; background: #e2e8f0; border-radius: 3px; width: 100%; overflow: hidden; margin-top: 5px; }
+.prog-fill { height: 100%; border-radius: 3px; }
 
-/* --- DATA ENTRY STYLES --- */
-.entry-container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: var(--shadow); }
-.entry-section { margin-bottom: 30px; border-bottom: 1px solid #f3f4f6; padding-bottom: 20px; }
-.entry-section:last-child { border-bottom: none; }
-.es-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
-.f-group { display: flex; flex-direction: column; gap: 6px; }
-.f-group label { font-size: 12px; font-weight: 600; color: #4b5563; }
-.f-input { padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-family: 'Inter'; outline: none; transition: 0.2s; }
-.f-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-.f-readonly { background: #f9fafb; font-weight: 700; color: #374151; }
-
-/* --- RECORDS TABLE --- */
-.records-toolbar { display: flex; gap: 15px; flex-wrap: wrap; background: white; padding: 15px; border-radius: 12px; margin-bottom: 20px; align-items: flex-end; }
-.table-wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
-.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.data-table th { background: #f8fafc; padding: 15px; text-align: left; font-weight: 600; color: #4b5563; border-bottom: 1px solid #e5e7eb; white-space: nowrap;}
-.data-table td { padding: 12px 15px; border-bottom: 1px solid #f3f4f6; color: #1f2937; }
-.status-pill { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.sp-good { background: #dcfce7; color: #166534; }
-.sp-bad { background: #fee2e2; color: #991b1b; }
-.action-btn { border: none; background: #f3f4f6; padding: 6px 10px; border-radius: 6px; cursor: pointer; color: #6b7280; transition: 0.2s; }
-.action-btn:hover { background: var(--primary); color: white; }
-
-/* --- MODAL --- */
-.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 99; }
-.modal-box { 
-    display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-    width: 90%; max-width: 800px; background: white; border-radius: 16px; z-index: 100;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); overflow: hidden; max-height: 90vh; overflow-y: auto;
-}
-.modal-header { background: #1f2937; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-.modal-body { padding: 30px; }
-.report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-.rep-item { background: #f9fafb; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #e5e7eb; }
-.rep-lbl { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 700; }
-.rep-val { font-size: 16px; font-weight: 700; color: #111827; margin-top: 5px; }
-
-/* Responsive */
-@media (max-width: 768px) {
-    body { flex-direction: column; overflow: auto; }
-    .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px; overflow-x: auto; }
-    .nav-links { flex-direction: row; }
-    .main-content { padding: 15px; }
-    .charts-grid, .details-grid, .entry-container { grid-template-columns: 1fr; }
-    .heatmap-container { grid-template-columns: repeat(4, 1fr); }
+/* Responsive adjustments */
+@media(max-width: 900px) {
+    .chart-grid, .details-grid { grid-template-columns: 1fr; }
+    .heatmap-grid { grid-template-columns: repeat(6, 1fr); }
 }
 
-/* Animations */
-.fade-in { animation: fadeIn 0.4s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.hidden { display: none; }
+/* =========================================
+   ORIGINAL FORMS & RECORDS STYLES (UNCHANGED)
+   ========================================= */
+.form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+.form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
+input, select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: 'Poppins'; outline: none; }
+button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; background: var(--primary); color: white; transition: 0.2s; }
+.table-responsive { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
+.table th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; }
+.table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+
+/* Modal & Preview styles (Kept same) */
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 999; }
+.modal-lg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 1000px; background: #fff; border-radius: 8px; z-index: 1000; box-shadow: 0 25px 50px rgba(0,0,0,0.4); overflow: hidden; animation: slideUp 0.3s; }
+.pv-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+.pv-body { padding: 20px; max-height: 80vh; overflow-y: auto; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translate(-50%, -45%); opacity: 0; } to { transform: translate(-50%, -50%); opacity: 1; } }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-    <div class="logo-area">
-        <div class="logo-icon"><i class="fa fa-chart-line"></i></div>
-        <div class="brand-text">PQC Monitor<br><span style="font-size:11px; font-weight:400; color:#6b7280;">Manager Edition</span></div>
+<!-- HEADER (ORIGINAL) -->
+<div class="header-box">
+    <div style="display:flex; align-items:center;">
+        <img id="mainLogo" src="" class="app-logo"> 
+        <div class="app-title">PQC System</div>
     </div>
-    <ul class="nav-links">
-        <li class="nav-item active" onclick="nav('dashboard', this)">
-            <div class="nav-icon"><i class="fa fa-th-large"></i></div> Dashboard
-        </li>
-        <li class="nav-item" onclick="nav('entry', this)">
-            <div class="nav-icon"><i class="fa fa-pen-to-square"></i></div> Data Entry
-        </li>
-        <li class="nav-item" onclick="nav('records', this)">
-            <div class="nav-icon"><i class="fa fa-folder-open"></i></div> Records DB
-        </li>
-    </ul>
-    <div class="sb-footer">
-        <i class="fa fa-server"></i> System Status: Online<br>
-        v2.5.0 Updated
-    </div>
+    <div style="font-size:12px; color:#64748b; font-weight:600;">Date: <span id="curDate"></span></div>
 </div>
 
-<!-- MAIN CONTENT -->
-<div class="main-content">
+<!-- TABS (ORIGINAL) -->
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('entry')">📝 Data Entry</button>
+    <button class="tab-btn" onclick="switchTab('report')">📂 Records</button>
+</div>
+
+<!-- =========================================
+     TAB 1: IMPROVED DASHBOARD
+     ========================================= -->
+<div id="dashboard" class="tab-content active">
     
-    <!-- DASHBOARD TAB -->
-    <div id="dashboard" class="view-section fade-in">
-        <div class="top-header">
-            <div class="page-title">
-                <h2>Production Overview</h2>
-                <span>Real-time quality control analytics</span>
-            </div>
-            <div class="date-controls">
-                <input type="date" id="dash_from" class="date-input">
-                <span style="align-self:center; font-size:12px; color:#aaa;">to</span>
-                <input type="date" id="dash_to" class="date-input">
-                <button class="btn-primary" onclick="loadDashboard()">Update</button>
-            </div>
-        </div>
-
-        <!-- 1. KPI CARDS -->
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-head"><span class="kpi-label">TOTAL PRODUCTION</span><div class="kpi-icon icon-blue"><i class="fa fa-cubes"></i></div></div>
-                <div class="kpi-val" id="k_inp">0</div>
-                <div class="trend-badge trend-up"><i class="fa fa-arrow-up"></i> High Volume</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-head"><span class="kpi-label">FIRST PASS YIELD</span><div class="kpi-icon icon-green"><i class="fa fa-check-circle"></i></div></div>
-                <div class="kpi-val" id="k_fpy">--%</div>
-                <div class="trend-badge" id="fpy_badge">Target: 98%</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-head"><span class="kpi-label">TOTAL DEFECTS</span><div class="kpi-icon icon-red"><i class="fa fa-bug"></i></div></div>
-                <div class="kpi-val" id="k_def">0</div>
-                <div class="kpi-label" style="font-size:12px; margin-top:5px;">Rejection Rate: <span id="k_rej" style="color:var(--danger); font-weight:700;">0%</span></div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-head"><span class="kpi-label">SMT FALLOUT</span><div class="kpi-icon icon-orange"><i class="fa fa-microchip"></i></div></div>
-                <div class="kpi-val" id="k_smt">0%</div>
-                <div class="kpi-label" style="font-size:12px;">Contribution to Defect</div>
-            </div>
-        </div>
-
-        <!-- 2. CHARTS & HEATMAP -->
-        <div class="charts-grid">
-            <div class="card-box">
-                <div class="chart-header">
-                    <div class="ch-title">Line Performance Heatmap (L1-L24)</div>
-                    <div style="font-size:11px; color:#6b7280; display:flex; gap:10px;">
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:8px; height:8px; background:#dcfce7; border-radius:50%;"></div> >98%</span>
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:8px; height:8px; background:#fef9c3; border-radius:50%;"></div> 95-98%</span>
-                        <span style="display:flex; align-items:center; gap:4px;"><div style="width:8px; height:8px; background:#fee2e2; border-radius:50%;"></div> <95%</span>
-                    </div>
-                </div>
-                <div id="line_heatmap" class="heatmap-container">
-                    <!-- Heatmap Generated via JS -->
-                </div>
-            </div>
-            <div class="card-box">
-                <div class="ch-title">Defect Distribution</div>
-                <div id="pie_chart"></div>
-            </div>
-        </div>
-
-        <!-- 3. DETAILED STATS -->
-        <div class="details-grid">
-            <div class="card-box">
-                <div class="ch-title">7-Day FPY Trend</div>
-                <div id="trend_chart"></div>
-            </div>
-            <div class="card-box">
-                <div class="ch-title">Top 5 Defects (Action Items)</div>
-                <table class="table-slim">
-                    <thead><tr><th>Defect Name</th><th>Qty</th><th>%</th></tr></thead>
-                    <tbody id="top_defect_body"></tbody>
-                </table>
-            </div>
+    <!-- 1. Controls -->
+    <div class="dash-header">
+        <h3 style="margin:0; color:#333;">Executive Overview</h3>
+        <div class="filter-group">
+            <span style="font-size:12px; font-weight:600; color:#64748b;">From:</span>
+            <input type="date" id="dash_from" class="d-date">
+            <span style="font-size:12px; font-weight:600; color:#64748b;">To:</span>
+            <input type="date" id="dash_to" class="d-date">
+            <button onclick="filterDashboard()" style="padding:8px 20px; font-size:13px;">Update</button>
         </div>
     </div>
 
-    <!-- DATA ENTRY TAB -->
-    <div id="entry" class="view-section fade-in hidden">
-        <div class="top-header">
-            <div class="page-title"><h2>New Inspection Record</h2><span>Enter PQC data for shift verification</span></div>
-            <button class="btn-primary" onclick="resetForm()" style="background:#6b7280;"><i class="fa fa-eraser"></i> Clear Form</button>
+    <!-- 2. Modern KPIs -->
+    <div class="kpi-row">
+        <div class="kpi-modern k-blue">
+            <i class="fa fa-cubes kpi-icon"></i>
+            <div class="kpi-label">Total Input</div>
+            <div class="kpi-value" id="d_inp">0</div>
+            <div class="kpi-sub" style="color:#3b82f6;"><i class="fa fa-check-circle"></i> Production</div>
+        </div>
+        <div class="kpi-modern k-green">
+            <i class="fa fa-percent kpi-icon"></i>
+            <div class="kpi-label">Avg FPY Rate</div>
+            <div class="kpi-value" id="d_fpy">0%</div>
+            <div class="kpi-sub" id="fpy_status">--</div>
+        </div>
+        <div class="kpi-modern k-red">
+            <i class="fa fa-bug kpi-icon"></i>
+            <div class="kpi-label">Total Defects</div>
+            <div class="kpi-value" id="d_def">0</div>
+            <div class="kpi-sub" style="color:#ef4444;"><span id="d_rej">0%</span> Rejection Rate</div>
+        </div>
+        <div class="kpi-modern k-purple">
+            <i class="fa fa-layer-group kpi-icon"></i>
+            <div class="kpi-label">SMT Contribution</div>
+            <div class="kpi-value" id="d_smt_cont">0%</div>
+            <div class="kpi-sub">of total defects</div>
+        </div>
+    </div>
+
+    <!-- 3. Charts & Heatmap -->
+    <div class="chart-grid">
+        <!-- Main Chart -->
+        <div class="dash-card">
+            <div class="dc-title">
+                <span>Production Trend (Last 7 Days)</span>
+                <i class="fa fa-chart-line" style="color:#ccc;"></i>
+            </div>
+            <div id="trend_chart"></div>
         </div>
         
-        <div class="entry-container">
-            <!-- Basic Info -->
-            <div class="entry-section">
-                <div class="es-title"><i class="fa fa-info-circle"></i> Production Info</div>
-                <div class="form-grid">
-                    <div class="f-group"><label>Date</label><input type="date" id="f_date" class="f-input"></div>
-                    <div class="f-group"><label>Shift</label><select id="f_shift" class="f-input"><option>A</option><option>B</option><option>C</option></select></div>
-                    <div class="f-group"><label>Line No</label><select id="f_line" class="f-input"></select></div> <!-- Filled by JS -->
-                    <div class="f-group"><label>Model</label><input id="f_model" class="f-input" placeholder="e.g. Buds Air 5"></div>
-                    <div class="f-group"><label>Inspector</label><input id="f_prep" class="f-input" placeholder="Your Name"></div>
-                </div>
+        <!-- Heatmap / Line Status -->
+        <div class="dash-card">
+            <div class="dc-title">
+                <span>Line Performance (L1-L24)</span>
+                <span style="font-size:11px; font-weight:400; color:#666;">Green > 98%</span>
             </div>
-
-            <!-- Counts -->
-            <div class="entry-section">
-                <div class="es-title"><i class="fa fa-calculator"></i> Quantity Analysis</div>
-                <div class="form-grid">
-                    <div class="f-group"><label>Input Qty</label><input type="number" id="f_input" class="f-input" oninput="calc()"></div>
-                    <div class="f-group"><label>Defect Qty</label><input type="number" id="f_def" class="f-input" oninput="calc()"></div>
-                    <div class="f-group"><label>FPY %</label><input id="f_fpy" class="f-input f-readonly" readonly></div>
-                    <div class="f-group"><label>Rej %</label><input id="f_rej" class="f-input f-readonly" readonly></div>
-                </div>
-                <div class="form-grid" style="margin-top:15px; background:#f9fafb; padding:15px; border-radius:8px;">
-                     <div class="f-group"><label>RMD Rej</label><input type="number" id="rmd" class="f-input" placeholder="Qty"></div>
-                     <div class="f-group"><label>Process Rej</label><input type="number" id="proc" class="f-input" placeholder="Qty"></div>
-                     <div class="f-group"><label>SMT Rej</label><input type="number" id="smt" class="f-input" placeholder="Qty"></div>
-                </div>
+            <div id="line_heatmap" class="heatmap-grid">
+                <!-- Javascript will fill this -->
             </div>
-
-            <!-- Defects -->
-            <div class="entry-section">
-                <div class="es-title"><i class="fa fa-list-ul"></i> Top Defects</div>
-                <datalist id="def_list">
-                    <option value="Mic Fail"><option value="Speaker Fail"><option value="Charging Issue"><option value="Cosmetic"><option value="Software">
-                </datalist>
-                <div style="display:grid; gap:10px;">
-                    <div style="display:flex; gap:10px;">
-                        <input id="d1" class="f-input" list="def_list" placeholder="Defect 1 Name" style="flex:2">
-                        <input id="q1" type="number" class="f-input" placeholder="Qty" style="flex:1">
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <input id="d2" class="f-input" list="def_list" placeholder="Defect 2 Name" style="flex:2">
-                        <input id="q2" type="number" class="f-input" placeholder="Qty" style="flex:1">
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <input id="d3" class="f-input" list="def_list" placeholder="Defect 3 Name" style="flex:2">
-                        <input id="q3" type="number" class="f-input" placeholder="Qty" style="flex:1">
-                    </div>
-                </div>
+            <div style="margin-top:15px; height:150px;">
+                <div class="dc-title" style="border:none; margin-bottom:5px; font-size:13px;">Defect Split</div>
+                <div id="pie_chart" style="height:100%;"></div>
             </div>
-
-            <button class="btn-primary" id="saveBtn" style="width:100%; padding:15px; font-size:16px;" onclick="saveData()">SUBMIT RECORD</button>
         </div>
     </div>
 
-    <!-- RECORDS TAB -->
-    <div id="records" class="view-section fade-in hidden">
-         <div class="top-header">
-            <div class="page-title"><h2>Records Database</h2><span>Search and audit past inspections</span></div>
+    <!-- 4. Details Tables -->
+    <div class="details-grid">
+        <div class="dash-card">
+            <div class="dc-title">Top 5 Defect Analysis</div>
+            <table class="st-table">
+                <thead><tr><th>Defect Name</th><th>Qty</th><th>Impact</th></tr></thead>
+                <tbody id="d_defect_list"></tbody>
+            </table>
         </div>
-        
-        <div class="records-toolbar">
-            <div class="f-group"><label>From</label><input type="date" id="s_from" class="date-input"></div>
-            <div class="f-group"><label>To</label><input type="date" id="s_to" class="date-input"></div>
-            <div class="f-group" style="flex:1;"><label>Filter by Model</label><input id="s_model" class="date-input" placeholder="All Models"></div>
-            <button class="btn-primary" onclick="filterRecords()"><i class="fa fa-search"></i> Search</button>
-            <button class="btn-primary" onclick="exportCSV()" style="background:#10b981;"><i class="fa fa-file-csv"></i> Export</button>
-        </div>
-
-        <div class="table-wrapper">
-            <div style="overflow-x:auto;">
-                <table class="data-table">
-                    <thead>
-                        <tr><th>Date</th><th>Line</th><th>Model</th><th>Input</th><th>Defect</th><th>FPY %</th><th>Status</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="rec_body"></tbody>
-                </table>
-            </div>
-            <div id="no_data" style="padding:40px; text-align:center; color:#9ca3af; display:none;">No records found matching filters.</div>
+        <div class="dash-card">
+            <div class="dc-title">Stage Bifurcation</div>
+            <table class="st-table">
+                <thead><tr><th>Stage</th><th>Defect Qty</th><th>Share %</th></tr></thead>
+                <tbody id="d_process_body"></tbody>
+            </table>
         </div>
     </div>
-
 </div>
 
-<!-- PREVIEW MODAL -->
-<div class="modal-overlay" id="overlay"></div>
-<div class="modal-box" id="pv_modal">
-    <div class="modal-header">
-        <span style="font-weight:700; font-size:18px;">INSPECTION REPORT</span>
-        <button onclick="closeModal()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">&times;</button>
+<!-- =========================================
+     TAB 2: DATA ENTRY (ORIGINAL)
+     ========================================= -->
+<div id="entry" class="tab-content">
+    <div class="card" id="entryForm">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <h3>📝 New PQC Entry</h3>
+            <button onclick="resetForm()" style="background:#94a3b8; font-size:12px;">Clear</button>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
+            <div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
+            <div class="form-group"><label>Line No</label><input type="number" id="f_line" placeholder="1-24"></div>
+            <div class="form-group"><label>Model</label><input id="f_model" placeholder="Enter Model"></div>
+            <div class="form-group"><label>Input Qty</label><input id="f_input" type="number" oninput="autoCalc()"></div>
+            <div class="form-group"><label>Defect Qty</label><input id="f_def" type="number" oninput="autoCalc()"></div>
+            <div class="form-group"><label>Rej %</label><input id="f_rej" readonly></div>
+            <div class="form-group"><label>FPY %</label><input id="f_fpy" readonly style="font-weight:700; color:#10b981;"></div>
+        </div>
+        <h4>Detailed Bifurcation</h4>
+        <div class="form-row">
+            <div class="form-group"><label>RMD Qty</label><input id="rmd" type="number" oninput="autoCalc()"></div>
+            <div class="form-group"><label>RMD %</label><input id="rmd_r" readonly></div>
+            <div class="form-group"><label>Process Qty</label><input id="proc" type="number" oninput="autoCalc()"></div>
+            <div class="form-group"><label>Process %</label><input id="proc_r" readonly></div>
+            <div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
+            <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
+        </div>
+        <h4>Top 3 Defects</h4>
+        <datalist id="defect_list">
+            <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
+        </datalist>
+        <div class="form-row">
+            <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Cause" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Cause" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Cause" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
+        </div>
+        <div class="form-row" style="margin-top:20px;">
+            <div class="form-group"><label>Prepared By</label><input id="prep" placeholder="Enter Name"></div>
+            <button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:23px; height:45px;">SAVE RECORD</button>
+        </div>
     </div>
-    <div class="modal-body" id="pv_content"></div>
+</div>
+
+<!-- =========================================
+     TAB 3: RECORDS (ORIGINAL)
+     ========================================= -->
+<div id="report" class="tab-content">
+    <div class="card">
+        <h3>📂 Recorded Database</h3>
+        <div style="background:#f1f5f9; padding:15px; border-radius:10px; margin-bottom:20px;">
+            <div class="form-row">
+                <div class="form-group" style="max-width: 140px;"><label>From</label><input type="date" id="date_from"></div>
+                <div class="form-group" style="max-width: 140px;"><label>To</label><input type="date" id="date_to"></div>
+                <div class="form-group" style="flex:2;"><label>Lines</label><div id="lineSelectBox" style="border:1px solid #cbd5e1; background:white; height:42px; overflow-y:auto; padding:5px; border-radius:8px;"></div></div>
+                <div class="form-group" style="flex:1; justify-content: flex-end;"><button onclick="applyFilters()" style="margin-bottom:5px;">Search</button></div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table>
+            <div id="noDataMsg" style="text-align:center; padding:30px; display:none; color:#64748b;">No records found.</div>
+        </div>
+    </div>
+</div>
+
+<!-- PREVIEW MODAL (KEPT SAME) -->
+<div class="overlay" id="overlay"></div>
+<div class="modal-lg" id="previewModal">
+  <div class="pv-header">
+      <div style="font-size:20px; font-weight:700;">INSPECTION REPORT</div>
+      <button onclick="closeModal()" style="border:none; background:none; font-size:20px;">✕</button>
+  </div>
+  <div class="pv-body" id="previewContent"></div>
 </div>
 
 <script>
-// API CONFIG
-const API_URL = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
+// --- CONFIGURATION ---
+const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
+const LOGO_URL = "https://i.postimg.cc/kRSbTd6w/logo.png"; 
 
-// GLOBAL STATE
-let rawData = [];
-let editIndex = null;
+document.getElementById('mainLogo').src = LOGO_URL;
+document.getElementById('curDate').innerText = new Date().toLocaleDateString('en-IN');
 google.charts.load('current', {'packages':['corechart', 'line']});
 
-// INIT
-window.onload = function() {
-    setupDates();
-    generateHeatmapGrid();
-    populateLineSelect();
-    fetchData();
-}
+let allData = []; let editingRowIndex = null;
 
-function nav(id, el) {
-    document.querySelectorAll('.view-section').forEach(d => d.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    el.classList.add('active');
-    if(id === 'dashboard') loadDashboard();
-    if(id === 'records') filterRecords();
-}
-
-function setupDates(){
-    const d = new Date().toISOString().slice(0,10);
-    const dStart = new Date(); dStart.setDate(1);
-    document.getElementById('dash_to').value = d;
-    document.getElementById('dash_from').value = dStart.toISOString().slice(0,10);
-    document.getElementById('s_to').value = d;
-    document.getElementById('s_from').value = dStart.toISOString().slice(0,10);
-    document.getElementById('f_date').value = d;
-}
-
-function generateHeatmapGrid(){
-    const c = document.getElementById('line_heatmap');
-    let h = "";
-    for(let i=1; i<=24; i++){
-        h += `<div class="hm-box" id="hm_L${i}">
-                <div class="hm-line">L${i}</div>
-                <div class="hm-val" id="hm_v_L${i}">-</div>
-              </div>`;
-    }
-    c.innerHTML = h;
-}
-
-function populateLineSelect(){
-    const s = document.getElementById('f_line');
-    for(let i=1; i<=24; i++) { let o = document.createElement('option'); o.value=i; o.text=`Line ${i}`; s.appendChild(o); }
-}
-
-async function fetchData(){
-    try {
-        let res = await fetch(API_URL);
-        let json = await res.json();
-        rawData = json.rows.slice(1); // Remove header
-        loadDashboard();
-    } catch(e) { console.error(e); }
-}
-
-// --- DASHBOARD LOGIC ---
-function loadDashboard(){
-    if(!rawData.length) return;
-    const from = document.getElementById('dash_from').value;
-    const to = document.getElementById('dash_to').value;
+function init() {
+    const box = document.getElementById('lineSelectBox');
+    let html = '<div style="display:flex; gap:10px; flex-wrap:wrap;">';
+    for(let i=1; i<=24; i++){ html += `<label style="font-size:11px; display:flex; align-items:center; gap:3px;"><input type="checkbox" value="${i}" class="line-chk"> L${i}</label>`; }
+    html += '</div>'; box.innerHTML = html;
     
-    // Filter Data
-    const data = rawData.filter(r => {
-        let d = fixDate(r[0]);
-        return d >= from && d <= to;
+    // Set Dashboard Dates to current month
+    const today = new Date(); 
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    document.getElementById('dash_from').value = firstDay.toISOString().slice(0,10);
+    document.getElementById('dash_to').value = today.toISOString().slice(0,10);
+}
+init();
+
+function fixDate(dateValue) {
+    if (!dateValue) return "";
+    if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) return dateValue;
+    let d = new Date(dateValue); if (isNaN(d.getTime())) return dateValue;
+    return d.toLocaleDateString('en-CA');
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if(tabId==='dashboard') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    if(tabId==='entry') document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    if(tabId==='report') document.querySelectorAll('.tab-btn')[2].classList.add('active');
+    if(tabId==='dashboard') filterDashboard();
+}
+
+// ===============================================
+// IMPROVED DASHBOARD LOGIC
+// ===============================================
+function filterDashboard() {
+    if(!allData || allData.length === 0) return;
+    const dFrom = document.getElementById('dash_from').value;
+    const dTo = document.getElementById('dash_to').value;
+    let dashRows = allData.slice(1).filter(r => {
+        let rDate = fixDate(r[0]);
+        return rDate >= dFrom && rDate <= dTo;
     });
+    renderDashboardStats(dashRows);
+}
 
-    // 1. Calc Totals
-    let tInp=0, tDef=0, tSmt=0;
+function renderDashboardStats(rows) {
+    let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
     let defectMap = {};
-    let lineStats = {}; // { 1: {inp:100, def:2}, 2: ... }
+    let lineStats = {}; // To store line wise fpy
 
-    data.forEach(r => {
-        let inp = +r[4]||0; let def = +r[5]||0; let smt = +r[12]||0; let line = r[2];
-        tInp += inp; tDef += def; tSmt += smt;
+    rows.forEach(r => {
+        let inp = (+r[4]||0); let def = (+r[5]||0); let ln = parseInt(r[2]);
+        tInp += inp; tDef += def;
+        tRMD += (+r[8]||0); tProc += (+r[10]||0); tSMT += (+r[12]||0);
         
         // Defect Aggregation
-        [[14,15], [18,19], [22,23]].forEach(idx => {
-            if(r[idx[0]]) defectMap[r[idx[0]]] = (defectMap[r[idx[0]]]||0) + (+r[idx[1]]||0);
-        });
+        if(r[14]) defectMap[r[14]] = (defectMap[r[14]]||0) + (+r[15]||0);
+        if(r[18]) defectMap[r[18]] = (defectMap[r[18]]||0) + (+r[19]||0);
+        if(r[22]) defectMap[r[22]] = (defectMap[r[22]]||0) + (+r[23]||0);
 
-        // Line Aggregation
-        if(!lineStats[line]) lineStats[line] = {inp:0, def:0};
-        lineStats[line].inp += inp; lineStats[line].def += def;
+        // Line Stats for Heatmap
+        if(!lineStats[ln]) lineStats[ln] = {inp:0, def:0};
+        lineStats[ln].inp += inp; lineStats[ln].def += def;
     });
 
-    // 2. Update KPI Cards
-    document.getElementById('k_inp').innerText = tInp.toLocaleString();
-    document.getElementById('k_def').innerText = tDef.toLocaleString();
-    let fpy = tInp ? (100 - (tDef/tInp*100)).toFixed(2) : "100.00";
-    let smtRate = tInp ? (tSmt/tInp*100).toFixed(2) : "0.00";
-    document.getElementById('k_fpy').innerText = fpy + "%";
-    document.getElementById('k_rej').innerText = (100-fpy).toFixed(2) + "%";
-    document.getElementById('k_smt').innerText = smtRate + "%";
+    // 1. Update KPIs
+    let avgFpy = tInp > 0 ? (100 - (tDef/tInp*100)).toFixed(2) : "0.00";
+    let avgRej = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "0.00";
+    let smtCont = tDef > 0 ? (tSMT/tDef*100).toFixed(1) : "0.0";
 
-    // Style FPY Badge
-    const b = document.getElementById('fpy_badge');
-    if(fpy >= 98) { b.className="trend-badge trend-up"; b.innerHTML="<i class='fa fa-check'></i> On Target"; }
-    else { b.className="trend-badge trend-down"; b.innerHTML="<i class='fa fa-exclamation'></i> Below Target"; }
+    document.getElementById('d_inp').innerText = tInp.toLocaleString();
+    document.getElementById('d_def').innerText = tDef.toLocaleString();
+    document.getElementById('d_fpy').innerText = avgFpy + "%";
+    document.getElementById('d_rej').innerText = avgRej + "%";
+    document.getElementById('d_smt_cont').innerText = smtCont + "%";
+    
+    // Status text for FPY
+    let fpyEl = document.getElementById('fpy_status');
+    if(avgFpy >= 98) { fpyEl.innerHTML = '<span style="color:#10b981"><i class="fa fa-arrow-up"></i> Good</span>'; }
+    else if(avgFpy >= 95) { fpyEl.innerHTML = '<span style="color:#f59e0b"><i class="fa fa-minus"></i> Average</span>'; }
+    else { fpyEl.innerHTML = '<span style="color:#ef4444"><i class="fa fa-arrow-down"></i> Critical</span>'; }
 
-    // 3. Update Heatmap
+    // 2. Heatmap Generation
+    let hmHtml = "";
     for(let i=1; i<=24; i++){
-        const el = document.getElementById(`hm_L${i}`);
-        const valEl = document.getElementById(`hm_v_L${i}`);
-        if(lineStats[i] && lineStats[i].inp > 0) {
-            let lfpy = (100 - (lineStats[i].def / lineStats[i].inp * 100)).toFixed(1);
-            valEl.innerText = lfpy + "%";
-            el.className = "hm-box " + (lfpy >= 98 ? 'hm-good' : (lfpy >= 95 ? 'hm-warn' : 'hm-bad'));
-        } else {
-            valEl.innerText = "-"; el.className = "hm-box";
+        let lFpy = "-"; let cls = "hm-cell";
+        if(lineStats[i] && lineStats[i].inp > 0){
+            let val = (100 - (lineStats[i].def/lineStats[i].inp*100)).toFixed(1);
+            lFpy = val + "%";
+            if(val >= 98) cls += " hm-ok";
+            else if(val >= 95) cls += " hm-warn";
+            else cls += " hm-err";
         }
+        hmHtml += `<div class="${cls}"><div class="hm-lbl">L${i}</div><div class="hm-val">${lFpy}</div></div>`;
     }
+    document.getElementById('line_heatmap').innerHTML = hmHtml;
 
-    // 4. Update Charts
-    if(google.visualization){
-        // Pie Chart
-        let pieDt = google.visualization.arrayToDataTable([['Type','Qty'], ['Good', tInp-tDef], ['Defect', tDef]]);
-        new google.visualization.PieChart(document.getElementById('pie_chart')).draw(pieDt, {
-            colors: ['#10b981', '#ef4444'], pieHole: 0.4, chartArea:{width:'90%', height:'80%'}, legend: 'bottom'
-        });
+    // 3. Tables
+    let breakdownTotal = tRMD + tProc + tSMT;
+    const getCont = (v) => breakdownTotal > 0 ? (v/breakdownTotal*100).toFixed(1)+"%" : "0%";
+    const getBar = (v) => breakdownTotal > 0 ? (v/breakdownTotal*100).toFixed(0)+"%" : "0%";
+    
+    document.getElementById('d_process_body').innerHTML = `
+        <tr><td>RMD</td><td>${tRMD}</td><td><div class="prog-bar"><div class="prog-fill" style="width:${getBar(tRMD)}; background:#3b82f6;"></div></div>${getCont(tRMD)}</td></tr>
+        <tr><td>Process</td><td>${tProc}</td><td><div class="prog-bar"><div class="prog-fill" style="width:${getBar(tProc)}; background:#8b5cf6;"></div></div>${getCont(tProc)}</td></tr>
+        <tr><td>SMT</td><td>${tSMT}</td><td><div class="prog-bar"><div class="prog-fill" style="width:${getBar(tSMT)}; background:#f59e0b;"></div></div>${getCont(tSMT)}</td></tr>
+    `;
 
-        // Trend Chart (Simulated 7 Day) - Real implementation would group by date
-        // For demo, creating simple mock trend based on filtered aggregate
-        let trendData = [['Day', 'FPY']];
-        let dateMap = {};
-        data.forEach(r => { 
-            let d = fixDate(r[0]); 
-            if(!dateMap[d]) dateMap[d] = {i:0, d:0};
-            dateMap[d].i += (+r[4]); dateMap[d].d += (+r[5]);
-        });
-        Object.keys(dateMap).sort().slice(-7).forEach(d => {
-            let dayFpy = dateMap[d].i ? (100 - (dateMap[d].d/dateMap[d].i*100)) : 100;
-            trendData.push([d.slice(5), dayFpy]);
-        });
-        if(trendData.length > 1) {
-            let lineDt = google.visualization.arrayToDataTable(trendData);
-            new google.visualization.LineChart(document.getElementById('trend_chart')).draw(lineDt, {
-                legend: 'none', curveType: 'function', colors:['#4f46e5'], vAxis: {minValue: 90, format:'#'}, chartArea:{width:'85%', height:'80%'}
-            });
-        }
-    }
-
-    // 5. Top Defects
     let sortedDefs = Object.entries(defectMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    let tbh = "";
-    sortedDefs.forEach(d => {
-        let pct = tDef ? (d[1]/tDef*100).toFixed(1) : 0;
-        let color = pct > 20 ? '#ef4444' : '#6366f1';
-        tbh += `<tr>
-            <td>${d[0]}</td>
-            <td>${d[1]}</td>
-            <td><div class="progress-bg"><div class="progress-fill" style="width:${pct}%; background:${color}"></div></div> ${pct}%</td>
-        </tr>`;
+    let defHtml = "";
+    sortedDefs.forEach(d => { 
+        let impact = tDef > 0 ? (d[1]/tDef*100).toFixed(1) : 0;
+        let col = impact > 20 ? '#ef4444' : '#64748b';
+        defHtml += `<tr><td>${d[0]}</td><td style="font-weight:700;">${d[1]}</td><td><span style="color:${col}; font-weight:600;">${impact}%</span></td></tr>`; 
     });
-    document.getElementById('top_defect_body').innerHTML = tbh || "<tr><td colspan='3'>No defects recorded</td></tr>";
+    document.getElementById('d_defect_list').innerHTML = defHtml || "<tr><td colspan='3'>No Data</td></tr>";
+
+    // 4. Charts
+    if(google && google.visualization && tInp > 0) {
+        // Pie
+        var pieData = google.visualization.arrayToDataTable([['Type', 'Qty'], ['Good', tInp-tDef], ['Defects', tDef]]);
+        new google.visualization.PieChart(document.getElementById('pie_chart')).draw(pieData, {
+            colors:['#10b981','#ef4444'], pieHole: 0.5, chartArea:{width:'90%',height:'90%'}, legend:'none'
+        });
+
+        // Trend (Simulated using existing data sorted by date)
+        // Group by Date first
+        let dateMap = {};
+        rows.forEach(r => {
+            let d = fixDate(r[0]);
+            if(!dateMap[d]) dateMap[d] = {i:0, d:0};
+            dateMap[d].i += (+r[4]||0); dateMap[d].d += (+r[5]||0);
+        });
+        
+        let trendArr = [['Date', 'FPY %']];
+        // Sort dates
+        Object.keys(dateMap).sort().forEach(d => {
+            let dayFpy = dateMap[d].i > 0 ? (100 - (dateMap[d].d/dateMap[d].i*100)) : 100;
+            trendArr.push([d.slice(5), dayFpy]); // slice to show MM-DD
+        });
+
+        if(trendArr.length > 1){
+            var lineData = google.visualization.arrayToDataTable(trendArr);
+            new google.visualization.LineChart(document.getElementById('trend_chart')).draw(lineData, {
+                legend:'none', curveType: 'function', colors:['#2563eb'], 
+                vAxis: {viewWindow: {min: 80, max: 100}},
+                chartArea:{width:'85%',height:'75%'}
+            });
+        } else {
+             document.getElementById('trend_chart').innerHTML = "<div style='padding:50px; text-align:center; color:#999;'>Need more than 1 day data for trend</div>";
+        }
+    }
 }
 
-// --- ENTRY LOGIC ---
-function calc(){
-    let i = +document.getElementById('f_input').value || 0;
-    let d = +document.getElementById('f_def').value || 0;
-    if(i > 0) {
-        document.getElementById('f_fpy').value = (100 - (d/i*100)).toFixed(2) + "%";
-        document.getElementById('f_rej').value = (d/i*100).toFixed(2) + "%";
-    }
+// ===============================================
+// ORIGINAL FUNCTIONS (ENTRY & RECORDS)
+// ===============================================
+function autoCalc(){
+    let i = +f_input.value || 0; let d = +f_def.value || 0;
+    if(i > 0){ f_rej.value = ((d/i)*100).toFixed(2); f_fpy.value = (100 - (d/i*100)).toFixed(2); } 
+    rmd_r.value = i ? ((+rmd.value||0)/i*100).toFixed(2) : '';
+    proc_r.value = i ? ((+proc.value||0)/i*100).toFixed(2) : '';
+    smt_r.value = i ? ((+smt.value||0)/i*100).toFixed(2) : '';
 }
 
 async function saveData(){
-    const btn = document.getElementById('saveBtn');
-    if(!document.getElementById('f_input').value) return alert("Please enter Input Quantity");
-    
-    btn.innerText = "Saving...";
-    
-    // Construct Array based on exact column order of Sheet
-    let r = [
-        document.getElementById('f_date').value,
-        document.getElementById('f_shift').value,
-        document.getElementById('f_line').value,
-        document.getElementById('f_model').value,
-        document.getElementById('f_input').value,
-        document.getElementById('f_def').value,
-        parseFloat(document.getElementById('f_rej').value)||0,
-        parseFloat(document.getElementById('f_fpy').value)||0,
-        document.getElementById('rmd').value, // 8
-        0, // Calc % in sheet or JS? Keeping simple
-        document.getElementById('proc').value,
-        0,
-        document.getElementById('smt').value,
-        0,
-        document.getElementById('d1').value,
-        document.getElementById('q1').value,
-        '','', // Cause/Action 1
-        document.getElementById('d2').value,
-        document.getElementById('q2').value,
-        '','',
-        document.getElementById('d3').value,
-        document.getElementById('q3').value,
-        '','',
-        document.getElementById('f_prep').value
-    ];
-
-    try {
-        await fetch(API_URL, { 
-            method: 'POST', 
-            body: JSON.stringify({ action: editIndex!==null?'edit':'append', row: r, rowIndex: editIndex })
-        });
-        alert("Saved Successfully");
-        resetForm();
-        fetchData(); // Reload data
-    } catch(e) { alert("Error saving"); }
-    btn.innerText = "SUBMIT RECORD";
+  if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
+  const row = [f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value, rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value, d1.value, q1.value, c1.value, a1.value, d2.value, q2.value, c2.value, a2.value, d3.value, q3.value, c3.value, a3.value, prep.value];
+  const btn = document.getElementById("saveBtn"); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
+  try {
+     const action = editingRowIndex !== null ? "edit" : "append";
+     const bodyData = { action: action, row: row, rowIndex: editingRowIndex };
+     const res = await fetch(API, { method: "POST", body: JSON.stringify(bodyData) });
+     const result = await res.json();
+     if(result.status === "saved" || result.status === "updated"){ load(); resetForm(); alert("Saved!"); } 
+  } catch(e) { alert("Error"); } finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
-function resetForm(){
-    document.querySelectorAll('.f-input').forEach(i => { if(i.type!=='select-one' && i.type!=='date') i.value=''; });
-    editIndex = null;
+function showDetailedPreview(r){
+  // Basic Preview logic same as before but simple
+  const d = fixDate(r[0]); 
+  document.getElementById("previewContent").innerHTML = `
+    <p><b>Date:</b> ${d} | <b>Line:</b> ${r[2]} | <b>Shift:</b> ${r[1]}</p>
+    <p><b>Model:</b> ${r[3]}</p>
+    <hr>
+    <p><b>Input:</b> ${r[4]} | <b>Defects:</b> ${r[5]} | <b>FPY:</b> ${r[7]}%</p>
+    <hr>
+    <b>Defects:</b><br>
+    ${r[14] ? r[14] + ': ' + r[15] + '<br>' : ''}
+    ${r[18] ? r[18] + ': ' + r[19] + '<br>' : ''}
+    ${r[22] ? r[22] + ': ' + r[23] : ''}
+  `;
+  document.getElementById("overlay").style.display = 'block';
+  document.getElementById("previewModal").style.display = 'block';
 }
 
-// --- RECORDS LOGIC ---
-function filterRecords(){
-    const tbody = document.getElementById('rec_body');
-    tbody.innerHTML = "";
-    const from = document.getElementById('s_from').value;
-    const to = document.getElementById('s_to').value;
-    const mod = document.getElementById('s_model').value.toLowerCase();
+function editRow(idx) {
+    let r = allData[idx]; editingRowIndex = idx;
+    f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
+    rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
+    d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17]; d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21]; d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25]; prep.value=r[26];
+    switchTab('entry'); document.getElementById("saveBtn").innerText = "UPDATE RECORD"; document.getElementById("saveBtn").style.background = "#f59e0b";
+}
 
-    let found = 0;
-    rawData.forEach((r, idx) => {
-        let d = fixDate(r[0]);
-        if(d >= from && d <= to && (!mod || r[3].toString().toLowerCase().includes(mod))) {
-            found++;
-            let fpy = parseFloat(r[7]);
-            let status = fpy >= 98 ? '<span class="status-pill sp-good">Good</span>' : '<span class="status-pill sp-bad">Alert</span>';
-            let tr = `<tr>
-                <td>${d}</td><td>L-${r[2]}</td><td><b>${r[3]}</b></td><td>${r[4]}</td><td>${r[5]}</td>
-                <td>${r[7]}%</td><td>${status}</td>
-                <td>
-                    <button class="action-btn" onclick="viewModal(${idx})"><i class="fa fa-eye"></i></button>
-                    <button class="action-btn" onclick="loadEdit(${idx})"><i class="fa fa-edit"></i></button>
-                </td>
-            </tr>`;
-            tbody.innerHTML += tr;
+function applyFilters() {
+    if(!allData || allData.length === 0) return;
+    const dFrom = document.getElementById("date_from").value; const dTo = document.getElementById("date_to").value;
+    const checkboxes = document.querySelectorAll('.line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
+    const t = document.getElementById('tbody'); const h = document.getElementById('thead'); t.innerHTML = ""; h.innerHTML = "";
+    allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`); h.innerHTML += `<th>Action</th>`;
+
+    allData.slice(1).forEach((r, index) => {
+        let rDate = fixDate(r[0]); let rLine = r[2].toString(); let match = true;
+        if(dFrom && rDate < dFrom) match = false; if(dTo && rDate > dTo) match = false; if(selectedLines.length > 0 && !selectedLines.includes(rLine)) match = false;
+        if(match) {
+            let tr = document.createElement("tr");
+            r.forEach((c, i) => tr.innerHTML += `<td>${i===0 ? fixDate(c) : c||""}</td>`);
+            let realIdx = index + 1;
+            tr.innerHTML += `<td>
+                <button onclick='showDetailedPreview(allData[${realIdx}])' style="padding:5px;"><i class="fa fa-eye"></i></button>
+                <button onclick='editRow(${realIdx})' style="padding:5px; background:#f59e0b;"><i class="fa fa-edit"></i></button>
+            </td>`;
+            t.appendChild(tr);
         }
     });
-    document.getElementById('no_data').style.display = found ? 'none' : 'block';
 }
 
-function viewModal(idx){
-    const r = rawData[idx];
-    const html = `
-        <div class="report-grid">
-            <div class="rep-item"><div class="rep-lbl">DATE</div><div class="rep-val">${fixDate(r[0])}</div></div>
-            <div class="rep-item"><div class="rep-lbl">LINE / SHIFT</div><div class="rep-val">L-${r[2]} / ${r[1]}</div></div>
-            <div class="rep-item"><div class="rep-lbl">MODEL</div><div class="rep-val">${r[3]}</div></div>
-        </div>
-        <div class="kpi-grid" style="margin-bottom:20px;">
-             <div class="kpi-card" style="padding:15px; border:1px solid #e5e7eb; box-shadow:none;">
-                <div class="kpi-label">Input</div><div class="kpi-val" style="font-size:20px;">${r[4]}</div>
-             </div>
-             <div class="kpi-card" style="padding:15px; border:1px solid #fee2e2; background:#fff1f2; box-shadow:none;">
-                <div class="kpi-label">Defects</div><div class="kpi-val" style="font-size:20px; color:#ef4444;">${r[5]}</div>
-             </div>
-             <div class="kpi-card" style="padding:15px; border:1px solid #d1fae5; background:#ecfdf5; box-shadow:none;">
-                <div class="kpi-label">FPY</div><div class="kpi-val" style="font-size:20px; color:#059669;">${r[7]}%</div>
-             </div>
-        </div>
-        <div class="ch-title">Defect Breakdown</div>
-        <table class="table-slim" style="margin-top:10px;">
-            <tr><th>Defect</th><th>Qty</th></tr>
-            ${r[14] ? `<tr><td>${r[14]}</td><td>${r[15]}</td></tr>` : ''}
-            ${r[18] ? `<tr><td>${r[18]}</td><td>${r[19]}</td></tr>` : ''}
-            ${r[22] ? `<tr><td>${r[22]}</td><td>${r[23]}</td></tr>` : ''}
-        </table>
-    `;
-    document.getElementById('pv_content').innerHTML = html;
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('pv_modal').style.display = 'block';
-}
+async function load(){ try { const res = await fetch(API); const j = await res.json(); allData = j.rows; applyFilters(); filterDashboard(); } catch(e) {} }
+function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
+function resetForm(){ document.querySelectorAll('#entryForm input').forEach(i => i.value = ''); editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; }
 
-function loadEdit(idx){
-    // Map raw data back to form (Simplified for demo)
-    let r = rawData[idx];
-    editIndex = idx + 1; // 1-based index for API
-    document.getElementById('f_date').value = fixDate(r[0]);
-    document.getElementById('f_line').value = r[2];
-    document.getElementById('f_input').value = r[4];
-    document.getElementById('f_def').value = r[5];
-    calc();
-    nav('entry', document.querySelectorAll('.nav-item')[1]);
-}
-
-function closeModal(){ document.getElementById('overlay').style.display='none'; document.getElementById('pv_modal').style.display='none'; }
-function fixDate(d) { return d ? new Date(d).toISOString().slice(0,10) : ''; }
-
-function exportCSV() {
-    let csv = "Date,Line,Model,Input,Defect,FPY\n";
-    rawData.forEach(r => {
-        csv += `${fixDate(r[0])},${r[2]},${r[3]},${r[4]},${r[5]},${r[7]}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'PQC_Report.csv'; a.click();
-}
+load();
 </script>
 </body>
 </html>
