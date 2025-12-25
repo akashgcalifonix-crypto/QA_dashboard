@@ -30,11 +30,10 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .app-logo { height: 45px; }
 .app-title { font-size: 20px; font-weight: 700; margin-left: 15px; }
 
-/* CATEGORY SWITCHER (New Style) */
+/* CATEGORY SWITCHER (New) */
 .cat-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; background: #cbd5e1; padding: 5px; border-radius: 12px; width: fit-content; margin: 0 auto 20px auto; }
-.cat-btn { padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 15px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
-.cat-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); transform: scale(1.02); }
-.cat-btn i { font-size: 18px; }
+.cat-btn { padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.cat-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
 .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 25px auto; }
 .tab-btn { padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer; font-weight: 600; color: #64748b; background: transparent; transition: 0.3s; }
@@ -43,7 +42,7 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .tab-content.active { display: block; }
 .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
 
-/* Form Styles */
+/* Original Form Styles */
 .form-row { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
 .form-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
 input, select { padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: 'Poppins'; outline: none; }
@@ -53,7 +52,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 .table th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; }
 .table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
 
-/* Dashboard Styles */
+/* --- DASHBOARD STYLES --- */
 .dash-container { max-width: 100%; margin: 0 auto; }
 .dash-top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.04); border: 1px solid #eef2f6; }
 .d-filter-group { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 8px 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
@@ -224,7 +223,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <h3>📝 New PQC Entry (<span id="entryCatName" style="color:var(--primary);">Earbuds</span>)</h3>
+            <h3>📝 New PQC Entry (<span id="entryCatName">Earbuds</span>)</h3>
             <button onclick="resetForm()" style="background:#94a3b8; font-size:12px;">Clear</button>
         </div>
         <div class="form-row">
@@ -265,7 +264,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 <!-- TAB 3: RECORDS (WITH EDIT & DELETE) -->
 <div id="report" class="tab-content">
     <div class="card">
-        <h3>📂 Recorded Database (<span id="recordCatName" style="color:var(--primary);">Earbuds</span>)</h3>
+        <h3>📂 Recorded Database (<span id="recordCatName">Earbuds</span>)</h3>
         <div style="background:#f1f5f9; padding:15px; border-radius:10px; margin-bottom:20px;">
             <div class="form-row">
                 <div class="form-group" style="max-width: 140px;"><label>From</label><input type="date" id="date_from"></div>
@@ -299,7 +298,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 
 <script>
 // --- CONFIGURATION ---
-const API = "https://script.google.com/macros/s/AKfycby1UInXUdBQ4P5_wr5jTUg19ctUgbZmdPv1LHRodhd6BIwCE4dy8jZ7V63GjyD0q6ivRA/exec";
+const API = "https://script.google.com/macros/s/AKfycbxR9xw1KJjLp0HUiHqyrSHgc4Ztt4HmWYNyfy8_tp50FubEaKbL36fJMQkjKNISQ_vXCA/exec";
 const LOGO_URL = "https://i.postimg.cc/kRSbTd6w/logo.png"; 
 
 document.getElementById('mainLogo').src = LOGO_URL;
@@ -310,7 +309,7 @@ google.charts.load('current', {'packages':['corechart']});
 let allData = []; 
 let editingRowIndex = null; 
 let activeDashFloor = 'all';
-let currentCategory = "Earbuds"; // DEFAULT CATEGORY (Purana data yahi aayega)
+let currentCategory = "Earbuds"; // Default Category
 
 function init() {
     const box = document.getElementById('lineSelectBox');
@@ -323,14 +322,13 @@ function init() {
 }
 init();
 
-// --- SWITCH CATEGORY LOGIC (EARBUDS vs CHARGING CASE) ---
+// --- SWITCH CATEGORY LOGIC ---
 function switchCategory(cat) {
     currentCategory = cat;
     
-    // Update UI Buttons
+    // Update Buttons UI
     document.getElementById('btnEarbuds').classList.remove('active');
     document.getElementById('btnCase').classList.remove('active');
-    
     if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
     else document.getElementById('btnCase').classList.add('active');
 
@@ -338,12 +336,12 @@ function switchCategory(cat) {
     document.getElementById('entryCatName').innerText = cat;
     document.getElementById('recordCatName').innerText = cat;
 
-    // Reset UI & Reload Data
+    // Reset Data & Reload
     allData = [];
     document.getElementById('tbody').innerHTML = "";
     document.getElementById('d_inp').innerText = "...";
     
-    load(); // Load fresh data for selected category
+    load(); // Load fresh data for the selected category
 }
 
 function fixDate(dateValue) {
@@ -371,6 +369,7 @@ function switchDashTab(floor, btn) {
 
 function filterDashboard() {
     if(!allData || allData.length === 0) {
+        // Clear Dashboard if no data
         document.getElementById('d_inp').innerText = "0";
         document.getElementById('d_def').innerText = "0";
         document.getElementById('d_fpy').innerText = "--";
@@ -494,8 +493,8 @@ async function saveData(){
   const btn = document.getElementById("saveBtn"); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   try {
      const action = editingRowIndex !== null ? "edit" : "append";
-     // Sending Sheet Name (Earbuds or Charging Case) to GAS
-     const bodyData = { sheetName: currentCategory, action: action, row: row, rowIndex: editingRowIndex };
+     // Added "sheet: currentCategory" to payload
+     const bodyData = { sheet: currentCategory, action: action, row: row, rowIndex: editingRowIndex };
      const res = await fetch(API, { method: "POST", body: JSON.stringify(bodyData) });
      const result = await res.json();
      if(result.status === "saved" || result.status === "updated"){ showDetailedPreview(row); load(); resetForm(); } 
@@ -505,7 +504,8 @@ async function saveData(){
 async function deleteRow(idx) {
     if(!confirm("Are you sure you want to DELETE this record from " + currentCategory + "?")) return;
     try {
-        const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheetName: currentCategory, action: "delete", rowIndex: idx }) });
+        // Added "sheet: currentCategory" to payload
+        const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) });
         const result = await res.json();
         if(result.status === "deleted") { alert("Record Deleted!"); load(); } else { alert("Error deleting"); }
     } catch(e) { alert("Network Error"); }
@@ -607,8 +607,8 @@ function applyFilters() {
 
 async function load(){ 
     try { 
-        // Request specific sheet (Earbuds or Charging Case)
-        const res = await fetch(API + "?sheetName=" + currentCategory); 
+        // Sending 'sheet' parameter to fetch data for specific category
+        const res = await fetch(API + "?sheet=" + currentCategory); 
         const j = await res.json(); 
         allData = j.rows; 
         
