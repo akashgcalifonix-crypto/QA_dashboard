@@ -484,6 +484,7 @@ function showDetailedPreview(r){
             <div class="pv-sec-title">▌ Top Defects</div>
             ${r[14] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>1. ${r[14]}</span><span>${r[15]}</span></div><div class="pv-cause-action">C: ${r[16]||'-'}<br>A: ${r[17]||'-'}</div></div>` : ''}
             ${r[18] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>2. ${r[18]}</span><span>${r[19]}</span></div><div class="pv-cause-action">C: ${r[20]||'-'}<br>A: ${r[21]||'-'}</div></div>` : ''}
+            ${r[22] ? `<div class="pv-defect-box"><div class="pv-def-header"><span>3. ${r[22]}</span><span>${r[23]}</span></div><div class="pv-cause-action">C: ${r[24]||'-'}<br>A: ${r[25]||'-'}</div></div>` : ''}
         </div>
     </div>`;
   document.getElementById("overlay").style.display = 'block';
