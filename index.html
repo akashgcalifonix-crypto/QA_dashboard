@@ -26,9 +26,15 @@
 body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 15px; color: var(--dark); }
 
 /* Header & Tabs */
-.header-box { background: white; padding: 15px 25px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 5px solid var(--primary); }
+.header-box { background: white; padding: 15px 25px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px; border-left: 5px solid var(--primary); }
 .app-logo { height: 45px; }
 .app-title { font-size: 20px; font-weight: 700; margin-left: 15px; }
+
+/* CATEGORY SWITCHER (New) */
+.cat-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; background: #cbd5e1; padding: 5px; border-radius: 12px; width: fit-content; margin: 0 auto 20px auto; }
+.cat-btn { padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.cat-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
 .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 25px auto; }
 .tab-btn { padding: 10px 25px; border: none; border-radius: 25px; cursor: pointer; font-weight: 600; color: #64748b; background: transparent; transition: 0.3s; }
 .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); }
@@ -46,7 +52,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 .table th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; }
 .table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
 
-/* --- DASHBOARD STYLES (BIG FONT & COLORFUL) --- */
+/* --- DASHBOARD STYLES --- */
 .dash-container { max-width: 100%; margin: 0 auto; }
 .dash-top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 15px rgba(0,0,0,0.04); border: 1px solid #eef2f6; }
 .d-filter-group { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 8px 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
@@ -138,6 +144,16 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     <div style="font-size:12px; color:#64748b; font-weight:600;">Date: <span id="curDate"></span></div>
 </div>
 
+<!-- CATEGORY SWITCHER (Earbuds vs Charging Case) -->
+<div class="cat-switcher">
+    <button class="cat-btn active" id="btnEarbuds" onclick="switchCategory('Earbuds')">
+        <i class="fa fa-headphones"></i> Earbuds
+    </button>
+    <button class="cat-btn" id="btnCase" onclick="switchCategory('Charging Case')">
+        <i class="fa fa-battery-full"></i> Charging Case
+    </button>
+</div>
+
 <!-- TABS -->
 <div class="nav-tabs">
     <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
@@ -207,7 +223,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-            <h3>📝 New PQC Entry</h3>
+            <h3>📝 New PQC Entry (<span id="entryCatName">Earbuds</span>)</h3>
             <button onclick="resetForm()" style="background:#94a3b8; font-size:12px;">Clear</button>
         </div>
         <div class="form-row">
@@ -248,7 +264,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
 <!-- TAB 3: RECORDS (WITH EDIT & DELETE) -->
 <div id="report" class="tab-content">
     <div class="card">
-        <h3>📂 Recorded Database</h3>
+        <h3>📂 Recorded Database (<span id="recordCatName">Earbuds</span>)</h3>
         <div style="background:#f1f5f9; padding:15px; border-radius:10px; margin-bottom:20px;">
             <div class="form-row">
                 <div class="form-group" style="max-width: 140px;"><label>From</label><input type="date" id="date_from"></div>
@@ -290,7 +306,10 @@ document.getElementById('modalLogo').src = LOGO_URL;
 document.getElementById('curDate').innerText = new Date().toLocaleDateString('en-IN');
 google.charts.load('current', {'packages':['corechart']});
 
-let allData = []; let editingRowIndex = null; let activeDashFloor = 'all';
+let allData = []; 
+let editingRowIndex = null; 
+let activeDashFloor = 'all';
+let currentCategory = "Earbuds"; // Default Category
 
 function init() {
     const box = document.getElementById('lineSelectBox');
@@ -302,6 +321,28 @@ function init() {
     document.getElementById('dash_to').value = today.toISOString().slice(0,10);
 }
 init();
+
+// --- SWITCH CATEGORY LOGIC ---
+function switchCategory(cat) {
+    currentCategory = cat;
+    
+    // Update Buttons UI
+    document.getElementById('btnEarbuds').classList.remove('active');
+    document.getElementById('btnCase').classList.remove('active');
+    if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
+    else document.getElementById('btnCase').classList.add('active');
+
+    // Update Label Text
+    document.getElementById('entryCatName').innerText = cat;
+    document.getElementById('recordCatName').innerText = cat;
+
+    // Reset Data & Reload
+    allData = [];
+    document.getElementById('tbody').innerHTML = "";
+    document.getElementById('d_inp').innerText = "...";
+    
+    load(); // Load fresh data for the selected category
+}
 
 function fixDate(dateValue) {
     if (!dateValue) return "";
@@ -327,7 +368,19 @@ function switchDashTab(floor, btn) {
 }
 
 function filterDashboard() {
-    if(!allData || allData.length === 0) return;
+    if(!allData || allData.length === 0) {
+        // Clear Dashboard if no data
+        document.getElementById('d_inp').innerText = "0";
+        document.getElementById('d_def').innerText = "0";
+        document.getElementById('d_fpy').innerText = "--";
+        document.getElementById('d_rej').innerText = "--";
+        document.getElementById('line_performance_grid').innerHTML = "<div style='text-align:center; padding:30px; color:#999;'>No Data</div>";
+        document.getElementById('d_defect_list').innerHTML = "";
+        document.getElementById('d_process_body').innerHTML = "";
+        document.getElementById('d_bar').innerHTML = "";
+        return;
+    }
+
     const dFrom = document.getElementById('dash_from').value;
     const dTo = document.getElementById('dash_to').value;
     let dashRows = allData.slice(1).filter(r => {
@@ -421,6 +474,8 @@ function renderDashboardStats(rows) {
             ['SMT', smtR, '#f59e0b', smtR.toFixed(2)+'%']
         ]);
         new google.visualization.ColumnChart(document.getElementById('d_bar')).draw(barData, { legend:'none', chartArea:{width:'85%',height:'75%'}, vAxis:{minValue:0, format:'#.##%'} });
+    } else {
+        document.getElementById('d_bar').innerHTML = "";
     }
 }
 
@@ -438,17 +493,19 @@ async function saveData(){
   const btn = document.getElementById("saveBtn"); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   try {
      const action = editingRowIndex !== null ? "edit" : "append";
-     const bodyData = { action: action, row: row, rowIndex: editingRowIndex };
+     // Added "sheet: currentCategory" to payload
+     const bodyData = { sheet: currentCategory, action: action, row: row, rowIndex: editingRowIndex };
      const res = await fetch(API, { method: "POST", body: JSON.stringify(bodyData) });
      const result = await res.json();
      if(result.status === "saved" || result.status === "updated"){ showDetailedPreview(row); load(); resetForm(); } 
-  } catch(e) { alert("Error"); } finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
+  } catch(e) { alert("Error saving to " + currentCategory); } finally { btn.innerText = "SAVE RECORD"; btn.disabled = false; }
 }
 
 async function deleteRow(idx) {
-    if(!confirm("Are you sure you want to DELETE this record?")) return;
+    if(!confirm("Are you sure you want to DELETE this record from " + currentCategory + "?")) return;
     try {
-        const res = await fetch(API, { method: "POST", body: JSON.stringify({ action: "delete", rowIndex: idx }) });
+        // Added "sheet: currentCategory" to payload
+        const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) });
         const result = await res.json();
         if(result.status === "deleted") { alert("Record Deleted!"); load(); } else { alert("Error deleting"); }
     } catch(e) { alert("Network Error"); }
@@ -459,9 +516,9 @@ function showDetailedPreview(r){
   const d = fixDate(r[0]); 
   content.innerHTML = `
     <div class="pv-info-strip">
+        <div class="pv-info-item"><div class="pv-lbl">CATEGORY</div><div class="pv-val" style="color:var(--primary);">${currentCategory.toUpperCase()}</div></div>
         <div class="pv-info-item"><div class="pv-lbl">DATE</div><div class="pv-val">${d}</div></div>
-        <div class="pv-info-item"><div class="pv-lbl">SHIFT</div><div class="pv-val">${r[1]}</div></div>
-        <div class="pv-info-item"><div class="pv-lbl">FLOOR / LINE</div><div class="pv-val">${getFloorName(r[2])} / L-${r[2]}</div></div>
+        <div class="pv-info-item"><div class="pv-lbl">LINE</div><div class="pv-val">L-${r[2]}</div></div>
         <div class="pv-info-item"><div class="pv-lbl">MODEL</div><div class="pv-val">${r[3]}</div></div>
     </div>
     <div class="pv-kpi-row">
@@ -507,7 +564,10 @@ function editRow(idx) {
 }
 
 function applyFilters() {
-    if(!allData || allData.length === 0) return;
+    if(!allData || allData.length === 0) {
+        document.getElementById('tbody').innerHTML = "";
+        return;
+    }
     const dFrom = document.getElementById("date_from").value; const dTo = document.getElementById("date_to").value;
     const checkboxes = document.querySelectorAll('.line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
     const t = document.getElementById('tbody'); const h = document.getElementById('thead'); t.innerHTML = ""; h.innerHTML = "";
@@ -545,7 +605,19 @@ function applyFilters() {
     }
 }
 
-async function load(){ try { const res = await fetch(API); const j = await res.json(); allData = j.rows; applyFilters(); filterDashboard(); } catch(e) {} }
+async function load(){ 
+    try { 
+        // Sending 'sheet' parameter to fetch data for specific category
+        const res = await fetch(API + "?sheet=" + currentCategory); 
+        const j = await res.json(); 
+        allData = j.rows; 
+        
+        applyFilters(); 
+        filterDashboard(); 
+    } catch(e) {
+        console.error("Load Error", e);
+    } 
+}
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 function getFloorName(l){ l = parseInt(l); if(l>=1 && l<=8) return "1st Floor"; if(l>=9 && l<=16) return "2nd Floor"; if(l>=17 && l<=24) return "Basement"; return "Other"; }
 function resetForm(){ document.querySelectorAll('#entryForm input').forEach(i => i.value = ''); editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; }
