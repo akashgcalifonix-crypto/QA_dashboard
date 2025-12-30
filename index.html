@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>TWS Rejection Outlook 5.0</title>
+<title>TWS Rejection Outlook 6.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -237,12 +237,24 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             </div>
         </div>
 
-        <!-- VIEW 2: LINE ANALYSIS -->
+        <!-- VIEW 2: LINE ANALYSIS (UPDATED TO SEPARATE CHARTS) -->
         <div id="view_line" class="dash-view">
             <div class="grid-1">
                 <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title"><i class="fa fa-layer-group" style="color:var(--c-rmd);"></i> Line Rejection Breakdown (Stacked Rate %)</div></div>
-                    <div id="d_line_chart" style="width:100%; height:350px;"></div>
+                    <div class="mc-header"><div class="mc-title" style="color:var(--c-rmd);">Line Wise RMD Rate %</div></div>
+                    <div id="d_line_rmd_chart" style="width:100%; height:300px;"></div>
+                </div>
+            </div>
+            <div class="grid-1">
+                <div class="mgmt-card">
+                    <div class="mc-header"><div class="mc-title" style="color:var(--c-proc);">Line Wise Process Rate %</div></div>
+                    <div id="d_line_proc_chart" style="width:100%; height:300px;"></div>
+                </div>
+            </div>
+            <div class="grid-1">
+                <div class="mgmt-card">
+                    <div class="mc-header"><div class="mc-title" style="color:var(--c-smt);">Line Wise SMT Rate %</div></div>
+                    <div id="d_line_smt_chart" style="width:100%; height:300px;"></div>
                 </div>
             </div>
             <div class="grid-1">
@@ -279,7 +291,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             </div>
         </div>
 
-        <!-- VIEW 4: FLOOR ANALYSIS (SEPARATE GRAPHS) -->
+        <!-- VIEW 4: FLOOR ANALYSIS -->
         <div id="view_floor" class="dash-view">
             <div class="grid-3">
                 <div class="mgmt-card">
@@ -526,6 +538,7 @@ function renderDashboardStats(rows) {
         let model = r[3] || 'Unknown';
         let inp = (+r[4]||0); 
         let def = (+r[5]||0); 
+        
         let rmdQ = (+r[8]||0);
         let procQ = (+r[10]||0);
         let smtQ = (+r[12]||0);
@@ -607,21 +620,35 @@ function renderDashboardStats(rows) {
             { legend:'none', chartArea:{width:'85%',height:'75%'}, vAxis:{title:'Defect Rate %'} }
         );
 
-        let lineArr = [['Line', 'RMD%', 'Proc%', 'SMT%', { role: 'annotation' }]];
+        // --- LINE CHARTS (SPLIT) ---
+        let lineRMD = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
+        let lineProc = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
+        let lineSMT = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
         let lineTableHtml = "";
+
         Object.keys(lineData).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(l => {
             let d = lineData[l];
             let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0;
             let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0;
             let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
             let tot = rr+pr+sr;
-            lineArr.push(['L'+l, rr, pr, sr, tot.toFixed(1)+'%']);
+            
+            lineRMD.push(['L'+l, rr, '#3b82f6', rr.toFixed(1)+'%']);
+            lineProc.push(['L'+l, pr, '#8b5cf6', pr.toFixed(1)+'%']);
+            lineSMT.push(['L'+l, sr, '#f59e0b', sr.toFixed(1)+'%']);
+
             lineTableHtml += `<tr><td><b>L-${l}</b></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
         });
         document.getElementById('d_line_table_body').innerHTML = lineTableHtml;
-        new google.visualization.ColumnChart(document.getElementById('d_line_chart')).draw(
-            google.visualization.arrayToDataTable(lineArr),
-            { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'85%',height:'70%'}, vAxis:{title:'Rate %'} }
+        
+        new google.visualization.ColumnChart(document.getElementById('d_line_rmd_chart')).draw(
+            google.visualization.arrayToDataTable(lineRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'90%',height:'70%'} }
+        );
+        new google.visualization.ColumnChart(document.getElementById('d_line_proc_chart')).draw(
+            google.visualization.arrayToDataTable(lineProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'90%',height:'70%'} }
+        );
+        new google.visualization.ColumnChart(document.getElementById('d_line_smt_chart')).draw(
+            google.visualization.arrayToDataTable(lineSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'90%',height:'70%'} }
         );
 
         let modelArr = [['Model', 'RMD%', 'Proc%', 'SMT%', { role: 'annotation' }]];
@@ -640,7 +667,6 @@ function renderDashboardStats(rows) {
             { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'80%',height:'75%'}, hAxis:{title:'Rate %'} }
         );
 
-        // --- NEW SEPARATE FLOOR GRAPHS ---
         let fRMD = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
         let fProc = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
         let fSMT = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
@@ -670,15 +696,13 @@ function renderDashboardStats(rows) {
 
 function downloadDashboardPDF() {
     const dashboard = document.getElementById('dashboard');
-    const header = document.querySelector('.header-box'); // Capture the header (LOGO)
+    const header = document.querySelector('.header-box'); 
     
-    // Hide buttons for PDF
     document.querySelector('.dash-top-bar').style.display = 'none';
     
-    // Create temporary wrapper
     let tempContainer = document.createElement('div');
-    tempContainer.appendChild(header.cloneNode(true)); // Add Logo/Header
-    tempContainer.appendChild(dashboard.cloneNode(true)); // Add Dashboard content
+    tempContainer.appendChild(header.cloneNode(true)); 
+    tempContainer.appendChild(dashboard.cloneNode(true)); 
     
     var opt = {
       margin: 5,
@@ -689,7 +713,7 @@ function downloadDashboardPDF() {
     };
 
     html2pdf().set(opt).from(tempContainer).save().then(() => {
-        document.querySelector('.dash-top-bar').style.display = 'flex'; // Show buttons again
+        document.querySelector('.dash-top-bar').style.display = 'flex'; 
     });
 }
 
