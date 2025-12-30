@@ -30,9 +30,9 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .app-logo { height: 45px; }
 .app-title { font-size: 20px; font-weight: 700; margin-left: 15px; }
 
-/* CATEGORY SWITCHER (New) */
+/* CATEGORY SWITCHER (Updated for 3 Tabs) */
 .cat-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; background: #cbd5e1; padding: 5px; border-radius: 12px; width: fit-content; margin: 0 auto 20px auto; }
-.cat-btn { padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.cat-btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
 .cat-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
 .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 25px auto; }
@@ -144,13 +144,17 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     <div style="font-size:12px; color:#64748b; font-weight:600;">Date: <span id="curDate"></span></div>
 </div>
 
-<!-- CATEGORY SWITCHER (Earbuds vs Charging Case) -->
+<!-- CATEGORY SWITCHER (UPDATED - ADDED PROCESS) -->
 <div class="cat-switcher">
     <button class="cat-btn active" id="btnEarbuds" onclick="switchCategory('Earbuds')">
         <i class="fa fa-headphones"></i> Earbuds
     </button>
     <button class="cat-btn" id="btnCase" onclick="switchCategory('Charging Case')">
         <i class="fa fa-battery-full"></i> Charging Case
+    </button>
+    <!-- ADDED PROCESS BUTTON -->
+    <button class="cat-btn" id="btnProcess" onclick="switchCategory('Process')">
+        <i class="fa fa-cogs"></i> Process
     </button>
 </div>
 
@@ -245,15 +249,19 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             <div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
         </div>
-        <h4>Top 3 Defects</h4>
+        
+        <!-- UPDATED HEADER AND PLACEHOLDERS -->
+        <h4>Defects / Process Breakup (Analysis)</h4>
         <datalist id="defect_list">
             <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
         </datalist>
         <div class="form-row">
-            <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Cause" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Cause" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Cause" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
+            <!-- Renamed Cause to Analysis -->
+            <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Analysis" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Analysis" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Analysis" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
         </div>
+        
         <div class="form-row" style="margin-top:20px;">
             <div class="form-group"><label>Prepared By</label><input id="prep" placeholder="Enter Name"></div>
             <button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:23px; height:45px;">SAVE RECORD</button>
@@ -322,15 +330,18 @@ function init() {
 }
 init();
 
-// --- SWITCH CATEGORY LOGIC ---
+// --- SWITCH CATEGORY LOGIC (UPDATED) ---
 function switchCategory(cat) {
     currentCategory = cat;
     
     // Update Buttons UI
     document.getElementById('btnEarbuds').classList.remove('active');
     document.getElementById('btnCase').classList.remove('active');
+    document.getElementById('btnProcess').classList.remove('active'); // Reset Process button too
+
     if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
-    else document.getElementById('btnCase').classList.add('active');
+    else if(cat === 'Charging Case') document.getElementById('btnCase').classList.add('active');
+    else if(cat === 'Process') document.getElementById('btnProcess').classList.add('active'); // Activate Process
 
     // Update Label Text
     document.getElementById('entryCatName').innerText = cat;
