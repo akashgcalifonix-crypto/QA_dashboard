@@ -143,7 +143,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     <button class="tab-btn" onclick="switchTab('report')">📂 Records</button>
 </div>
 
-<!-- TAB 1: DASHBOARD (UPDATED) -->
+<!-- TAB 1: DASHBOARD -->
 <div id="dashboard" class="tab-content active">
     <div class="dash-container">
         
@@ -181,7 +181,7 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             </div>
         </div>
 
-        <!-- NEW BOTTOM ROW: Process Defects vs Functional Defects -->
+        <!-- NEW BOTTOM ROW: Separated Process & Functional -->
         <div class="bottom-row">
             <div class="mgmt-card">
                 <div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:#f59e0b;"></i> Top 5 Process Defects</div></div>
@@ -393,14 +393,14 @@ function renderDashboardStats(rows) {
         let inp = (+r[4]||0); let def = (+r[5]||0); let procD = (+r[10]||0); let line = r[2]; 
         tInp += inp; tDef += def; tRMD += (+r[8]||0); tProc += procD; tSMT += (+r[12]||0);
         
-        // 1. Process Defects (Indices 14, 15)
+        // 1. Process Defects (Indices 14, 15) - Only from Process Section
         if(r[14]) {
             let pNames = r[14].toString().split('\n');
             let pQtys = r[15].toString().split('\n');
             pNames.forEach((n, i) => { if(n) processDefectMap[n] = (processDefectMap[n]||0) + (+pQtys[i]||0); });
         }
 
-        // 2. Functional Defects (Indices 17, 21, 25)
+        // 2. Functional Defects (Indices 17, 21, 25) - Only from Top 3 Section
         if(r[17]) functionalDefectMap[r[17]] = (functionalDefectMap[r[17]]||0) + (+r[18]||0);
         if(r[21]) functionalDefectMap[r[21]] = (functionalDefectMap[r[21]]||0) + (+r[22]||0);
         if(r[25]) functionalDefectMap[r[25]] = (functionalDefectMap[r[25]]||0) + (+r[26]||0);
@@ -409,7 +409,6 @@ function renderDashboardStats(rows) {
         lineData[line].inp += inp; lineData[line].def += def; lineData[line].proc += procD;
     });
 
-    // KPI Values
     let avgFpy = tInp > 0 ? (100 - (tDef/tInp*100)).toFixed(2) : "--"; let avgRej = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "--";
     document.getElementById('d_inp').innerText = tInp.toLocaleString(); document.getElementById('d_def').innerText = tDef.toLocaleString();
     document.getElementById('d_fpy').innerText = avgFpy + "%"; document.getElementById('d_rej').innerText = avgRej + "%";
@@ -465,7 +464,6 @@ function autoCalc(){
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
   
-  // Collect Dynamic Process Data
   const pNames = Array.from(document.querySelectorAll('.pd-inp')).map(i => i.value).join('\n');
   const pQtys = Array.from(document.querySelectorAll('.pq-inp')).map(i => i.value).join('\n');
   const pAnals = Array.from(document.querySelectorAll('.pa-inp')).map(i => i.value).join('\n');
@@ -473,7 +471,7 @@ async function saveData(){
   const row = [
       f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value, 
       rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value, 
-      pNames, pQtys, pAnals, // Process Defect Columns
+      pNames, pQtys, pAnals, 
       d1.value, q1.value, c1.value, a1.value, 
       d2.value, q2.value, c2.value, a2.value, 
       d3.value, q3.value, c3.value, a3.value, 
@@ -503,7 +501,6 @@ function showDetailedPreview(r){
   const content = document.getElementById("previewContent");
   const d = fixDate(r[0]); 
   
-  // Generate Process Defect HTML List
   let pHtml = "";
   if(r[14]) {
       let pNames = r[14].toString().split('\n');
