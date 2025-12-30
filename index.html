@@ -30,9 +30,9 @@ body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; pad
 .app-logo { height: 45px; }
 .app-title { font-size: 20px; font-weight: 700; margin-left: 15px; }
 
-/* CATEGORY SWITCHER (Updated for 3 Tabs) */
+/* CATEGORY SWITCHER */
 .cat-switcher { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; background: #cbd5e1; padding: 5px; border-radius: 12px; width: fit-content; margin: 0 auto 20px auto; }
-.cat-btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+.cat-btn { padding: 10px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; color: #475569; background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
 .cat-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
 .nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; background: #e2e8f0; padding: 5px; border-radius: 30px; width: fit-content; margin: 0 auto 25px auto; }
@@ -144,17 +144,13 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
     <div style="font-size:12px; color:#64748b; font-weight:600;">Date: <span id="curDate"></span></div>
 </div>
 
-<!-- CATEGORY SWITCHER (UPDATED - ADDED PROCESS) -->
+<!-- CATEGORY SWITCHER (Earbuds vs Charging Case) -->
 <div class="cat-switcher">
     <button class="cat-btn active" id="btnEarbuds" onclick="switchCategory('Earbuds')">
         <i class="fa fa-headphones"></i> Earbuds
     </button>
     <button class="cat-btn" id="btnCase" onclick="switchCategory('Charging Case')">
         <i class="fa fa-battery-full"></i> Charging Case
-    </button>
-    <!-- ADDED PROCESS BUTTON -->
-    <button class="cat-btn" id="btnProcess" onclick="switchCategory('Process')">
-        <i class="fa fa-cogs"></i> Process
     </button>
 </div>
 
@@ -250,18 +246,33 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
         </div>
         
-        <!-- UPDATED HEADER AND PLACEHOLDERS -->
-        <h4>Defects / Process Breakup (Analysis)</h4>
+        <h4>Top 3 Defects (Functional)</h4>
         <datalist id="defect_list">
             <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
         </datalist>
         <div class="form-row">
-            <!-- Renamed Cause to Analysis -->
-            <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Analysis" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Analysis" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Analysis" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Cause" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Cause" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
+            <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Cause" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
         </div>
         
+        <!-- NEW SECTION: Process Defects Breakup -->
+        <h4 style="margin-top:20px; color:var(--primary); border-top:2px dashed #e2e8f0; padding-top:10px;">Process Defects Breakup</h4>
+        <div class="form-row">
+             <div class="form-group">
+                <label>Process Defect</label>
+                <input id="pd1" list="defect_list" placeholder="Enter Process Defect">
+            </div>
+            <div class="form-group">
+                <label>Defect Qty</label>
+                <input id="pq1" type="number" placeholder="Qty">
+            </div>
+            <div class="form-group" style="flex:2;">
+                <label>Analysis</label>
+                <input id="pa1" placeholder="Enter Analysis">
+            </div>
+        </div>
+
         <div class="form-row" style="margin-top:20px;">
             <div class="form-group"><label>Prepared By</label><input id="prep" placeholder="Enter Name"></div>
             <button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:23px; height:45px;">SAVE RECORD</button>
@@ -330,18 +341,15 @@ function init() {
 }
 init();
 
-// --- SWITCH CATEGORY LOGIC (UPDATED) ---
+// --- SWITCH CATEGORY LOGIC ---
 function switchCategory(cat) {
     currentCategory = cat;
     
     // Update Buttons UI
     document.getElementById('btnEarbuds').classList.remove('active');
     document.getElementById('btnCase').classList.remove('active');
-    document.getElementById('btnProcess').classList.remove('active'); // Reset Process button too
-
     if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
-    else if(cat === 'Charging Case') document.getElementById('btnCase').classList.add('active');
-    else if(cat === 'Process') document.getElementById('btnProcess').classList.add('active'); // Activate Process
+    else document.getElementById('btnCase').classList.add('active');
 
     // Update Label Text
     document.getElementById('entryCatName').innerText = cat;
@@ -500,7 +508,16 @@ function autoCalc(){
 
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
-  const row = [f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value, rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value, d1.value, q1.value, c1.value, a1.value, d2.value, q2.value, c2.value, a2.value, d3.value, q3.value, c3.value, a3.value, prep.value];
+  // Updated Row with Process Data (pd1, pq1, pa1) inserted before Prep
+  const row = [
+      f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value, 
+      rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value, 
+      d1.value, q1.value, c1.value, a1.value, 
+      d2.value, q2.value, c2.value, a2.value, 
+      d3.value, q3.value, c3.value, a3.value, 
+      pd1.value, pq1.value, pa1.value, // New Process Data
+      prep.value
+  ];
   const btn = document.getElementById("saveBtn"); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   try {
      const action = editingRowIndex !== null ? "edit" : "append";
@@ -546,7 +563,7 @@ function showDetailedPreview(r){
                 <tr><td>Process</td><td>${r[10]||0}</td><td>${r[11]||0}%</td></tr>
                 <tr><td>SMT</td><td>${r[12]||0}</td><td>${r[13]||0}%</td></tr>
             </table>
-            <div id="modal_mini_chart"></div>
+            ${r[26] ? `<div class="pv-defect-box" style="border-left:3px solid var(--ref-blue);"><div class="pv-def-header"><span>Process: ${r[26]}</span><span>${r[27]}</span></div><div class="pv-cause-action">Analysis: ${r[28]||'-'}</div></div>` : ''}
         </div>
         <div>
             <div class="pv-sec-title">▌ Top Defects</div>
@@ -557,20 +574,22 @@ function showDetailedPreview(r){
     </div>`;
   document.getElementById("overlay").style.display = 'block';
   document.getElementById("previewModal").style.display = 'block';
-  setTimeout(() => { drawPreviewChart(r); }, 200);
-}
-
-function drawPreviewChart(r) {
-    if(!google.visualization) return;
-    var data = google.visualization.arrayToDataTable([['Stage', 'Qty', {role:'style'}], ['RMD', +r[8]||0, '#3b82f6'], ['Process', +r[10]||0, '#8b5cf6'], ['SMT', +r[12]||0, '#f59e0b']]);
-    new google.visualization.ColumnChart(document.getElementById('modal_mini_chart')).draw(data, {legend:'none', chartArea:{width:'85%',height:'70%'}});
 }
 
 function editRow(idx) {
     let r = allData[idx]; editingRowIndex = idx;
+    // Standard Fields
     f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
     rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
-    d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17]; d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21]; d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25]; prep.value=r[26];
+    // Top 3
+    d1.value=r[14]; q1.value=r[15]; c1.value=r[16]; a1.value=r[17]; 
+    d2.value=r[18]; q2.value=r[19]; c2.value=r[20]; a2.value=r[21]; 
+    d3.value=r[22]; q3.value=r[23]; c3.value=r[24]; a3.value=r[25]; 
+    // NEW Process Defect Data
+    pd1.value=r[26]; pq1.value=r[27]; pa1.value=r[28];
+    // Prepared By (Moved to end)
+    prep.value=r[29];
+    
     switchTab('entry'); document.getElementById("saveBtn").innerText = "UPDATE RECORD"; document.getElementById("saveBtn").style.background = "#f59e0b";
 }
 
@@ -582,6 +601,8 @@ function applyFilters() {
     const dFrom = document.getElementById("date_from").value; const dTo = document.getElementById("date_to").value;
     const checkboxes = document.querySelectorAll('.line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
     const t = document.getElementById('tbody'); const h = document.getElementById('thead'); t.innerHTML = ""; h.innerHTML = "";
+    
+    // Dynamically create headers
     allData[0].forEach(x => h.innerHTML += `<th>${x}</th>`); h.innerHTML += `<th>Action</th>`;
 
     let sInp = 0, sDef = 0, sRMD = 0, sSMT = 0, count = 0;
