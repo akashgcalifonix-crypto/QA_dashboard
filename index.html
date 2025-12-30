@@ -181,14 +181,14 @@ button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; 
             </div>
         </div>
 
-        <!-- NEW BOTTOM ROW: Separated Process & Functional -->
+        <!-- NEW BOTTOM ROW: Process (Top 5) vs Functional (Top 3) -->
         <div class="bottom-row">
             <div class="mgmt-card">
                 <div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:#f59e0b;"></i> Top 5 Process Defects</div></div>
                 <table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Impact %</th></tr></thead><tbody id="d_process_defects_list"></tbody></table>
             </div>
             <div class="mgmt-card">
-                <div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:#ef4444;"></i> Top 5 Functional Defects</div></div>
+                <div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:#ef4444;"></i> Top 3 Functional Defects</div></div>
                 <table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Impact %</th></tr></thead><tbody id="d_functional_defects_list"></tbody></table>
             </div>
         </div>
@@ -415,7 +415,7 @@ function renderDashboardStats(rows) {
 
     const getRate = (v) => tInp > 0 ? (v/tInp*100).toFixed(2)+"%" : "0%";
 
-    // Render Process Defects
+    // Render Process Defects (TOP 5)
     let sortedProcess = Object.entries(processDefectMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
     let pDefHtml = "";
     if(sortedProcess.length === 0) pDefHtml = "<tr><td colspan='3' style='text-align:center; color:#999;'>No process defects</td></tr>";
@@ -425,8 +425,8 @@ function renderDashboardStats(rows) {
     });
     document.getElementById('d_process_defects_list').innerHTML = pDefHtml;
 
-    // Render Functional Defects
-    let sortedFunc = Object.entries(functionalDefectMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    // Render Functional Defects (TOP 3) - CHANGED HERE
+    let sortedFunc = Object.entries(functionalDefectMap).sort((a,b)=>b[1]-a[1]).slice(0,3);
     let fDefHtml = "";
     if(sortedFunc.length === 0) fDefHtml = "<tr><td colspan='3' style='text-align:center; color:#999;'>No functional defects</td></tr>";
     else sortedFunc.forEach(d => { 
