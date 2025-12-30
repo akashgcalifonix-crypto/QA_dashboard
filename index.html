@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>TWS Rejection Outlook - Premium</title>
+<title>TWS Rejection Outlook 8.0</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,17 +23,13 @@
     --text-main: #0f172a;
     --text-light: #64748b;
     
-    /* Premium Gradients */
-    --g-rmd: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%);
-    --g-proc: linear-gradient(135deg, #f5f3ff 0%, #ddd6fe 100%);
-    --g-smt: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
-    --g-danger: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+    /* Stage Colors */
+    --c-rmd: #3b82f6;   
+    --c-proc: #8b5cf6;  
+    --c-smt: #f59e0b;   
     
-    --c-rmd: #1d4ed8;
-    --c-proc: #7c3aed;
-    --c-smt: #c2410c;
-    --c-danger: #dc2626;
-    --c-success: #059669;
+    --c-danger: #ef4444;
+    --c-success: #10b981;
 }
 
 body { font-family: 'Manrope', sans-serif; background: var(--bg-body); margin: 0; padding: 20px; color: var(--text-main); -webkit-font-smoothing: antialiased; }
@@ -51,7 +47,7 @@ body { font-family: 'Manrope', sans-serif; background: var(--bg-body); margin: 0
 .tab-btn { padding: 10px 30px; border: 1px solid #e2e8f0; border-radius: 30px; cursor: pointer; font-weight: 700; color: var(--text-light); background: var(--surface); transition: 0.3s; font-size: 14px; }
 .tab-btn.active { background: var(--text-main); color: white; border-color: var(--text-main); box-shadow: 0 5px 15px rgba(30, 41, 59, 0.2); }
 
-/* --- DASHBOARD SUB-NAV --- */
+/* --- DASHBOARD COMPONENTS --- */
 .dash-sub-nav { display: flex; gap: 5px; margin-bottom: 25px; background: #fff; padding: 5px; border-radius: 10px; border: 1px solid #e2e8f0; width: fit-content; }
 .ds-btn { padding: 8px 20px; border: none; background: none; font-weight: 700; color: var(--text-light); cursor: pointer; font-size: 13px; border-radius: 8px; transition: 0.2s; }
 .ds-btn.active { background: #eff6ff; color: var(--primary); }
@@ -117,7 +113,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 .prog-track { width: 100%; height: 8px; background: #f1f5f9; border-radius: 10px; margin-top: 8px; overflow: hidden; }
 .prog-fill { height: 100%; border-radius: 10px; }
 
-/* --- PREMIUM PREVIEW MODAL --- */
+/* --- PREVIEW MODAL GAUGE STYLES --- */
 .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999; }
 .modal-lg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 900px; background: #fff; border-radius: 20px; z-index: 1000; box-shadow: 0 25px 60px rgba(0,0,0,0.3); overflow: hidden; animation: slideUp 0.3s; }
 .pv-header { padding: 25px 35px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fff; }
@@ -129,20 +125,23 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 .pv-label { font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 5px; }
 .pv-value { font-size: 15px; font-weight: 800; color: #1f2937; }
 
+/* GAUGES CONTAINER */
+.pv-gauge-row { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; padding: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; }
+
+/* STAGE CARDS */
 .pv-stage-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-.pv-scard { padding: 20px; border-radius: 16px; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.03); transition: transform 0.2s; }
+.pv-scard { padding: 20px; border-radius: 16px; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
 .pv-scard:hover { transform: translateY(-3px); }
-.sc-blue { background: var(--g-rmd); color: var(--c-rmd); }
-.sc-purple { background: var(--g-proc); color: var(--c-proc); }
-.sc-orange { background: var(--g-smt); color: var(--c-smt); }
-.sc-title { font-size: 12px; font-weight: 800; text-transform: uppercase; opacity: 0.8; letter-spacing: 1px; }
-.sc-val { font-size: 32px; font-weight: 800; margin: 5px 0; }
-.sc-sub { font-size: 13px; font-weight: 700; opacity: 0.9; }
+.sc-blue { border-top: 4px solid var(--c-rmd); }
+.sc-purple { border-top: 4px solid var(--c-proc); }
+.sc-orange { border-top: 4px solid var(--c-smt); }
+.sc-title { font-size: 12px; font-weight: 800; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; color: #64748b; margin-bottom: 5px; }
+.sc-val { font-size: 28px; font-weight: 800; margin-bottom: 5px; color: #1e293b; }
+.sc-rate { font-size: 14px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; }
 
 .pv-section-head { font-size: 14px; font-weight: 800; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 .pv-split { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
 .pv-d-card { background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; }
-.pv-d-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.06); transform: translateY(-2px); }
 .pv-dc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 700; color: #1f2937; }
 .pv-dc-badge { background: #f3f4f6; color: #4b5563; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
 .pv-dc-content { font-size: 12px; color: #6b7280; line-height: 1.5; background: #f9fafb; padding: 10px; border-radius: 8px; }
@@ -160,12 +159,12 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 <!-- HEADER -->
 <div class="header-box">
     <div style="display:flex; align-items:center;">
-        <img id="mainLogo" src="" style="height:45px;"> 
+        <img id="mainLogo" src="" style="height:40px;"> 
         <div class="app-title">TWS Rejection Outlook</div>
     </div>
     <div style="text-align:right;">
         <div style="font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase;">Overview Date</div>
-        <div style="font-size:15px; font-weight:800; color:var(--text-main);" id="curDate"></div>
+        <div style="font-size:14px; font-weight:800; color:var(--text-main);" id="curDate"></div>
     </div>
 </div>
 
@@ -189,43 +188,22 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 <!-- TAB 1: DASHBOARD -->
 <div id="dashboard" class="tab-content active">
     <div class="dash-container">
-        
+        <!-- Dashboard Content Same as Previous (Filters, KPI, Views) - Kept Clean for brevity -->
         <!-- DASHBOARD FILTERS -->
         <div class="dash-top-bar">
             <div style="display:flex; align-items:center; gap:10px;">
                 <h3 style="margin:0; font-size:16px; font-weight:800;"><i class="fa fa-filter" style="color:var(--primary);"></i> Filters</h3>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                <div class="d-filter-group">
-                    <span class="d-label">FROM</span>
-                    <input type="date" id="dash_from" class="d-inp">
-                </div>
-                <div class="d-filter-group">
-                    <span class="d-label">TO</span>
-                    <input type="date" id="dash_to" class="d-inp">
-                </div>
-                
-                <!-- MULTI SELECT LINES -->
-                <div class="multiselect">
-                    <div class="selectBox" onclick="toggleCheckboxes()">
-                        <select class="d-inp" style="min-width:120px; padding:6px; border:1px solid #e5e7eb; border-radius:6px;">
-                            <option>Select Lines</option>
-                        </select>
-                        <div class="overSelect"></div>
-                    </div>
-                    <div id="checkboxes" class="checkboxes"></div>
-                </div>
-
-                <div class="d-filter-group">
-                    <span class="d-label">MODEL</span>
-                    <select id="dash_model" class="d-inp" style="min-width:80px;"><option value="all">All</option></select>
-                </div>
+                <div class="d-filter-group"><span class="d-label">FROM</span><input type="date" id="dash_from" class="d-inp"></div>
+                <div class="d-filter-group"><span class="d-label">TO</span><input type="date" id="dash_to" class="d-inp"></div>
+                <div class="multiselect"><div class="selectBox" onclick="toggleCheckboxes()"><select class="d-inp" style="min-width:120px; padding:6px; border:1px solid #e5e7eb; border-radius:6px;"><option>Select Lines</option></select><div class="overSelect"></div></div><div id="checkboxes" class="checkboxes"></div></div>
+                <div class="d-filter-group"><span class="d-label">MODEL</span><select id="dash_model" class="d-inp" style="min-width:80px;"><option value="all">All</option></select></div>
                 <button onclick="filterDashboard()" style="padding:8px 15px; font-size:12px;">Apply</button>
                 <button onclick="downloadDashboardPDF()" style="padding:8px 15px; font-size:12px; background:#b30b00;"><i class="fa fa-file-pdf"></i> PDF</button>
             </div>
         </div>
 
-        <!-- KPI GRID -->
         <div class="mgmt-kpi-grid">
             <div class="kpi-modern k-blue"><div class="kpi-icon"><i class="fa fa-cubes"></i></div><div><div class="kpi-val" id="d_inp">0</div><div class="kpi-lbl">Total Input</div></div></div>
             <div class="kpi-modern k-green"><div class="kpi-icon"><i class="fa fa-check-circle"></i></div><div><div class="kpi-val" id="d_fpy">--</div><div class="kpi-lbl">Avg FPY %</div></div></div>
@@ -233,7 +211,6 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <div class="kpi-modern k-purple"><div class="kpi-icon"><i class="fa fa-chart-line"></i></div><div><div class="kpi-val" id="d_rej">--</div><div class="kpi-lbl">Rejection Rate</div></div></div>
         </div>
 
-        <!-- Sub Tabs -->
         <div class="dash-sub-nav">
             <button class="ds-btn active" onclick="switchDashSubTab('overview', this)">🏠 Overview</button>
             <button class="ds-btn" onclick="switchDashSubTab('line', this)">🏭 Line Analysis</button>
@@ -241,108 +218,43 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <button class="ds-btn" onclick="switchDashSubTab('floor', this)">🏢 Floor Analysis</button>
         </div>
 
-        <!-- VIEW 1: OVERVIEW -->
         <div id="view_overview" class="dash-view active">
             <div class="grid-50">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:var(--c-smt);"></i> Top 5 Process Defects</div></div>
-                    <table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_process_defects_list"></tbody></table>
-                </div>
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Top 3 Functional Defects</div></div>
-                    <table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_functional_defects_list"></tbody></table>
-                </div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:var(--c-smt);"></i> Top 5 Process Defects</div></div><table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_process_defects_list"></tbody></table></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Top 3 Functional Defects</div></div><table class="mgmt-table"><thead><tr><th>Defect</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_functional_defects_list"></tbody></table></div>
             </div>
             <div class="grid-2">
-                 <div class="mgmt-card">
-                     <div class="mc-header"><div class="mc-title"><i class="fa fa-chart-line" style="color:var(--primary);"></i> Daily Rejection Trend</div></div>
-                     <div id="d_trend_chart" style="width:100%; height:300px;"></div>
-                </div>
-                 <div class="mgmt-card">
-                     <div class="mc-header"><div class="mc-title"><i class="fa fa-chart-simple" style="color:var(--c-proc);"></i> Stage Defect Rates (%)</div></div>
-                    <div id="d_bar" style="width:100%; height:300px;"></div>
-                </div>
+                 <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-line" style="color:var(--primary);"></i> Daily Rejection Trend</div></div><div id="d_trend_chart" style="width:100%; height:300px;"></div></div>
+                 <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-simple" style="color:var(--c-proc);"></i> Stage Defect Rates (%)</div></div><div id="d_bar" style="width:100%; height:300px;"></div></div>
             </div>
         </div>
 
-        <!-- VIEW 2: LINE ANALYSIS -->
         <div id="view_line" class="dash-view">
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-rmd);">Line Wise RMD Rate %</div></div>
-                    <div id="d_line_rmd_chart" style="width:100%; height:300px;"></div>
-                </div>
-            </div>
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-proc);">Line Wise Process Rate %</div></div>
-                    <div id="d_line_proc_chart" style="width:100%; height:300px;"></div>
-                </div>
-            </div>
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-smt);">Line Wise SMT Rate %</div></div>
-                    <div id="d_line_smt_chart" style="width:100%; height:300px;"></div>
-                </div>
-            </div>
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title">Line Performance Table</div></div>
-                    <div class="table-responsive">
-                        <table class="mgmt-table">
-                            <thead><tr><th>Line</th><th>Input</th><th>Defects</th><th>RMD %</th><th>Process %</th><th>SMT %</th><th>Total Rej %</th></tr></thead>
-                            <tbody id="d_line_table_body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-rmd);">Line Wise RMD Rate %</div></div><div id="d_line_rmd_chart" style="width:100%; height:300px;"></div></div></div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-proc);">Line Wise Process Rate %</div></div><div id="d_line_proc_chart" style="width:100%; height:300px;"></div></div></div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-smt);">Line Wise SMT Rate %</div></div><div id="d_line_smt_chart" style="width:100%; height:300px;"></div></div></div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title">Line Performance Table</div></div><div class="table-responsive"><table class="mgmt-table"><thead><tr><th>Line</th><th>Input</th><th>Defects</th><th>RMD %</th><th>Process %</th><th>SMT %</th><th>Total Rej %</th></tr></thead><tbody id="d_line_table_body"></tbody></table></div></div></div>
         </div>
 
-        <!-- VIEW 3: MODEL ANALYSIS -->
         <div id="view_model" class="dash-view">
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title"><i class="fa fa-crown" style="color:var(--c-smt);"></i> Model Rejection Breakdown (Stacked Rate %)</div></div>
-                    <div id="d_model_chart" style="width:100%; height:350px;"></div>
-                </div>
-            </div>
-            <div class="grid-1">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title">Model Performance Table</div></div>
-                    <div class="table-responsive" style="max-height:400px;">
-                        <table class="mgmt-table">
-                            <thead><tr><th>Model</th><th>Input</th><th>Defects</th><th>RMD %</th><th>Process %</th><th>SMT %</th><th>Total Rej %</th></tr></thead>
-                            <tbody id="d_model_table_body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-crown" style="color:var(--c-smt);"></i> Model Rejection Breakdown (Stacked Rate %)</div></div><div id="d_model_chart" style="width:100%; height:350px;"></div></div></div>
+            <div class="grid-1"><div class="mgmt-card"><div class="mc-header"><div class="mc-title">Model Performance Table</div></div><div class="table-responsive" style="max-height:400px;"><table class="mgmt-table"><thead><tr><th>Model</th><th>Input</th><th>Defects</th><th>RMD %</th><th>Process %</th><th>SMT %</th><th>Total Rej %</th></tr></thead><tbody id="d_model_table_body"></tbody></table></div></div></div>
         </div>
 
-        <!-- VIEW 4: FLOOR ANALYSIS -->
         <div id="view_floor" class="dash-view">
             <div class="grid-3">
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-rmd);">RMD Defect Rate</div></div>
-                    <div id="d_floor_rmd_chart" style="width:100%; height:300px;"></div>
-                </div>
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-proc);">Process Defect Rate</div></div>
-                    <div id="d_floor_proc_chart" style="width:100%; height:300px;"></div>
-                </div>
-                <div class="mgmt-card">
-                    <div class="mc-header"><div class="mc-title" style="color:var(--c-smt);">SMT Defect Rate</div></div>
-                    <div id="d_floor_smt_chart" style="width:100%; height:300px;"></div>
-                </div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-rmd);">RMD Defect Rate</div></div><div id="d_floor_rmd_chart" style="width:100%; height:300px;"></div></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-proc);">Process Defect Rate</div></div><div id="d_floor_proc_chart" style="width:100%; height:300px;"></div></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title" style="color:var(--c-smt);">SMT Defect Rate</div></div><div id="d_floor_smt_chart" style="width:100%; height:300px;"></div></div>
             </div>
         </div>
-
     </div>
 </div>
 
 <!-- TAB 2: DATA ENTRY -->
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
+        <!-- Entry Form Content (Kept as is) -->
         <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
             <h3 style="margin:0; font-size:18px;">📝 New PQC Entry (<span id="entryCatName" style="color:var(--primary);">Earbuds</span>)</h3>
             <button onclick="resetForm()" style="background:var(--text-light); font-size:11px;">Reset</button>
@@ -357,7 +269,6 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <div class="form-group"><label>Rej %</label><input id="f_rej" readonly style="background:#f1f5f9;"></div>
             <div class="form-group"><label>FPY %</label><input id="f_fpy" readonly style="font-weight:700; color:var(--c-success); background:#f1f5f9;"></div>
         </div>
-        
         <h4 style="margin:20px 0 10px 0; font-size:13px; color:var(--text-light); border-bottom:1px solid #e5e7eb;">Stage Breakdown</h4>
         <div class="form-row">
             <div class="form-group"><label>RMD Qty</label><input id="rmd" type="number" oninput="autoCalc()"></div>
@@ -367,24 +278,20 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
         </div>
-        
         <datalist id="defect_list">
             <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
         </datalist>
-
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:25px; border-bottom:1px solid #e5e7eb; padding-bottom:5px; margin-bottom:10px;">
             <h4 style="margin:0; font-size:13px; color:var(--c-smt);">Process Defects Breakup</h4>
             <button type="button" onclick="addProcessRow()" style="background:var(--c-success); padding:6px 12px; font-size:11px;"><i class="fa fa-plus"></i> Add Row</button>
         </div>
         <div id="process_container"></div>
-
         <h4 style="margin:25px 0 10px 0; font-size:13px; color:var(--c-danger); border-bottom:1px solid #e5e7eb;">Top 3 Functional Defects</h4>
         <div class="form-row">
             <div class="form-group"><label>Defect 1</label><input id="d1" list="defect_list" placeholder="Defect Name"><input id="q1" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c1" placeholder="Cause" style="margin-top:5px;"><input id="a1" placeholder="Action" style="margin-top:5px;"></div>
             <div class="form-group"><label>Defect 2</label><input id="d2" list="defect_list" placeholder="Defect Name"><input id="q2" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c2" placeholder="Cause" style="margin-top:5px;"><input id="a2" placeholder="Action" style="margin-top:5px;"></div>
             <div class="form-group"><label>Defect 3</label><input id="d3" list="defect_list" placeholder="Defect Name"><input id="q3" placeholder="Qty" type="number" style="margin-top:5px;"><input id="c3" placeholder="Cause" style="margin-top:5px;"><input id="a3" placeholder="Action" style="margin-top:5px;"></div>
         </div>
-
         <div class="form-row" style="margin-top:30px;">
             <div class="form-group"><label>Prepared By</label><input id="prep" placeholder="Enter Name"></div>
             <button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:23px; height:45px; font-size:15px;">SAVE RECORD</button>
@@ -415,7 +322,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
     </div>
 </div>
 
-<!-- PREMIUM PREVIEW MODAL -->
+<!-- PREVIEW MODAL -->
 <div class="overlay" id="overlay"></div>
 <div class="modal-lg" id="previewModal">
   <div class="pv-header">
@@ -449,16 +356,13 @@ function init() {
     let html = '<div style="display:flex; gap:8px; flex-wrap:wrap;">';
     for(let i=1; i<=24; i++){ html += `<label style="font-size:11px; display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" value="${i}" class="line-chk"> L${i}</label>`; }
     html += '</div>'; box.innerHTML = html;
-    
     const dashBox = document.getElementById('checkboxes');
     let dHtml = '';
     for(let i=1; i<=24; i++){ dHtml += `<label><input type="checkbox" value="${i}" class="dash-line-chk" /> Line ${i}</label>`; }
     dashBox.innerHTML = dHtml;
-
     const today = new Date(); const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     document.getElementById('dash_from').value = firstDay.toISOString().slice(0,10);
     document.getElementById('dash_to').value = today.toISOString().slice(0,10);
-    
     addProcessRow(); 
 }
 init();
@@ -525,72 +429,34 @@ function populateFilters() {
 
 function filterDashboard() {
     if(!allData || allData.length === 0) { document.getElementById('d_inp').innerText = "0"; return; }
-
-    const dFrom = document.getElementById('dash_from').value; 
-    const dTo = document.getElementById('dash_to').value;
-    const sModel = document.getElementById('dash_model').value;
-    
-    const checkboxes = document.querySelectorAll('.dash-line-chk:checked'); 
-    const selectedLines = Array.from(checkboxes).map(cb => cb.value);
-
+    const dFrom = document.getElementById('dash_from').value; const dTo = document.getElementById('dash_to').value; const sModel = document.getElementById('dash_model').value;
+    const checkboxes = document.querySelectorAll('.dash-line-chk:checked'); const selectedLines = Array.from(checkboxes).map(cb => cb.value);
     let dashRows = allData.slice(1).filter(r => { 
-        let rDate = fixDate(r[0]); 
-        let rLine = r[2].toString();
-        let rModel = r[3] || "";
-        
+        let rDate = fixDate(r[0]); let rLine = r[2].toString(); let rModel = r[3] || "";
         let dateMatch = rDate >= dFrom && rDate <= dTo;
         let lineMatch = selectedLines.length === 0 || selectedLines.includes(rLine);
         let modelMatch = sModel === 'all' || rModel === sModel;
-
         return dateMatch && lineMatch && modelMatch;
     });
-    
     renderDashboardStats(dashRows);
 }
 
 function renderDashboardStats(rows) {
     let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
-    let processDefectMap = {}; 
-    let functionalDefectMap = {};
-    let lineData = {}; 
-    let dateMap = {};
-    let modelData = {};
+    let processDefectMap = {}; let functionalDefectMap = {}; let lineData = {}; let dateMap = {}; let modelData = {};
     let floorData = {'Floor 1':{inp:0,rmd:0,proc:0,smt:0}, 'Floor 2':{inp:0,rmd:0,proc:0,smt:0}, 'Basement':{inp:0,rmd:0,proc:0,smt:0}};
 
     rows.forEach(r => {
-        let date = fixDate(r[0]);
-        let line = r[2]; 
-        let model = r[3] || 'Unknown';
-        let inp = (+r[4]||0); 
-        let def = (+r[5]||0); 
-        
-        let rmdQ = (+r[8]||0);
-        let procQ = (+r[10]||0);
-        let smtQ = (+r[12]||0);
-        
+        let date = fixDate(r[0]); let line = r[2]; let model = r[3] || 'Unknown';
+        let inp = (+r[4]||0); let def = (+r[5]||0); let rmdQ = (+r[8]||0); let procQ = (+r[10]||0); let smtQ = (+r[12]||0);
         tInp += inp; tDef += def; tRMD += rmdQ; tProc += procQ; tSMT += smtQ;
-        
-        if(r[14]) {
-            let pNames = r[14].toString().split('\n');
-            let pQtys = r[15].toString().split('\n');
-            pNames.forEach((n, i) => { if(n) processDefectMap[n] = (processDefectMap[n]||0) + (+pQtys[i]||0); });
-        }
-
+        if(r[14]) { let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); pNames.forEach((n, i) => { if(n) processDefectMap[n] = (processDefectMap[n]||0) + (+pQtys[i]||0); }); }
         if(r[17]) functionalDefectMap[r[17]] = (functionalDefectMap[r[17]]||0) + (+r[18]||0);
         if(r[21]) functionalDefectMap[r[21]] = (functionalDefectMap[r[21]]||0) + (+r[22]||0);
         if(r[25]) functionalDefectMap[r[25]] = (functionalDefectMap[r[25]]||0) + (+r[26]||0);
-
-        const addToObj = (obj, key) => {
-            if(!obj[key]) obj[key] = {inp:0, def:0, rmd:0, proc:0, smt:0};
-            obj[key].inp += inp; obj[key].def += def; 
-            obj[key].rmd += rmdQ; obj[key].proc += procQ; obj[key].smt += smtQ;
-        };
-        addToObj(lineData, line);
-        addToObj(modelData, model);
-
-        if(!dateMap[date]) dateMap[date] = {inp:0, def:0};
-        dateMap[date].inp += inp; dateMap[date].def += def;
-
+        const addToObj = (obj, key) => { if(!obj[key]) obj[key] = {inp:0, def:0, rmd:0, proc:0, smt:0}; obj[key].inp += inp; obj[key].def += def; obj[key].rmd += rmdQ; obj[key].proc += procQ; obj[key].smt += smtQ; };
+        addToObj(lineData, line); addToObj(modelData, model);
+        if(!dateMap[date]) dateMap[date] = {inp:0, def:0}; dateMap[date].inp += inp; dateMap[date].def += def;
         let lNum = parseInt(line);
         if(lNum >= 1 && lNum <= 8) { floorData['Floor 1'].inp += inp; floorData['Floor 1'].rmd += rmdQ; floorData['Floor 1'].proc += procQ; floorData['Floor 1'].smt += smtQ; }
         else if(lNum >= 9 && lNum <= 16) { floorData['Floor 2'].inp += inp; floorData['Floor 2'].rmd += rmdQ; floorData['Floor 2'].proc += procQ; floorData['Floor 2'].smt += smtQ; }
@@ -600,133 +466,125 @@ function renderDashboardStats(rows) {
     let avgFpy = tInp > 0 ? (100 - (tDef/tInp*100)).toFixed(2) : "--"; let avgRej = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "--";
     document.getElementById('d_inp').innerText = tInp.toLocaleString(); document.getElementById('d_def').innerText = tDef.toLocaleString();
     document.getElementById('d_fpy').innerText = avgFpy + "%"; document.getElementById('d_rej').innerText = avgRej + "%";
-
     const getRate = (v) => tInp > 0 ? (v/tInp*100).toFixed(2)+"%" : "0%";
 
     let sortedProcess = Object.entries(processDefectMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    let pDefHtml = "";
-    sortedProcess.forEach(d => { 
-        let rate = getRate(d[1]); let barW = tDef > 0 ? (d[1]/tDef*100) : 0; 
-        pDefHtml += `<tr><td>${d[0]}</td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-smt);">${rate}</div></td></tr>`; 
-    });
+    let pDefHtml = ""; sortedProcess.forEach(d => { let rate = getRate(d[1]); let barW = tDef > 0 ? (d[1]/tDef*100) : 0; pDefHtml += `<tr><td>${d[0]}</td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-smt);">${rate}</div></td></tr>`; });
     document.getElementById('d_process_defects_list').innerHTML = pDefHtml || "<tr><td colspan='3'>No Data</td></tr>";
 
     let sortedFunc = Object.entries(functionalDefectMap).sort((a,b)=>b[1]-a[1]).slice(0,3);
-    let fDefHtml = "";
-    sortedFunc.forEach(d => { 
-        let rate = getRate(d[1]);
-        fDefHtml += `<tr><td>${d[0]}</td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-danger);">${rate}</div></td></tr>`; 
-    });
+    let fDefHtml = ""; sortedFunc.forEach(d => { let rate = getRate(d[1]); fDefHtml += `<tr><td>${d[0]}</td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-danger);">${rate}</div></td></tr>`; });
     document.getElementById('d_functional_defects_list').innerHTML = fDefHtml || "<tr><td colspan='3'>No Data</td></tr>";
 
     if(google && google.visualization && tInp > 0) {
-        
-        let trendArr = [['Date', 'Rejection %', {role:'annotation'}]];
-        Object.keys(dateMap).sort().forEach(d => {
-            let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0;
-            trendArr.push([d, r, r.toFixed(1)+'%']);
-        });
-        new google.visualization.LineChart(document.getElementById('d_trend_chart')).draw(
-            google.visualization.arrayToDataTable(trendArr), 
-            { legend:'none', pointSize:6, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, vAxis:{format:'#.#'}, annotations:{alwaysOutside:true} }
-        );
+        let trendArr = [['Date', 'Rejection %', {role:'annotation'}]]; Object.keys(dateMap).sort().forEach(d => { let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0; trendArr.push([d, r, r.toFixed(1)+'%']); });
+        new google.visualization.LineChart(document.getElementById('d_trend_chart')).draw(google.visualization.arrayToDataTable(trendArr), { legend:'none', pointSize:6, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, vAxis:{format:'#.#'}, annotations:{alwaysOutside:true} });
 
-        let rmdR = tInp > 0 ? (tRMD/tInp*100) : 0; 
-        let procR = tInp > 0 ? (tProc/tInp*100) : 0; 
-        let smtR = tInp > 0 ? (tSMT/tInp*100) : 0;
-        
-        new google.visualization.ColumnChart(document.getElementById('d_bar')).draw(
-            google.visualization.arrayToDataTable([
-                ['Stage', 'Rate %', {role:'style'}, {role:'annotation'}],
-                ['RMD', rmdR, '#3b82f6', rmdR.toFixed(2)+'%'],
-                ['Process', procR, '#8b5cf6', procR.toFixed(2)+'%'],
-                ['SMT', smtR, '#f59e0b', smtR.toFixed(2)+'%']
-            ]),
-            { legend:'none', chartArea:{width:'85%',height:'75%'}, vAxis:{title:'Defect Rate %'} }
-        );
+        let rmdR = tInp > 0 ? (tRMD/tInp*100) : 0; let procR = tInp > 0 ? (tProc/tInp*100) : 0; let smtR = tInp > 0 ? (tSMT/tInp*100) : 0;
+        new google.visualization.ColumnChart(document.getElementById('d_bar')).draw(google.visualization.arrayToDataTable([['Stage', 'Rate %', {role:'style'}, {role:'annotation'}], ['RMD', rmdR, '#3b82f6', rmdR.toFixed(2)+'%'], ['Process', procR, '#8b5cf6', procR.toFixed(2)+'%'], ['SMT', smtR, '#f59e0b', smtR.toFixed(2)+'%']]), { legend:'none', chartArea:{width:'85%',height:'75%'}, vAxis:{title:'Defect Rate %'} });
 
-        let lineRMD = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        let lineProc = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        let lineSMT = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        let lineTableHtml = "";
-
+        let lineRMD = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]]; let lineProc = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]]; let lineSMT = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]]; let lineTableHtml = "";
         Object.keys(lineData).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(l => {
-            let d = lineData[l];
-            let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0;
-            let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0;
-            let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
-            let tot = rr+pr+sr;
-            
-            lineRMD.push(['L'+l, rr, '#3b82f6', rr.toFixed(1)+'%']);
-            lineProc.push(['L'+l, pr, '#8b5cf6', pr.toFixed(1)+'%']);
-            lineSMT.push(['L'+l, sr, '#f59e0b', sr.toFixed(1)+'%']);
-
+            let d = lineData[l]; let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0; let tot = rr+pr+sr;
+            lineRMD.push(['L'+l, rr, '#3b82f6', rr.toFixed(1)+'%']); lineProc.push(['L'+l, pr, '#8b5cf6', pr.toFixed(1)+'%']); lineSMT.push(['L'+l, sr, '#f59e0b', sr.toFixed(1)+'%']);
             lineTableHtml += `<tr><td><b>L-${l}</b></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
         });
         document.getElementById('d_line_table_body').innerHTML = lineTableHtml;
-        
-        new google.visualization.ColumnChart(document.getElementById('d_line_rmd_chart')).draw(
-            google.visualization.arrayToDataTable(lineRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'90%',height:'70%'} }
-        );
-        new google.visualization.ColumnChart(document.getElementById('d_line_proc_chart')).draw(
-            google.visualization.arrayToDataTable(lineProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'90%',height:'70%'} }
-        );
-        new google.visualization.ColumnChart(document.getElementById('d_line_smt_chart')).draw(
-            google.visualization.arrayToDataTable(lineSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'90%',height:'70%'} }
-        );
+        new google.visualization.ColumnChart(document.getElementById('d_line_rmd_chart')).draw(google.visualization.arrayToDataTable(lineRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'90%',height:'70%'} });
+        new google.visualization.ColumnChart(document.getElementById('d_line_proc_chart')).draw(google.visualization.arrayToDataTable(lineProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'90%',height:'70%'} });
+        new google.visualization.ColumnChart(document.getElementById('d_line_smt_chart')).draw(google.visualization.arrayToDataTable(lineSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'90%',height:'70%'} });
 
-        let modelArr = [['Model', 'RMD%', 'Proc%', 'SMT%', { role: 'annotation' }]];
-        let modelTableHtml = "";
+        let modelArr = [['Model', 'RMD%', 'Proc%', 'SMT%', { role: 'annotation' }]]; let modelTableHtml = "";
         Object.entries(modelData).sort((a,b) => (b[1].def/b[1].inp) - (a[1].def/a[1].inp)).forEach(([m, d]) => {
-            let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0;
-            let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0;
-            let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
-            let tot = rr+pr+sr;
+            let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0; let tot = rr+pr+sr;
             modelArr.push([m, rr, pr, sr, tot.toFixed(1)+'%']);
             modelTableHtml += `<tr><td><b>${m}</b></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
         });
         document.getElementById('d_model_table_body').innerHTML = modelTableHtml;
-        new google.visualization.BarChart(document.getElementById('d_model_chart')).draw(
-            google.visualization.arrayToDataTable(modelArr),
-            { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'80%',height:'75%'}, hAxis:{title:'Rate %'} }
-        );
+        new google.visualization.BarChart(document.getElementById('d_model_chart')).draw(google.visualization.arrayToDataTable(modelArr), { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'80%',height:'75%'}, hAxis:{title:'Rate %'} });
 
-        let fRMD = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        let fProc = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        let fSMT = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
-
+        let fRMD = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]]; let fProc = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]]; let fSMT = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
         ['Floor 1', 'Floor 2', 'Basement'].forEach(f => {
-            let d = floorData[f];
-            let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0;
-            let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0;
-            let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
-            fRMD.push([f, rr, '#3b82f6', rr.toFixed(2)+'%']);
-            fProc.push([f, pr, '#8b5cf6', pr.toFixed(2)+'%']);
-            fSMT.push([f, sr, '#f59e0b', sr.toFixed(2)+'%']);
+            let d = floorData[f]; let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
+            fRMD.push([f, rr, '#3b82f6', rr.toFixed(2)+'%']); fProc.push([f, pr, '#8b5cf6', pr.toFixed(2)+'%']); fSMT.push([f, sr, '#f59e0b', sr.toFixed(2)+'%']);
         });
-
-        new google.visualization.ColumnChart(document.getElementById('d_floor_rmd_chart')).draw(
-            google.visualization.arrayToDataTable(fRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'80%',height:'75%'} }
-        );
-        new google.visualization.ColumnChart(document.getElementById('d_floor_proc_chart')).draw(
-            google.visualization.arrayToDataTable(fProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'80%',height:'75%'} }
-        );
-        new google.visualization.ColumnChart(document.getElementById('d_floor_smt_chart')).draw(
-            google.visualization.arrayToDataTable(fSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'80%',height:'75%'} }
-        );
-
+        new google.visualization.ColumnChart(document.getElementById('d_floor_rmd_chart')).draw(google.visualization.arrayToDataTable(fRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'80%',height:'75%'} });
+        new google.visualization.ColumnChart(document.getElementById('d_floor_proc_chart')).draw(google.visualization.arrayToDataTable(fProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'80%',height:'75%'} });
+        new google.visualization.ColumnChart(document.getElementById('d_floor_smt_chart')).draw(google.visualization.arrayToDataTable(fSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'80%',height:'75%'} });
     } else { document.getElementById('d_bar').innerHTML = ""; }
 }
 
 function downloadDashboardPDF() {
-    const dashboard = document.getElementById('dashboard');
-    const header = document.querySelector('.header-box'); 
-    document.querySelector('.dash-top-bar').style.display = 'none';
-    let tempContainer = document.createElement('div');
-    tempContainer.appendChild(header.cloneNode(true)); 
-    tempContainer.appendChild(dashboard.cloneNode(true)); 
+    const dashboard = document.getElementById('dashboard'); const header = document.querySelector('.header-box'); document.querySelector('.dash-top-bar').style.display = 'none';
+    let tempContainer = document.createElement('div'); tempContainer.appendChild(header.cloneNode(true)); tempContainer.appendChild(dashboard.cloneNode(true)); 
     var opt = { margin: 5, filename: 'TWS_Dashboard_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
     html2pdf().set(opt).from(tempContainer).save().then(() => { document.querySelector('.dash-top-bar').style.display = 'flex'; });
+}
+
+function createGauge(value, title, isInverse) {
+    const r = 80; const cx = 100; const cy = 100; const angle = Math.min(Math.max((value / 100) * 180 - 90, -90), 90);
+    const color = isInverse ? (value < 2 ? '#10b981' : (value < 5 ? '#f59e0b' : '#ef4444')) : (value > 98 ? '#10b981' : (value > 95 ? '#f59e0b' : '#ef4444'));
+    const rad = angle * (Math.PI / 180); const nx = cx + (r - 10) * Math.cos(rad); const ny = cy + (r - 10) * Math.sin(rad);
+    return `<div style="text-align:center; width:200px;"><svg viewBox="0 0 200 110" style="width:100%;"><path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="20" /><text x="15" y="100" font-size="10" fill="#94a3b8">0</text><text x="100" y="15" font-size="10" fill="#94a3b8" text-anchor="middle">50</text><text x="185" y="100" font-size="10" fill="#94a3b8">100</text><line x1="100" y1="100" x2="${nx}" y2="${ny}" stroke="#1e293b" stroke-width="4" stroke-linecap="round" /><circle cx="100" cy="100" r="6" fill="#1e293b" /><text x="100" y="80" font-size="18" font-weight="800" fill="${color}" text-anchor="middle">${value}%</text></svg><div style="font-size:12px; font-weight:700; color:#64748b; margin-top:-10px;">${title}</div></div>`;
+}
+
+function showDetailedPreview(r){
+  const d = fixDate(r[0]); 
+  let input = +r[4] || 1;
+  let rejRate = (+r[6]||0);
+  let fpyRate = (100 - rejRate).toFixed(2);
+  
+  let rmdR = ((+r[8]||0) / input * 100).toFixed(2);
+  let procR = ((+r[10]||0) / input * 100).toFixed(2);
+  let smtR = ((+r[12]||0) / input * 100).toFixed(2);
+
+  let pHtml = "";
+  if(r[14]) {
+      let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n');
+      pNames.forEach((n, i) => { if(n) pHtml += `<div class="pv-defect-box" style="border-left:3px solid var(--c-proc);"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;"><span>${n}</span><span>Qty: ${pQtys[i]||0}</span></div><div style="font-size:11px;color:#666;margin-top:4px;">Analysis: ${pAnals[i]||'-'}</div></div>`; });
+  }
+  document.getElementById("previewContent").innerHTML = `
+    <div class="pv-meta-grid">
+        <div class="pv-meta-item"><div class="pv-label">Date</div><div class="pv-value">${d}</div></div>
+        <div class="pv-meta-item"><div class="pv-label">Line</div><div class="pv-value">L-${r[2]}</div></div>
+        <div class="pv-meta-item"><div class="pv-label">Model</div><div class="pv-value">${r[3]}</div></div>
+        <div class="pv-meta-item"><div class="pv-label">Shift</div><div class="pv-value">${r[1]}</div></div>
+        <div class="pv-meta-item"><div class="pv-label">User</div><div class="pv-value">${r[29]}</div></div>
+    </div>
+    
+    <div class="pv-gauge-row">
+        ${createGauge(rejRate, 'Rejection Rate', true)}
+        ${createGauge(fpyRate, 'First Pass Yield', false)}
+    </div>
+
+    <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Analysis</div>
+    <div class="pv-stage-cards">
+        <div class="pv-scard sc-blue">
+            <div class="sc-title">RMD</div>
+            <div class="sc-val">${r[8]||0}</div>
+            <div class="sc-sub"><span class="sc-rate" style="background:#eff6ff; color:#3b82f6;">${rmdR}%</span></div>
+        </div>
+        <div class="pv-scard sc-purple">
+            <div class="sc-title">Process</div>
+            <div class="sc-val">${r[10]||0}</div>
+            <div class="sc-sub"><span class="sc-rate" style="background:#f5f3ff; color:#8b5cf6;">${procR}%</span></div>
+        </div>
+        <div class="pv-scard sc-orange">
+            <div class="sc-title">SMT</div>
+            <div class="sc-val">${r[12]||0}</div>
+            <div class="sc-sub"><span class="sc-rate" style="background:#fff7ed; color:#f59e0b;">${smtR}%</span></div>
+        </div>
+    </div>
+
+    <div class="pv-split">
+        <div><h4 class="pv-section-head" style="color:var(--c-proc); border-color:var(--c-proc);"><i class="fa fa-cogs"></i> Process Breakdown</h4>${pHtml}</div>
+        <div><h4 class="pv-section-head" style="color:var(--c-danger); border-color:var(--c-danger);"><i class="fa fa-bug"></i> Top Functional Defects</h4>
+            ${r[17] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#1 ${r[17]}</span><span class="pv-dc-badge">${r[18]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[19]}<br><b>Action:</b> ${r[20]}</div></div>` : ''}
+            ${r[21] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#2 ${r[21]}</span><span class="pv-dc-badge">${r[22]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[23]}<br><b>Action:</b> ${r[24]}</div></div>` : ''}
+            ${r[25] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#3 ${r[25]}</span><span class="pv-dc-badge">${r[26]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[27]}<br><b>Action:</b> ${r[28]}</div></div>` : ''}
+        </div>
+    </div>`;
+  document.getElementById("overlay").style.display = 'block'; document.getElementById("previewModal").style.display = 'block';
 }
 
 function autoCalc(){
@@ -754,63 +612,6 @@ async function saveData(){
 async function deleteRow(idx) {
     if(!confirm("DELETE record?")) return;
     try { const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) }); load(); } catch(e) { alert("Network Error"); }
-}
-
-function showDetailedPreview(r){
-  const d = fixDate(r[0]); 
-  let input = +r[4] || 1;
-  let rmdR = ((+r[8]||0) / input * 100).toFixed(2);
-  let procR = ((+r[10]||0) / input * 100).toFixed(2);
-  let smtR = ((+r[12]||0) / input * 100).toFixed(2);
-
-  let pHtml = "";
-  if(r[14]) {
-      let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n');
-      pNames.forEach((n, i) => { if(n) pHtml += `<div class="pv-defect-box" style="border-left:3px solid var(--c-proc);"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;"><span>${n}</span><span>Qty: ${pQtys[i]||0}</span></div><div style="font-size:11px;color:#666;margin-top:4px;">Analysis: ${pAnals[i]||'-'}</div></div>`; });
-  }
-  document.getElementById("previewContent").innerHTML = `
-    <div class="pv-meta-grid">
-        <div class="pv-meta-item"><div class="pv-label">Date</div><div class="pv-value">${d}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Line</div><div class="pv-value">L-${r[2]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Model</div><div class="pv-value">${r[3]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Shift</div><div class="pv-value">${r[1]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">User</div><div class="pv-value">${r[29]}</div></div>
-    </div>
-    
-    <div class="pv-kpi-card" style="background:#ef4444; margin-bottom:25px;">
-        <div class="pv-kpi-val">${r[6]}%</div>
-        <div class="pv-kpi-lbl">Total Rejection Rate</div>
-        <i class="fa fa-chart-line pv-bg-icon"></i>
-    </div>
-
-    <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Analysis</div>
-    <div class="pv-stage-cards">
-        <div class="pv-scard sc-blue">
-            <div class="sc-title">RMD</div>
-            <div class="sc-val">${r[8]||0}</div>
-            <div class="sc-sub">${rmdR}%</div>
-        </div>
-        <div class="pv-scard sc-purple">
-            <div class="sc-title">Process</div>
-            <div class="sc-val">${r[10]||0}</div>
-            <div class="sc-sub">${procR}%</div>
-        </div>
-        <div class="pv-scard sc-orange">
-            <div class="sc-title">SMT</div>
-            <div class="sc-val">${r[12]||0}</div>
-            <div class="sc-sub">${smtR}%</div>
-        </div>
-    </div>
-
-    <div class="pv-split">
-        <div><h4 class="pv-section-head" style="color:var(--c-proc); border-color:var(--c-proc);"><i class="fa fa-cogs"></i> Process Breakdown</h4>${pHtml}</div>
-        <div><h4 class="pv-section-head" style="color:var(--c-danger); border-color:var(--c-danger);"><i class="fa fa-bug"></i> Top Functional Defects</h4>
-            ${r[17] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#1 ${r[17]}</span><span class="pv-dc-badge">${r[18]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[19]}<br><b>Action:</b> ${r[20]}</div></div>` : ''}
-            ${r[21] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#2 ${r[21]}</span><span class="pv-dc-badge">${r[22]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[23]}<br><b>Action:</b> ${r[24]}</div></div>` : ''}
-            ${r[25] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#3 ${r[25]}</span><span class="pv-dc-badge">${r[26]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[27]}<br><b>Action:</b> ${r[28]}</div></div>` : ''}
-        </div>
-    </div>`;
-  document.getElementById("overlay").style.display = 'block'; document.getElementById("previewModal").style.display = 'block';
 }
 
 function editRow(idx) {
