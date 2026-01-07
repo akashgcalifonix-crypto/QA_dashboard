@@ -259,11 +259,153 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <h3 style="margin:0; font-size:18px;">📝 New PQC Entry (<span id="entryCatName" style="color:var(--primary);">Earbuds</span>)</h3>
             <button onclick="resetForm()" style="background:var(--text-light); font-size:11px;">Reset</button>
         </div>
+        
+        <!-- DATA LISTS FOR DROPDOWNS -->
+        <datalist id="all_models">
+            <option value="Ad Unity ANC">
+            <option value="Ace">
+            <option value="Ad 111v2">
+            <option value="Ad 118">
+            <option value="Ad 120">
+            <option value="Ad 121Pro Plus">
+            <option value="Ad 131 Elite Anc">
+            <option value="Ad 131 Gen 2">
+            <option value="Ad 131 Pro Buds">
+            <option value="Ad 138 Gen 2">
+            <option value="Ad 141 Anc">
+            <option value="Ad 141 Anc Elite">
+            <option value="Ad 141 Gen 2">
+            <option value="Ad 141 Pro Buds">
+            <option value="Ad 148 Gen 2">
+            <option value="Ad 155">
+            <option value="Ad 161 Anc">
+            <option value="Ad 161 Anc Elite">
+            <option value="Ad 161 N">
+            <option value="Ad 181 Pro">
+            <option value="Ad 191 Anc">
+            <option value="Ad 192">
+            <option value="Ad 212">
+            <option value="Ad 213">
+            <option value="Ad 280 Anc">
+            <option value="Ad 300">
+            <option value="Ad 301">
+            <option value="Ad 311 Pro">
+            <option value="Ad 313">
+            <option value="Ad 701 Anc">
+            <option value="AD 71">
+            <option value="Ad 800">
+            <option value="Ad 800 Hidef">
+            <option value="Ad 91">
+            <option value="Ad 91 Prime">
+            <option value="Ad Ace Gen 2">
+            <option value="Ad Alpha Gen 2">
+            <option value="AD Hype">
+            <option value="AD Kick">
+            <option value="Ad Nirvana Crystal">
+            <option value="Ad Nirvana Iris">
+            <option value="Ad Nirvana X">
+            <option value="Ad Plus 311">
+            <option value="Ad Plus 318">
+            <option value="Ad Prime 412">
+            <option value="Ad Prime 513 Anc">
+            <option value="Ad Primo">
+            <option value="Ad Pulse">
+            <option value="AD Supreme">
+            <option value="Ad Ultra Pro">
+            <option value="Ad100">
+            <option value="Ad121 Pro">
+            <option value="Ad125">
+            <option value="Ad131">
+            <option value="Ad131 Pro">
+            <option value="Ad138">
+            <option value="Ad138 Pro">
+            <option value="Ad141">
+            <option value="Ad148">
+            <option value="Ad161">
+            <option value="AD161 Pro-Buds">
+            <option value="AD163">
+            <option value="Ad170">
+            <option value="AD181">
+            <option value="AD183">
+            <option value="Ad190">
+            <option value="AD191 G">
+            <option value="Airdopes 207">
+            <option value="Alpha">
+            <option value="Amazon basics">
+            <option value="Atom 81 Pro">
+            <option value="Atom 83">
+            <option value="Atom81">
+            <option value="Dashcam Hive E1">
+            <option value="Dashcam Hive F1">
+            <option value="HMD P50">
+            <option value="HMD P60">
+            <option value="HMD P70">
+            <option value="HMD S60">
+            <option value="HMD X50">
+            <option value="HMD X50 Pro">
+            <option value="IMT 100">
+            <option value="IMT101">
+            <option value="IMT121">
+            <option value="IMT128">
+            <option value="IMT131">
+            <option value="IMT161">
+            <option value="IMT181">
+            <option value="Joy">
+            <option value="Max">
+            <option value="Nirvana">
+            <option value="Nirvana Ion (ANC)">
+            <option value="Nirvana Ion ANC Pro">
+            <option value="Nirvana ION N Mold">
+            <option value="R 195 Pro">
+            <option value="Ultra Plus">
+            <option value="Zing">
+        </datalist>
+
+        <datalist id="defect_list">
+            <option value="Not On">
+            <option value="Mic Fail">
+            <option value="Speaker Fail">
+            <option value="Channel Detection">
+            <option value="Hard Glue">
+            <option value="Body Sensor">
+            <option value="RF Fail">
+            <option value="Sensor Fail">
+            <option value="Cavity Crack">
+            <option value="Dut Mode">
+            <option value="Dent, Scratch">
+            <option value="Pogo Pin Issue">
+            <option value="LED Issue">
+            <option value="BT not connect">
+            <option value="Buds Heating">
+            <option value="Battery Drain">
+            <option value="High Current">
+            <option value="Inquiry Fail">
+            <option value="Low Current">
+            <option value="Low Sound">
+            <option value="Electric Sound">
+            <option value="Software PCBA">
+            <option value="Polarity Reverse">
+            <option value="Distortion">
+            <option value="Key Issue">
+            <option value="ANC Fail">
+            <!-- New Defects from Image -->
+            <option value="Auto LED">
+            <option value="C Shell NG">
+            <option value="D Shell NG">
+            <option value="Deco NG">
+            <option value="Hall Sensor">
+            <option value="Key Hard">
+            <option value="Key Not Reset">
+            <option value="Sleep Mode">
+            <option value="Stuck">
+        </datalist>
+
         <div class="form-row">
             <div class="form-group"><label>Date</label><input type="date" id="f_date"></div>
             <div class="form-group"><label>Shift</label><select id="f_shift"><option>A</option><option>B</option><option>C</option></select></div>
             <div class="form-group"><label>Line No</label><input type="number" id="f_line" placeholder="1-24"></div>
-            <div class="form-group"><label>Model</label><input id="f_model" placeholder="Enter Model"></div>
+            <!-- UPDATED MODEL INPUT -->
+            <div class="form-group"><label>Model</label><input id="f_model" list="all_models" placeholder="Search Model..."></div>
             <div class="form-group"><label>Input Qty</label><input id="f_input" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>Defect Qty</label><input id="f_def" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>Rej %</label><input id="f_rej" readonly style="background:#f1f5f9;"></div>
@@ -278,9 +420,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <div class="form-group"><label>SMT Qty</label><input id="smt" type="number" oninput="autoCalc()"></div>
             <div class="form-group"><label>SMT %</label><input id="smt_r" readonly></div>
         </div>
-        <datalist id="defect_list">
-            <option value="Not On"><option value="Mic Fail"><option value="Speaker Fail"><option value="Channel Detection"><option value="Hard Glue"><option value="Body Sensor"><option value="RF Fail"><option value="Sensor Fail"><option value="Cavity Crack"><option value="Dut Mode"><option value="Dent, Scratch"><option value="Pogo Pin Issue"><option value="LED Issue"><option value="BT not connect"><option value="Buds Heating"><option value="Battery Drain"><option value="High Current"><option value="Inquiry Fail"><option value="Low Current"><option value="Low Sound"><option value="Electric Sound"><option value="Software PCBA"><option value="Polarity Reverse"><option value="Distortion"><option value="Key Issue"><option value="ANC Fail">
-        </datalist>
+        
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:25px; border-bottom:1px solid #e5e7eb; padding-bottom:5px; margin-bottom:10px;">
             <h4 style="margin:0; font-size:13px; color:var(--c-smt);">Process Defects Breakup</h4>
             <button type="button" onclick="addProcessRow()" style="background:var(--c-success); padding:6px 12px; font-size:11px;"><i class="fa fa-plus"></i> Add Row</button>
@@ -597,6 +737,38 @@ function autoCalc(){
 
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
+
+  // --- VALIDATION LOGIC START ---
+  // 1. Model Validation
+  const modelVal = f_model.value.trim();
+  const validModels = Array.from(document.getElementById('all_models').options).map(o => o.value);
+  if(modelVal && !validModels.includes(modelVal)){
+      alert("❌ Invalid Model Name!\nPlease select a valid model from the dropdown list.");
+      return;
+  }
+
+  // 2. Defect Validation
+  const validDefects = Array.from(document.getElementById('defect_list').options).map(o => o.value);
+  
+  // Check Process Defects
+  const pInputs = document.querySelectorAll('.pd-inp');
+  for(let inp of pInputs){
+      if(inp.value && !validDefects.includes(inp.value)){
+           alert("❌ Invalid Process Defect: " + inp.value + "\nPlease select from the list.");
+           return;
+      }
+  }
+
+  // Check Functional Defects
+  const funcDefects = [d1.value, d2.value, d3.value];
+  for(let val of funcDefects){
+      if(val && !validDefects.includes(val)){
+          alert("❌ Invalid Functional Defect: " + val + "\nPlease select from the list.");
+          return;
+      }
+  }
+  // --- VALIDATION LOGIC END ---
+
   const pNames = Array.from(document.querySelectorAll('.pd-inp')).map(i => i.value).join('\n');
   const pQtys = Array.from(document.querySelectorAll('.pq-inp')).map(i => i.value).join('\n');
   const pAnals = Array.from(document.querySelectorAll('.pa-inp')).map(i => i.value).join('\n');
