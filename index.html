@@ -165,7 +165,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 
 <!-- CATEGORY SWITCHER -->
 <div class="cat-switcher">
-    <button class="cat-btn active" id="btnEarbuds" onclick="switchCategory('Earbuds')"><i class="fa fa-headphones"></i> EARBUDS</button>
+    <button class="cat-btn active" id="btnEarbuds ,PB & HP" onclick="switchCategory('Earbuds ,PB & HP')"><i class="fa fa-headphones"></i> Earbuds ,PB & HP</button>
     <button class="cat-btn" id="btnCase" onclick="switchCategory('Charging Case')"><i class="fa fa-battery-full"></i> CHARGING CASE</button>
 </div>
 
@@ -245,7 +245,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
         <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-            <h3 style="margin:0; font-size:18px;">📝 New PQC Entry (<span id="entryCatName" style="color:var(--primary);">Earbuds</span>)</h3>
+            <h3 style="margin:0; font-size:18px;">📝 New PQC Entry (<span id="entryCatName" style="color:var(--primary);">Earbuds ,PB & HP</span>)</h3>
             <button onclick="resetForm()" style="background:var(--text-light); font-size:11px;">Reset</button>
         </div>
         
@@ -391,7 +391,7 @@ google.charts.load('current', {'packages':['corechart']});
 let allData = []; 
 let filteredData = []; 
 let editingRowIndex = null; 
-let currentCategory = "Earbuds"; 
+let currentCategory = "Earbuds ,PB & HP"; 
 let expandedLines = false;
 
 function init() {
@@ -615,9 +615,9 @@ function addProcessRow(dVal="", qVal="", aVal="") {
 
 function switchCategory(cat) {
     currentCategory = cat;
-    document.getElementById('btnEarbuds').classList.remove('active');
+    document.getElementById('btnEarbuds ,PB & HP').classList.remove('active');
     document.getElementById('btnCase').classList.remove('active');
-    if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
+    if(cat === 'Earbuds ,PB & HP') document.getElementById('btnEarbuds ,PB & HP').classList.add('active');
     else document.getElementById('btnCase').classList.add('active');
     document.getElementById('entryCatName').innerText = cat;
     allData = []; document.getElementById('tbody').innerHTML = ""; document.getElementById('d_inp').innerText = "...";
