@@ -1,3 +1,5 @@
+--- START OF FILE text/plain ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -539,7 +541,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
     let fRate = tInp > 0 ? (100 - rRate).toFixed(2) : 0;
     let rmdR = tInp > 0 ? (tRMD/tInp*100).toFixed(2) : 0;
     let procR = tInp > 0 ? (tProc/tInp*100).toFixed(2) : 0;
-    let smtR = tInp > 0 ? (tSMT/tInp*100).toFixed(2) : 0;
+    let smtR = tInp > 0 ? (tRMD/tInp*100).toFixed(2) : 0;
 
     let secHtml = `<table class="modal-inner-table"><thead><tr><th>${filterKeyIndex === 2 ? 'Model' : 'Line'}</th><th>Input</th><th>Rej %</th></tr></thead><tbody>`;
     Object.entries(secondaryMap).sort((a,b)=>b[1].inp - a[1].inp).forEach(([k, d]) => {
@@ -1144,7 +1146,8 @@ async function load(){ try { const res = await fetch(API + "?sheet=" + currentCa
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 function resetForm(){ document.querySelectorAll('#entryForm input').forEach(i => i.value = ''); editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; document.getElementById('process_container').innerHTML = ''; addDefectRow('Process'); }
 
-load();
+// ENSURE GOOGLE CHARTS LOADS BEFORE RUNNING THE INITIAL LOAD
+google.charts.setOnLoadCallback(load);
 </script>
 </body>
 </html>
