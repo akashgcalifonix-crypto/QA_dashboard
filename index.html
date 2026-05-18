@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +40,7 @@ body { font-family: 'Manrope', sans-serif; background: var(--bg-body); margin: 0
 .cat-btn { padding: 10px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; color: var(--text-light); background: transparent; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
 .cat-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); }
 
-.nav-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+.nav-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
 .tab-btn { padding: 10px 30px; border: 1px solid #e2e8f0; border-radius: 30px; cursor: pointer; font-weight: 700; color: var(--text-light); background: var(--surface); transition: 0.3s; font-size: 14px; }
 .tab-btn.active { background: var(--text-main); color: white; border-color: var(--text-main); box-shadow: 0 5px 15px rgba(30, 41, 59, 0.2); }
 
@@ -94,7 +92,7 @@ body { font-family: 'Manrope', sans-serif; background: var(--bg-body); margin: 0
 /* Filters Bar */
 .dash-top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; background: white; padding: 15px 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e2e8f0; }
 .d-filter-group { display: flex; gap: 10px; align-items: center; background: #f8fafc; padding: 8px 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-.d-label { font-size: 11px; font-weight: 800; color: var(--text-light); }
+.d-label { font-size: 11px; font-weight: 800; color: var(--text-light); text-transform: uppercase; }
 .d-inp { border: none; background: transparent; font-size: 13px; font-weight: 700; outline: none; font-family: 'Manrope'; }
 .multiselect { position: relative; display: inline-block; }
 .selectBox { position: relative; }
@@ -112,44 +110,48 @@ input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px 
 .bg-gray { background: #f1f5f9 !important; border-color: #cbd5e1 !important; color: #64748b !important; cursor: not-allowed; }
 button { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; background: var(--primary); color: white; transition: 0.2s; font-size: 13px; }
 button:hover { background: #1e40af; transform: translateY(-2px); }
-.process-row { background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; align-items: center; margin-bottom: 12px; }
+.process-row { background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
 .remove-btn { background: var(--c-danger); width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; color: white; box-shadow: 0 3px 8px rgba(220, 38, 38, 0.3); }
 
-/* --- PREVIEW MODAL GAUGE STYLES --- */
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999; }
-.modal-lg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 92%; max-width: 1000px; background: #fff; border-radius: 20px; z-index: 1000; box-shadow: 0 25px 60px rgba(0,0,0,0.3); overflow: hidden; animation: slideUp 0.3s; }
+/* --- EXCEL STYLE TABLE --- */
+.excel-table { width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #cbd5e1; }
+.excel-table th, .excel-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
+.excel-table th { background: #f1f5f9; color: #0f172a; font-weight: 800; }
+.excel-table .row-title { text-align: left; font-weight: 700; background: #f8fafc; }
+.ex-prod { background: #fcd9ce; } 
+.ex-def { background: #d0e8f2; }
+.ex-rate { background: #fff200; }
+.th-slant { position: relative; height: 110px; width: 45px; min-width: 45px; vertical-align: bottom; padding: 0 !important; background: #f8fafc; border: 1px solid #cbd5e1; }
+.th-slant span { position: absolute; bottom: 15px; left: 20px; transform: rotate(-45deg); transform-origin: bottom left; white-space: nowrap; font-size: 11px; font-weight: 800; color: #0f172a; }
+
+/* Matrix specific colors */
+.bg-peach { background-color: #ffebd2 !important; }
+.bg-lightblue { background-color: #cffafe !important; }
+.bg-yellow { background-color: #fef08a !important; }
+.fw-800 { font-weight: 800; }
+.sticky-col { position: sticky; left: 0; z-index: 3; box-shadow: 2px 0 5px rgba(0,0,0,0.05); border-right: 2px solid #cbd5e1 !important; }
+
+/* --- PREVIEW MODAL GAUGE & EXECUTIVE STYLES --- */
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9998; }
+.modal-lg { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 1200px; background: #fff; border-radius: 20px; z-index: 9999; box-shadow: 0 25px 60px rgba(0,0,0,0.3); overflow: hidden; animation: slideUp 0.3s; }
 .pv-header { padding: 25px 35px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fff; }
 .pv-body { padding: 35px; max-height: 85vh; overflow-y: auto; background: #fbfbfc; }
 
-.pv-meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-.pv-meta-item { text-align: center; border-right: 1px solid #f3f4f6; }
-.pv-meta-item:last-child { border-right: none; }
-.pv-label { font-size: 10px; font-weight: 800; color: #9ca3af; text-transform: uppercase; margin-bottom: 5px; }
-.pv-value { font-size: 18px; font-weight: 800; color: #1f2937; }
-
-.pv-gauge-row { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; padding: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; }
-.pv-stage-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-.pv-scard { padding: 20px; border-radius: 16px; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-.sc-blue { border-top: 4px solid var(--c-rmd); } .sc-purple { border-top: 4px solid var(--c-proc); } .sc-orange { border-top: 4px solid var(--c-smt); }
-.sc-title { font-size: 12px; font-weight: 800; text-transform: uppercase; opacity: 0.6; letter-spacing: 1px; color: #64748b; margin-bottom: 5px; }
-.sc-val { font-size: 28px; font-weight: 800; margin-bottom: 5px; color: #1e293b; }
-.sc-rate { font-size: 14px; font-weight: 700; padding: 3px 10px; border-radius: 20px; display: inline-block; }
-
-.pv-section-head { font-size: 14px; font-weight: 800; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-.pv-split { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
-.pv-split-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px; }
-.pv-d-card { background: #fff; padding: 15px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.2s; }
-.pv-dc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 700; color: #1f2937; }
-.pv-dc-badge { background: #f3f4f6; color: #4b5563; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
-.pv-defect-box { background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; margin-bottom: 8px; }
-.log-item { font-size: 11px; color: #475569; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; line-height: 1.4; }
-.log-item:last-child { border-bottom: none; }
-.log-date { font-weight: 800; color: #0f172a; margin-right: 5px; }
+/* Executive KPI Grid inside Modal */
+.exec-kpi-wrap { display: flex; gap: 15px; margin-bottom: 25px; }
+.exec-kpi { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.exec-kpi-lbl { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.exec-kpi-val { font-size: 28px; font-weight: 800; color: #0f172a; }
 
 /* Sub-Tables inside Modal */
 .modal-inner-table { width: 100%; border-collapse: collapse; font-size: 12px; background: white; }
-.modal-inner-table th { padding: 10px; background: #f1f5f9; color: #64748b; font-weight: 700; text-align: left; text-transform: uppercase; font-size: 10px; position: sticky; top:0; z-index: 2;}
-.modal-inner-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; color: #1e293b; font-weight: 600; }
+.modal-inner-table th { padding: 12px; background: #f8fafc; color: #475569; font-weight: 800; text-align: left; text-transform: uppercase; font-size: 10px; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 2; }
+.modal-inner-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; color: #1e293b; font-weight: 600; line-height: 1.4;}
+
+.pv-section-head { font-size: 14px; font-weight: 800; color: #374151; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.pv-split { display: grid; grid-template-columns: 1.5fr 1fr; gap: 25px; margin-bottom: 30px; }
+.pv-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+.pv-card-header { background: #f8fafc; padding: 15px; font-weight: 800; font-size: 13px; color: #0f172a; border-bottom: 1px solid #e2e8f0; display:flex; align-items:center; gap:8px; }
 
 /* Utils */
 .tab-content { display: none; }
@@ -180,9 +182,10 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 
 <!-- TABS -->
 <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('dashboard')"><i class="fa fa-chart-pie"></i> Dashboard</button>
-    <button class="tab-btn" onclick="switchTab('entry')"><i class="fa fa-pen-to-square"></i> Data Entry</button>
-    <button class="tab-btn" onclick="switchTab('report')"><i class="fa fa-table"></i> Records</button>
+    <button class="tab-btn active" onclick="switchTab('dashboard', this)"><i class="fa fa-chart-pie"></i> Dashboard</button>
+    <button class="tab-btn" onclick="switchTab('monthly', this)"><i class="fa fa-calendar-check"></i> Monthly Review</button>
+    <button class="tab-btn" onclick="switchTab('entry', this)"><i class="fa fa-pen-to-square"></i> Data Entry</button>
+    <button class="tab-btn" onclick="switchTab('report', this)"><i class="fa fa-table"></i> Records</button>
 </div>
 
 <!-- TAB 1: DASHBOARD -->
@@ -220,13 +223,14 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
 
         <!-- OVERVIEW TAB -->
         <div id="view_overview" class="dash-view active">
-            <div class="grid-50">
-                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:var(--c-smt);"></i> Top 5 Stage Defects (Overall)</div></div><table class="mgmt-table"><thead><tr><th>Defect Name</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_process_defects_list"></tbody></table></div>
-                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Most Actioned Defects (Top 3 Daily)</div></div><table class="mgmt-table"><thead><tr><th>Defect</th><th>Occurrences</th><th>Rate %</th></tr></thead><tbody id="d_functional_defects_list"></tbody></table></div>
+            <div class="grid-3">
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-simple" style="color:var(--c-proc);"></i> Stage Defect Rates (%)</div></div><div id="d_bar" style="width:100%; height:250px;"></div></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-bar" style="color:var(--c-proc);"></i> Defect Pareto</div></div><div id="d_overview_defect_pareto" style="width:100%; height:250px;"></div></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-bar" style="color:var(--c-danger);"></i> Cause Pareto</div></div><div id="d_overview_cause_pareto" style="width:100%; height:250px;"></div></div>
             </div>
             <div class="grid-2">
                  <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-line" style="color:var(--primary);"></i> Daily Rejection Trend</div></div><div id="d_trend_chart" style="width:100%; height:300px;"></div></div>
-                 <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-chart-simple" style="color:var(--c-proc);"></i> Stage Defect Rates (%)</div></div><div id="d_bar" style="width:100%; height:300px;"></div></div>
+                 <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:var(--c-smt);"></i> Top 5 Stage Defects (Overall)</div></div><table class="mgmt-table"><thead><tr><th>Defect Name</th><th>Qty</th><th>Rate %</th></tr></thead><tbody id="d_process_defects_list"></tbody></table></div>
             </div>
         </div>
 
@@ -248,7 +252,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
         <div id="view_defect" class="dash-view">
             <div class="grid-50">
                 <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-cogs" style="color:var(--c-proc);"></i> All Stage Defects Pareto (Overall)</div></div><div id="d_pareto_proc" style="width:100%; height:300px;"></div></div>
-                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Most Actioned Defects Pareto</div></div><div id="d_pareto_func" style="width:100%; height:300px;"></div></div>
+                <div class="mgmt-card"><div class="mc-header"><div class="mc-title"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Root Cause Pareto</div></div><div id="d_pareto_func" style="width:100%; height:300px;"></div></div>
             </div>
             <div class="grid-1">
                 <div class="mgmt-card">
@@ -282,6 +286,92 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
     </div>
 </div>
 
+<!-- TAB 1.5: MONTHLY REVIEW MEETING -->
+<div id="monthly" class="tab-content">
+    <div class="dash-container" id="monthlyReportContainer">
+        <!-- TOP BAR -->
+        <div class="dash-top-bar">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <h3 style="margin:0; font-size:16px; font-weight:800;"><i class="fa fa-calendar-alt" style="color:var(--primary);"></i> Monthly Review Meeting Report</h3>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                <div class="d-filter-group">
+                    <span class="d-label">SELECT MONTH</span>
+                    <input type="month" id="mr_month" class="d-inp" onchange="renderMonthlyReview()">
+                </div>
+                <button onclick="renderMonthlyReview()" style="padding:8px 15px; font-size:12px;">Generate</button>
+                <button onclick="downloadMonthlyPDF()" style="padding:8px 15px; font-size:12px; background:#b30b00;"><i class="fa fa-file-pdf"></i> Export PDF</button>
+            </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="mgmt-kpi-grid">
+            <div class="kpi-modern k-blue"><div class="kpi-icon"><i class="fa fa-cubes"></i></div><div><div class="kpi-val" id="mr_inp">0</div><div class="kpi-lbl">Total Input</div></div></div>
+            <div class="kpi-modern k-red"><div class="kpi-icon"><i class="fa fa-bug"></i></div><div><div class="kpi-val" id="mr_def">0</div><div class="kpi-lbl">Total Defects</div></div></div>
+            <div class="kpi-modern k-purple"><div class="kpi-icon"><i class="fa fa-chart-line"></i></div><div><div class="kpi-val" id="mr_rej">0%</div><div class="kpi-lbl">Avg Rejection Rate</div></div></div>
+            <div class="kpi-modern k-green"><div class="kpi-icon"><i class="fa fa-check-circle"></i></div><div><div class="kpi-val" id="mr_fpy">0%</div><div class="kpi-lbl">Avg FPY Rate</div></div></div>
+        </div>
+
+        <!-- DAILY DEFECT MONITORING MATRIX -->
+        <div class="grid-1">
+            <div class="mgmt-card" style="padding:0; overflow:hidden;">
+                <div class="mc-header" style="padding:20px; background:#f8fafc; margin-bottom:0; border-bottom:1px solid #e2e8f0;">
+                    <div class="mc-title"><i class="fa fa-calendar-day" style="color:var(--c-proc);"></i> Daily Defect Monitoring Matrix <span style="font-size:10px; font-weight:600; background:#eff6ff; padding:4px 8px; border-radius:4px; margin-left:10px; color:var(--primary);">💡 Click a Line No. to view Date-wise Defect Details</span></div>
+                </div>
+                <div class="table-responsive" style="max-height: 550px; overflow-y:auto; padding:20px;">
+                    <table class="excel-table" id="mr_daily_matrix">
+                        <!-- Populated dynamically via JS -->
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXCEL-LIKE SUMMARY MATRIX (LINE-WISE) -->
+        <div class="grid-1">
+            <div class="mgmt-card" style="padding:0; overflow:hidden;">
+                <div class="mc-header" style="padding:20px; background:#f8fafc; margin-bottom:0; border-bottom:1px solid #e2e8f0;">
+                    <div class="mc-title"><i class="fa fa-table" style="color:var(--primary);"></i> Total Summary Matrix (Line-Wise Aggregation)</div>
+                </div>
+                <div class="table-responsive" style="max-height: 500px; overflow-y:auto; padding:20px;">
+                    <table class="excel-table" id="mr_excel_table">
+                        <!-- Populated dynamically via JS -->
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TREND & STAGE -->
+        <div class="grid-2">
+            <div class="mgmt-card"><div class="mc-header"><div class="mc-title">Date-Wise Rejection Trend</div></div><div id="mr_date_chart" style="width:100%; height:300px;"></div></div>
+            <div class="mgmt-card"><div class="mc-header"><div class="mc-title">Stage Wise Defect Share</div></div><div id="mr_stage_chart" style="width:100%; height:300px;"></div></div>
+        </div>
+
+        <!-- LINE BAR CHART -->
+        <div class="grid-1">
+            <div class="mgmt-card"><div class="mc-header"><div class="mc-title">Line-Wise Total Rejection Rate %</div></div><div id="mr_line_chart" style="width:100%; height:300px;"></div></div>
+        </div>
+
+        <!-- PARETO GRIDS -->
+        <div class="grid-50">
+            <div class="mgmt-card"><div class="mc-header"><div class="mc-title">Defect Pareto Analysis</div></div><div id="mr_defect_pareto" style="width:100%; height:300px;"></div></div>
+            <div class="mgmt-card"><div class="mc-header"><div class="mc-title">Cause-Wise Pareto Analysis</div></div><div id="mr_cause_pareto" style="width:100%; height:300px;"></div></div>
+        </div>
+
+        <!-- ACTION PLAN -->
+        <div class="grid-1">
+            <div class="mgmt-card">
+                <div class="mc-header"><div class="mc-title"><i class="fa fa-clipboard-check" style="color:var(--c-success);"></i> Top Defect Analysis & Action Plan</div></div>
+                <div class="table-responsive">
+                    <table class="mgmt-table">
+                        <thead><tr><th>Actioned Defect Name</th><th>Occurrences</th><th>Primary Root Cause</th><th>Predominant Action Taken</th></tr></thead>
+                        <tbody id="mr_action_table"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- TAB 2: DATA ENTRY -->
 <div id="entry" class="tab-content">
     <div class="card" id="entryForm">
@@ -301,7 +391,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <option value="Ad 161 N"> <option value="Ad 181 Pro"> <option value="Ad 191 Anc">
             <option value="Ad 192"> <option value="Ad 212"> <option value="Ad 213">
             <option value="Ad 280 Anc"> <option value="Ad 300"> <option value="Ad 301">
-            <option value="Ad 311 Pro"> <option value="Ad 313"> <option value="Ad 701 Anc"><option value="Ad Plus Aura">
+            <option value="Ad 311 Pro"> <option value="Ad 313"> <option value="Ad 701 Anc">
             <option value="AD 71"> <option value="Ad 800"> <option value="Ad 800 Hidef">
             <option value="Ad 91"> <option value="Ad 91 Prime"> <option value="Ad Ace Gen 2">
             <option value="Ad Alpha Gen 2"> <option value="AD Hype"> <option value="AD Kick">
@@ -334,7 +424,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <option value="RF Fail"> <option value="Sensor Fail"> <option value="Cavity Crack"> <option value="Low Volatge">
             <option value="Dut Mode"> <option value="Dent, Scratch"> <option value="Pogo Pin Issue">
             <option value="LED Issue"><option value="Camera Blurr"><option value="Spot Mark in camera"> <option value="Wifi Not work"><option value="Rotator issue">
-<option value="G sensor"> <option value="BT not connect"> <option value="Buds Heating">
+            <option value="G sensor"> <option value="BT not connect"> <option value="Buds Heating">
             <option value="Battery Drain"> <option value="High Current"> <option value="Inquiry Fail">
             <option value="Low Current"> <option value="Low Sound"> <option value="Electric Sound">
             <option value="Software PCBA"> <option value="Polarity Reverse"> <option value="Distortion">
@@ -343,6 +433,18 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <option value="Hall Sensor"> <option value="Key Hard"> <option value="Tail Plug Crack">
             <option value="Middle Cavity Burn"> <option value="Key Not Reset"> <option value="Sleep Mode">
             <option value="Stuck">
+        </datalist>
+
+        <datalist id="cause_list">
+            <option value="Glue on MIC"><option value="Antenna bend"><option value="Dry soldering">
+            <option value="Cavity NG"><option value="Mylar Shift"><option value="Wire pinch">
+            <option value="Wire detached"><option value="Glue on diaphragm"><option value="Fitment issue">
+            <option value="FPC damage"><option value="Glue on Sensor pin"><option value="Low impedance">
+            <option value="Key damage"><option value="Led damage"><option value="Magnet Weak">
+            <option value="Pogo/Antenna Pin Mismatch"><option value="Speaker NG"><option value="MIC NG">
+            <option value="Battery NG"><option value="FPC NG"><option value="PCBA NG">
+            <option value="Main IC NG"><option value="Capacitor NG"><option value="Resistor NG">
+            <option value="Glue on pin">
         </datalist>
 
         <div class="form-row">
@@ -372,12 +474,6 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
         </div>
         <div id="process_container"></div>
         
-        <h4 style="margin:25px 0 10px 0; font-size:13px; color:var(--c-danger); border-bottom:1px solid #e5e7eb;">Top 3 Daily Defects (Auto-populated from above)</h4>
-        <div class="form-row">
-            <div class="form-group"><label>Top 1 <span id="r1_span" style="color:var(--primary); font-size:10px;"></span></label><input id="d1" readonly class="bg-gray" placeholder="Name"><input id="q1" readonly class="bg-gray" placeholder="Qty" style="margin-top:5px;"><input id="c1" placeholder="Root Cause" style="margin-top:5px;"><input id="a1" placeholder="Action Taken" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Top 2 <span id="r2_span" style="color:var(--primary); font-size:10px;"></span></label><input id="d2" readonly class="bg-gray" placeholder="Name"><input id="q2" readonly class="bg-gray" placeholder="Qty" style="margin-top:5px;"><input id="c2" placeholder="Root Cause" style="margin-top:5px;"><input id="a2" placeholder="Action Taken" style="margin-top:5px;"></div>
-            <div class="form-group"><label>Top 3 <span id="r3_span" style="color:var(--primary); font-size:10px;"></span></label><input id="d3" readonly class="bg-gray" placeholder="Name"><input id="q3" readonly class="bg-gray" placeholder="Qty" style="margin-top:5px;"><input id="c3" placeholder="Root Cause" style="margin-top:5px;"><input id="a3" placeholder="Action Taken" style="margin-top:5px;"></div>
-        </div>
         <div class="form-row" style="margin-top:30px;">
             <div class="form-group"><label>Prepared By</label><input id="prep" placeholder="Enter Name"></div>
             <button onclick="saveData()" id="saveBtn" style="width:100%; margin-top:23px; height:45px; font-size:15px;">SAVE RECORD</button>
@@ -415,11 +511,11 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
       <div style="display:flex; align-items:center; gap:10px;">
           <img id="modalLogo" src="" style="height:35px;">
           <div>
-              <div id="modalTitleMain" style="font-weight:800; font-size:16px;">INSPECTION DETAILS</div>
-              <div id="modalTitleSub" style="font-size:11px; color:#64748b;">Daily Quality Report</div>
+              <div id="modalTitleMain" style="font-weight:800; font-size:18px;">EXECUTIVE SUMMARY</div>
+              <div id="modalTitleSub" style="font-size:12px; color:#64748b; font-weight:700; text-transform:uppercase;">Analysis Report</div>
           </div>
       </div>
-      <button onclick="closeModal()" style="border:none; background:none; font-size:20px; cursor:pointer; color:#64748b;">&times;</button>
+      <button onclick="closeModal()" style="border:none; background:none; font-size:24px; cursor:pointer; color:#64748b;">&times;</button>
   </div>
   <div class="pv-body" id="previewContent"></div>
 </div>
@@ -439,22 +535,29 @@ let editingRowIndex = null;
 let currentCategory = "Earbuds"; 
 let expandedLines = false;
 
-// Store global parsed Maps for the dynamic tabs to use instantly
 window.currentDefectMaps = { Overall: {}, Process: {}, SMT: {}, RMD: {} };
 window.currentDefectTotals = { Overall: 0, Process: 0, SMT: 0, RMD: 0 };
+window.currentMatrixData = {};
 
 function init() {
     const box = document.getElementById('lineSelectBox');
     let html = '<div style="display:flex; gap:8px; flex-wrap:wrap;">';
     for(let i=1; i<=24; i++){ html += `<label style="font-size:11px; display:flex; align-items:center; gap:4px; cursor:pointer;"><input type="checkbox" value="${i}" class="line-chk"> L${i}</label>`; }
     html += '</div>'; box.innerHTML = html;
+    
     const dashBox = document.getElementById('checkboxes');
     let dHtml = '';
     for(let i=1; i<=24; i++){ dHtml += `<label><input type="checkbox" value="${i}" class="dash-line-chk" /> Line ${i}</label>`; }
     dashBox.innerHTML = dHtml;
+    
     const today = new Date(); const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     document.getElementById('dash_from').value = firstDay.toISOString().slice(0,10);
     document.getElementById('dash_to').value = today.toISOString().slice(0,10);
+
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    document.getElementById('mr_month').value = `${yyyy}-${mm}`;
+
     addDefectRow('Process'); 
 }
 init();
@@ -465,7 +568,6 @@ function toggleCheckboxes() {
   else { checkboxes.style.display = "none"; expandedLines = false; }
 }
 
-// Applies active Dashboard Filters to get relevant Historical Rows
 function getDashFilteredRows() {
     const dFrom = document.getElementById('dash_from').value;
     const dTo = document.getElementById('dash_to').value;
@@ -474,9 +576,7 @@ function getDashFilteredRows() {
     const selectedLines = Array.from(checkboxes).map(cb => cb.value);
 
     return allData.slice(1).filter(r => {
-        let rDate = fixDate(r[0]);
-        let rLine = r[2].toString();
-        let rModel = r[3] || "";
+        let rDate = fixDate(r[0]); let rLine = r[2] ? r[2].toString().trim() : ""; let rModel = r[3] || "";
         let match = true;
         if(dFrom && rDate < dFrom) match = false;
         if(dTo && rDate > dTo) match = false;
@@ -486,352 +586,544 @@ function getDashFilteredRows() {
     });
 }
 
-// 📌 HELPER LOGIC FOR GENERATING AGGREGATED VIEWS (LINE & MODEL)
-function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
-    let rawRows = getDashFilteredRows();
-    let rows = rawRows.filter(r => r[filterKeyIndex] == entityValue);
+// 📌 100% BULLETPROOF GLOBAL ATTACHMENTS
+window.showLineSummary = function(lineNo) {
+    showEntitySummary(lineNo, 2, 'Line');
+};
 
-    if(rows.length === 0) { alert("No historical data found for " + entityLabel + " " + entityValue + " in the selected date range."); return; }
+window.showModelSummary = function(modelName) {
+    showEntitySummary(modelName, 3, 'Model');
+};
 
-    rows.sort((a,b) => new Date(fixDate(a[0])) - new Date(fixDate(b[0])));
+window.showDefectSummary = function(pureDefectName) {
+    executeDefectDeepDive(pureDefectName);
+};
 
-    let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
-    let pMap = {}, fMap = {}, shiftMap = {}, secondaryMap = {};
-
-    let trHtml = "";
-    rows.forEach(r => {
-        let date = fixDate(r[0]); let shift = r[1] || 'Unknown'; let line = r[2] || 'Unknown'; let model = r[3] || 'Unknown';
-        let inp = +r[4]||0; let def = +r[5]||0; let rejR = r[6]||0;
-        
-        tInp += inp; tDef += def;
-        tRMD += +r[8]||0; tProc += +r[10]||0; tSMT += +r[12]||0;
-
-        if(!shiftMap[shift]) shiftMap[shift] = {inp:0, def:0};
-        shiftMap[shift].inp += inp; shiftMap[shift].def += def;
-
-        let secKey = filterKeyIndex === 2 ? model : line; 
-        if(!secondaryMap[secKey]) secondaryMap[secKey] = {inp:0, def:0};
-        secondaryMap[secKey].inp += inp; secondaryMap[secKey].def += def;
-
-        trHtml += `<tr><td><b>${date}</b></td><td>${shift}</td><td>${filterKeyIndex === 2 ? model : 'L-'+line}</td><td>${inp}</td><td>${def}</td><td><span class="badge-rate ${rejR>5?'b-high':(rejR>2?'b-smt':'b-proc')}">${rejR}%</span></td></tr>`;
-
-        if(r[14]) {
-            let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n');
-            pNames.forEach((n, i) => {
-                if(n) {
-                    if(!pMap[n]) pMap[n] = { total: 0, logs: [] };
-                    pMap[n].total += (+pQtys[i]||0);
-                    pMap[n].logs.push({ date: date, qty: pQtys[i], anal: pAnals[i]||'No Analysis Provided' });
-                }
-            });
-        }
-        
-        const addFuncDef = (n, q, c, a, dateStr) => {
-            if(n) {
-                if(!fMap[n]) fMap[n] = { total: 0, logs: [] };
-                fMap[n].total += (+q||0);
-                fMap[n].logs.push({ date: dateStr, qty: q, cause: c||'-', action: a||'-' });
-            }
-        };
-        addFuncDef(r[17], r[18], r[19], r[20], date);
-        addFuncDef(r[21], r[22], r[23], r[24], date);
-        addFuncDef(r[25], r[26], r[27], r[28], date);
-    });
-
-    let rRate = tInp > 0 ? (tDef/tInp*100).toFixed(2) : 0;
-    let fRate = tInp > 0 ? (100 - rRate).toFixed(2) : 0;
-    let rmdR = tInp > 0 ? (tRMD/tInp*100).toFixed(2) : 0;
-    let procR = tInp > 0 ? (tProc/tInp*100).toFixed(2) : 0;
-    let smtR = tInp > 0 ? (tRMD/tInp*100).toFixed(2) : 0;
-
-    let secHtml = `<table class="modal-inner-table"><thead><tr><th>${filterKeyIndex === 2 ? 'Model' : 'Line'}</th><th>Input</th><th>Rej %</th></tr></thead><tbody>`;
-    Object.entries(secondaryMap).sort((a,b)=>b[1].inp - a[1].inp).forEach(([k, d]) => {
-        let mRate = d.inp > 0 ? (d.def/d.inp*100).toFixed(2) : 0; let barW = Math.min(mRate, 100);
-        secHtml += `<tr><td><b>${filterKeyIndex === 2 ? k : 'L-'+k}</b></td><td>${d.inp}</td>
-        <td><div style="display:flex; align-items:center; gap:8px;"><span class="badge-rate ${mRate>2?'b-high':'b-proc'}">${mRate}%</span>
-        <div style="flex:1; background:#f1f5f9; height:4px; border-radius:4px;"><div style="width:${barW}%; background:var(--c-danger); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
-    });
-    secHtml += `</tbody></table>`;
-
-    let shiftHtml = `<table class="modal-inner-table"><thead><tr><th>Shift</th><th>Input</th><th>Rej %</th></tr></thead><tbody>`;
-    Object.keys(shiftMap).sort().forEach(s => {
-        let sRate = shiftMap[s].inp > 0 ? (shiftMap[s].def/shiftMap[s].inp*100).toFixed(2) : 0;
-        shiftHtml += `<tr><td><b>Shift ${s}</b></td><td>${shiftMap[s].inp}</td><td><span class="badge-rate ${sRate>2?'b-high':'b-proc'}">${sRate}%</span></td></tr>`;
-    });
-    shiftHtml += `</tbody></table>`;
-
-    let pHtml = Object.entries(pMap).sort((a,b)=>b[1].total-a[1].total).map(x => {
-        let defName = x[0].replace(/^\[.*?\]\s/, ''); let data = x[1];
-        let logsHtml = data.logs.map(l => `<div class="log-item"><span class="log-date">${l.date}</span> <span style="background:#e2e8f0; padding:1px 5px; border-radius:4px; font-weight:700;">Qty: ${l.qty}</span><br><i>Analysis: ${l.anal}</i></div>`).join('');
-        return `<div class="pv-defect-box" style="border-left:4px solid var(--c-proc); margin-bottom:15px; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-            <div style="display:flex;justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-weight:800; font-size:14px; color:#1e293b;">${defName}</span>
-                <span style="background:var(--c-proc); color:white; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">Total: ${data.total}</span>
-            </div>
-            <div style="background:#fff; padding:8px 12px; border-radius:6px; border:1px solid #f1f5f9; max-height:180px; overflow-y:auto;">${logsHtml}</div>
-        </div>`;
-    }).join('');
-    if(!pHtml) pHtml = "<div style='color:#999;font-size:12px; padding:10px;'>No defects recorded.</div>";
-
-    let fHtml = Object.entries(fMap).sort((a,b)=>b[1].total-a[1].total).map(x => {
-        let defName = x[0]; let data = x[1];
-        let logsHtml = data.logs.map(l => `<div class="log-item"><span class="log-date">${l.date}</span> <span style="background:#e2e8f0; padding:1px 5px; border-radius:4px; font-weight:700;">Qty: ${l.qty}</span><br><b style="color:var(--c-danger);">Cause:</b> ${l.cause}<br><b style="color:var(--c-success);">Action:</b> ${l.action}</div>`).join('');
-        return `<div class="pv-defect-box" style="border-left:4px solid var(--c-danger); margin-bottom:15px; box-shadow:0 2px 5px rgba(0,0,0,0.02);">
-            <div style="display:flex;justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="font-weight:800; font-size:14px; color:#1e293b;">${defName}</span>
-                <span style="background:var(--c-danger); color:white; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:700;">Total: ${data.total}</span>
-            </div>
-            <div style="background:#fff; padding:8px 12px; border-radius:6px; border:1px solid #f1f5f9; max-height:180px; overflow-y:auto;">${logsHtml}</div>
-        </div>`;
-    }).join('');
-    if(!fHtml) fHtml = "<div style='color:#999;font-size:12px; padding:10px;'>No root-cause actions recorded.</div>";
-
-    let dateRangeStr = document.getElementById('dash_from').value + " to " + document.getElementById('dash_to').value;
-    document.getElementById('modalTitleMain').innerText = `${entityLabel.toUpperCase()} ${entityValue} SUMMARY`;
-    document.getElementById('modalTitleSub').innerText = `${dateRangeStr} (${currentCategory})`;
-
-    document.getElementById("previewContent").innerHTML = `
-        <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center; background:#f8fafc; padding:15px; border-radius:12px; border:1px solid #e2e8f0;">
-            <div style="font-size:13px; font-weight:700; color:var(--text-light);">Records Count: <span style="color:var(--primary); font-size:15px; font-weight:800;">${rows.length} Entries</span></div>
-        </div>
-        <div class="pv-meta-grid" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="pv-meta-item"><div class="pv-label">Total Input</div><div class="pv-value">${tInp.toLocaleString()}</div></div>
-            <div class="pv-meta-item"><div class="pv-label">Total Defects</div><div class="pv-value">${tDef.toLocaleString()}</div></div>
-            <div class="pv-meta-item"><div class="pv-label">Avg FPY</div><div class="pv-value" style="color:var(--c-success);">${fRate}%</div></div>
-            <div class="pv-meta-item"><div class="pv-label">Avg Rejection</div><div class="pv-value" style="color:var(--c-danger);">${rRate}%</div></div>
-        </div>
-        <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Defect Analysis</div>
-        <div class="pv-stage-cards">
-            <div class="pv-scard sc-blue"><div class="sc-title">RMD</div><div class="sc-val">${tRMD}</div><div class="sc-sub"><span class="sc-rate" style="background:#eff6ff; color:#3b82f6;">${rmdR}%</span></div></div>
-            <div class="pv-scard sc-purple"><div class="sc-title">Process</div><div class="sc-val">${tProc}</div><div class="sc-sub"><span class="sc-rate" style="background:#f5f3ff; color:#8b5cf6;">${procR}%</span></div></div>
-            <div class="pv-scard sc-orange"><div class="sc-title">SMT</div><div class="sc-val">${tSMT}</div><div class="sc-sub"><span class="sc-rate" style="background:#fff7ed; color:#f59e0b;">${smtR}%</span></div></div>
-        </div>
-        <div class="pv-split" style="margin-bottom:30px;">
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.02);"><div style="background:#f8fafc; padding:12px; font-weight:800; font-size:13px; color:#0f172a; border-bottom:1px solid #e2e8f0;"><i class="fa fa-crown" style="color:var(--c-smt);"></i> ${filterKeyIndex === 2 ? 'Model' : 'Line'} Breakdown</div><div style="max-height:200px; overflow-y:auto;">${secHtml}</div></div>
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.02);"><div style="background:#f8fafc; padding:12px; font-weight:800; font-size:13px; color:#0f172a; border-bottom:1px solid #e2e8f0;"><i class="fa fa-clock" style="color:var(--primary);"></i> Shift Comparison</div><div>${shiftHtml}</div></div>
-        </div>
-        <div style="margin-bottom:30px;">
-            <div class="pv-section-head" style="color:#0f172a;"><i class="fa fa-calendar-days"></i> Date-Wise Production Logs</div>
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; max-height: 250px; overflow-y:auto; box-shadow:0 2px 10px rgba(0,0,0,0.02);">
-                <table class="modal-inner-table" style="margin:0;">
-                    <thead style="position:sticky; top:0; background:#f1f5f9; z-index:1; border-bottom:2px solid #e2e8f0;"><tr><th>Date</th><th>Shift</th><th>${filterKeyIndex === 2 ? 'Model' : 'Line'}</th><th>Input</th><th>Defects</th><th>Rej %</th></tr></thead>
-                    <tbody style="background:white;">${trHtml}</tbody>
-                </table>
-            </div>
-        </div>
-        <div class="pv-split">
-            <div><h4 class="pv-section-head" style="color:var(--c-proc); border-color:var(--c-proc);"><i class="fa fa-cogs"></i> Defect Details Breakdown</h4>${pHtml}</div>
-            <div><h4 class="pv-section-head" style="color:var(--c-danger); border-color:var(--c-danger);"><i class="fa fa-bug"></i> Root Cause & Action Reports</h4>${fHtml}</div>
-        </div>
-    `;
-
-    document.getElementById("overlay").style.display = 'block'; 
-    document.getElementById("previewModal").style.display = 'block';
+window.switchModalView = function(view) {
+    document.querySelectorAll('.modal-main-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('modal_exec_view').style.display = 'none';
+    document.getElementById('modal_matrix_view').style.display = 'none';
+    
+    if(view === 'exec') {
+        document.querySelectorAll('.modal-main-tab')[0].classList.add('active');
+        document.getElementById('modal_exec_view').style.display = 'block';
+    } else {
+        document.querySelectorAll('.modal-main-tab')[1].classList.add('active');
+        document.getElementById('modal_matrix_view').style.display = 'block';
+    }
 }
 
-function showLineSummary(lineNo) { showEntitySummary(lineNo, 2, 'Line'); }
-function showModelSummary(modelName) { showEntitySummary(modelName, 3, 'Model'); }
-
-// 📌 Comprehensive Defect Wise Analysis Report (with Stage Split Integration)
-function showDefectSummary(pureDefectName) {
-    let rows = getDashFilteredRows();
-    let logs = []; let lineMap = {}; let modelMap = {}; let shiftMap = {}; let catMap = {'Process': 0, 'SMT': 0, 'RMD': 0};
-    let totalQty = 0;
-
-    rows.forEach(r => {
-        let date = fixDate(r[0]); let shift = r[1] || 'Unknown'; let line = r[2] || 'Unknown'; let model = r[3] || 'Unknown';
-        let foundQty = 0; let details = ""; let causes = "";
-        
-        // 1. Accumulate Quantities from the categorized logs (with Stage parsing)
-        if(r[14]) {
-            let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16] ? r[16].toString().split('\n') : [];
-            pNames.forEach((n, i) => { 
-                let match = n.match(/^\[(.*?)\]\s(.*)$/);
-                let stage = match ? match[1] : 'Process';
-                let dName = match ? match[2] : n.trim();
-
-                if(dName === pureDefectName) { 
-                    let q = (+pQtys[i]||0);
-                    foundQty += q; 
-                    if(catMap[stage] !== undefined) catMap[stage] += q;
-                    if(pAnals[i]) details += pAnals[i] + " "; 
-                } 
-            });
-        }
-        
-        // 2. Check if it was actioned in Top 3 to append Root Cause/Action text logs
-        const checkCause = (dIdx, cIdx, aIdx) => {
-            if(r[dIdx] && r[dIdx].trim() === pureDefectName) {
-                causes += `Cause: ${r[cIdx]||'-'} | Action: ${r[aIdx]||'-'} `;
-            }
-        };
-        checkCause(17, 19, 20);
-        checkCause(21, 23, 24);
-        checkCause(25, 27, 28);
-
-        if(foundQty > 0 || causes !== "") {
-            if(foundQty === 0) return; // Ignore ghost text-only logs if qty is somehow 0
-            
-            totalQty += foundQty;
-            lineMap[line] = (lineMap[line]||0) + foundQty;
-            modelMap[model] = (modelMap[model]||0) + foundQty;
-            shiftMap[shift] = (shiftMap[shift]||0) + foundQty;
-            
-            let combinedText = "";
-            if(details) combinedText += `<b>Analysis:</b> ${details}<br>`;
-            if(causes) combinedText += `<span style="color:var(--c-danger);"><b>Actioned:</b> ${causes}</span>`;
-            if(!combinedText) combinedText = "No additional details logged.";
-            
-            logs.push({ date, shift, line, model, qty: foundQty, details: combinedText });
-        }
+// 📌 MATRIX RENDERING FUNCTION
+window.renderLineMatrix = function(filterStage) {
+    let data = window.currentMatrixData;
+    let dates = data.dates;
+    
+    let html = '<table class="excel-table line-matrix-table" style="min-width: 1000px; white-space: nowrap;">';
+    
+    // Header Row (Dates)
+    html += '<thead><tr><th class="sticky-col bg-white" style="width: 200px; font-size:18px; color:var(--primary); padding:10px !important;">Defect<br>Monitoring</th>';
+    dates.forEach(d => {
+        let dObj = new Date(d);
+        let m = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dObj.getMonth()];
+        let label = String(dObj.getDate()).padStart(2, '0') + '-' + m; 
+        html += `<th class="th-slant"><span>${label}</span></th>`;
     });
-
-    if(totalQty === 0) { alert("No occurrences found for this defect in the selected range."); return; }
-
-    const genTable = (map, label) => {
-        let html = `<table class="modal-inner-table"><thead><tr><th>${label}</th><th>Qty</th><th>% Share</th></tr></thead><tbody>`;
-        Object.entries(map).sort((a,b)=>b[1]-a[1]).forEach(([k, v]) => {
-            if(v === 0 && label === 'Stage') return; // Skip empty stages
-            let pct = (v/totalQty*100).toFixed(1);
-            let displayKey = label === 'Line' ? 'L-'+k : k;
-            html += `<tr><td><b>${displayKey}</b></td><td>${v}</td><td><div style="display:flex; align-items:center; gap:5px;"><span style="min-width:40px; font-size:10px; font-weight:800;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:4px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--primary); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
-        });
-        return html + `</tbody></table>`;
-    };
-
-    let logHtml = "";
-    logs.sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(l => {
-        logHtml += `<div class="log-item" style="padding:10px; background:#fff; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:8px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-weight:800; font-size:12px; color:#1e293b;">
-                <span>🗓️ ${l.date} | Shift ${l.shift}</span><span style="background:var(--c-danger); color:white; padding:2px 8px; border-radius:12px;">Qty: ${l.qty}</span>
-            </div>
-            <div style="display:flex; gap:10px; font-size:11px; color:#64748b; margin-bottom:5px;"><span><b>Line:</b> L-${l.line}</span> <span><b>Model:</b> ${l.model}</span></div>
-            <div style="background:#f8fafc; padding:6px; border-radius:4px; font-style:italic;">📝 ${l.details}</div>
-        </div>`;
-    });
-
-    let maxLine = Object.keys(lineMap).length > 0 ? Object.entries(lineMap).sort((a,b)=>b[1]-a[1])[0][0] : "-";
-    let maxModel = Object.keys(modelMap).length > 0 ? Object.entries(modelMap).sort((a,b)=>b[1]-a[1])[0][0] : "-";
-
-    document.getElementById('modalTitleMain').innerText = `DEFECT REPORT: ${pureDefectName.toUpperCase()}`;
-    document.getElementById('modalTitleSub').innerText = `COMPREHENSIVE DEFECT SUMMARY`;
-    document.getElementById("previewContent").innerHTML = `
-        <div class="pv-meta-grid" style="grid-template-columns: repeat(3, 1fr); background:#eff6ff; border-color:#bfdbfe;">
-            <div class="pv-meta-item"><div class="pv-label">Total Occurrences</div><div class="pv-value" style="color:var(--primary); font-size:24px;">${totalQty}</div></div>
-            <div class="pv-meta-item"><div class="pv-label">Most Affected Line</div><div class="pv-value">Line ${maxLine}</div></div>
-            <div class="pv-meta-item"><div class="pv-label">Most Affected Model</div><div class="pv-value">${maxModel}</div></div>
-        </div>
-        
-        <div class="pv-split-3">
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;"><div style="background:#f8fafc; padding:12px; font-weight:800; font-size:13px; border-bottom:1px solid #e2e8f0;">Line Contribution</div><div style="max-height:200px; overflow-y:auto;">${genTable(lineMap, 'Line')}</div></div>
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;"><div style="background:#f8fafc; padding:12px; font-weight:800; font-size:13px; border-bottom:1px solid #e2e8f0;">Model Contribution</div><div style="max-height:200px; overflow-y:auto;">${genTable(modelMap, 'Model')}</div></div>
-            <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;"><div style="background:#f8fafc; padding:12px; font-weight:800; font-size:13px; border-bottom:1px solid #e2e8f0;">Stage Distribution</div><div style="max-height:200px; overflow-y:auto;">${genTable(catMap, 'Stage')}</div></div>
-        </div>
-        
-        <div style="margin-top:20px;">
-            <div class="pv-section-head"><i class="fa fa-clipboard-list" style="color:var(--primary);"></i> Defect Action Logs</div>
-            <div style="max-height:300px; overflow-y:auto; padding:5px; background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">${logHtml}</div>
-        </div>
-    `;
-
-    document.getElementById("overlay").style.display = 'block'; 
-    document.getElementById("previewModal").style.display = 'block';
-}
-
-// Render dynamic tabs for Comprehensive Defect Table
-window.renderDefectTable = function(tabName) {
-    // UI Update
-    document.querySelectorAll('.def-tab-btn').forEach(btn => btn.classList.toggle('active', btn.innerText === tabName));
-
-    let map = window.currentDefectMaps[tabName] || {};
-    let total = window.currentDefectTotals[tabName] || 0;
-    let sorted = Object.entries(map).sort((a,b) => b[1]-a[1]);
-
-    let html = "";
-    sorted.forEach(d => {
-        let dName = d[0]; let qty = d[1];
-        let pct = total > 0 ? ((qty/total)*100).toFixed(1) : 0;
-        let badgeClass = tabName === 'Overall' ? 'b-proc' : (tabName==='SMT'?'b-smt':(tabName==='RMD'?'b-rmd':'b-proc'));
-        let catBadge = tabName === 'Overall' ? 'All Stages' : tabName;
-
-        html += `<tr>
-            <td><span class="badge-rate ${badgeClass}">${catBadge}</span></td>
-            <td><span class="line-link" onclick="showDefectSummary('${dName.replace(/'/g, "\\'")}')"><b>${dName}</b></span></td>
-            <td>${qty}</td>
-            <td><div style="display:flex; align-items:center; gap:5px;"><span style="font-size:11px; font-weight:800; min-width:35px;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:4px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--primary); height:100%; border-radius:4px;"></div></div></div></td>
-        </tr>`;
+    html += '</tr></thead><tbody>';
+    
+    // Model
+    html += '<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">Model Name</td>';
+    dates.forEach(d => html += `<td class="bg-peach" style="font-weight:800;">${data.daily[d].models.join(', ')}</td>`);
+    html += '</tr>';
+    
+    // Production
+    html += '<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">Production</td>';
+    dates.forEach(d => html += `<td class="bg-peach fw-800">${data.daily[d].prod || ''}</td>`);
+    html += '</tr>';
+    
+    // Qtys
+    let qtyRows = [
+        { label: 'Process Defect Qty.', key: 'proc' },
+        { label: 'RMD Defect Qty.', key: 'rmd' },
+        { label: 'SMT Defect Qty.', key: 'smt' },
+        { label: 'Total Defects', key: 'tot', bg: 'bg-white' }
+    ];
+    qtyRows.forEach((r, i) => {
+        let bg = i === 3 ? 'background:#e2e8f0;' : 'background:#cffafe;';
+        html += `<tr><td class="sticky-col row-title" style="${bg} font-size:11px; border-right:2px solid #cbd5e1 !important;">${r.label}</td>`;
+        dates.forEach(d => html += `<td style="${bg} font-weight:800;">${data.daily[d].prod > 0 ? (data.daily[d][r.key] || '0') : ''}</td>`);
+        html += '</tr>';
     });
     
+    // Rates
+    let rateRows = [
+        { label: 'Process Rate', key: 'proc' },
+        { label: 'RMD Rate', key: 'rmd' },
+        { label: 'SMT Rate', key: 'smt' },
+        { label: 'Total Rejection Rate', key: 'tot' }
+    ];
+    rateRows.forEach(r => {
+        html += `<tr><td class="sticky-col row-title bg-yellow" style="font-size:11px;">${r.label}</td>`;
+        dates.forEach(d => {
+            let p = data.daily[d].prod;
+            let v = data.daily[d][r.key];
+            let text = p > 0 ? (v/p*100).toFixed(2)+'%' : (p === 0 && v === 0 && !data.daily[d].hasInput ? '' : '#DIV/0!');
+            html += `<td class="bg-yellow fw-800">${text}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    // Defects
+    let defectsToShow = [];
+    if(filterStage === 'Overall') {
+        defectsToShow = Object.keys(data.defectStages);
+    } else {
+        defectsToShow = Object.keys(data.defectStages).filter(k => data.defectStages[k] === filterStage);
+    }
+    defectsToShow.sort(); 
+    
+    if(defectsToShow.length === 0) {
+        html += `<tr><td class="sticky-col bg-white" style="color:var(--text-light); text-align:center;">No ${filterStage !== 'Overall' ? filterStage : ''} Defects</td><td colspan="${dates.length}"></td></tr>`;
+    }
+
+    defectsToShow.forEach(def => {
+        html += `<tr><td class="sticky-col row-title bg-white" style="font-weight:600; font-size:11px; color:#333;">${def}</td>`;
+        dates.forEach(d => {
+            let q = data.daily[d].defects[def];
+            html += `<td>${q ? q : ''}</td>`;
+        });
+        html += '</tr>';
+    });
+    
+    html += '</tbody></table>';
+    document.getElementById('modal_matrix_container').innerHTML = html;
+    
+    document.querySelectorAll('.matrix-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.innerText === filterStage);
+    });
+};
+
+// 📌 IMPROVED EXECUTIVE LINE/MODEL SUMMARY WITH DETAILED TABLE & DAILY MATRIX
+function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
+    try {
+        let rawRows = getDashFilteredRows();
+        let safeEntityValue = entityValue ? entityValue.toString().trim() : "";
+        
+        let rows = rawRows.filter(r => r[filterKeyIndex] && r[filterKeyIndex].toString().trim() === safeEntityValue);
+
+        if(rows.length === 0) { 
+            alert(`No historical data found for ${entityLabel} ${safeEntityValue} in the selected date range.\n\nPlease adjust your Dashboard Filters to ensure dates are correct.`); 
+            return; 
+        }
+        
+        rows.sort((a,b) => new Date(fixDate(a[0])) - new Date(fixDate(b[0])));
+
+        let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
+        let defectMap = {}; let dateTrendData = [['Date', 'Rejection %', {role:'annotation'}]]; 
+        let tempDateMap = {};
+        
+        let detailedLogs = []; 
+
+        // ----------------------------------------------------
+        // BUILD MATRIX DATA ARCHITECTURE
+        // ----------------------------------------------------
+        let fromDate = document.getElementById('dash_from').value;
+        let toDate = document.getElementById('dash_to').value;
+        let datesArr = [];
+        let curr = new Date(fromDate);
+        let endD = new Date(toDate);
+        while(curr <= endD) {
+            datesArr.push(curr.toISOString().slice(0,10));
+            curr.setDate(curr.getDate() + 1);
+        }
+        
+        let matrix = { dates: datesArr, daily: {}, defectStages: {} };
+        datesArr.forEach(d => {
+            matrix.daily[d] = { models: new Set(), prod: 0, proc: 0, rmd: 0, smt: 0, tot: 0, defects: {}, hasInput: false };
+        });
+
+        rows.forEach(r => {
+            let date = fixDate(r[0]); let inp = +r[4]||0; let def = +r[5]||0;
+            tInp += inp; tDef += def; tRMD += +r[8]||0; tProc += +r[10]||0; tSMT += +r[12]||0;
+
+            if(!tempDateMap[date]) tempDateMap[date] = {inp:0, def:0};
+            tempDateMap[date].inp += inp; tempDateMap[date].def += def;
+
+            // Fill Matrix Daily Info
+            if(matrix.daily[date]) {
+                if(r[3]) matrix.daily[date].models.add(r[3]);
+                matrix.daily[date].hasInput = true;
+                matrix.daily[date].prod += inp;
+                matrix.daily[date].tot += def;
+                matrix.daily[date].rmd += (+r[8]||0);
+                matrix.daily[date].proc += (+r[10]||0);
+                matrix.daily[date].smt += (+r[12]||0);
+            }
+
+            // Extract Top 3 causes into a map for this specific row to match later
+            let rowCauses = {};
+            if(r[17]) rowCauses[r[17].trim()] = { cause: r[19] || '', action: r[20] || '' };
+            if(r[21]) rowCauses[r[21].trim()] = { cause: r[23] || '', action: r[24] || '' };
+            if(r[25]) rowCauses[r[25].trim()] = { cause: r[27] || '', action: r[28] || '' };
+
+            if(r[14]) {
+                let pNames = r[14].toString().split('\n'); 
+                let pQtys = r[15].toString().split('\n');
+                let pAnals = r[16] ? r[16].toString().split('\n') : [];
+
+                pNames.forEach((n, i) => {
+                    if(n) {
+                        let match = n.match(/^\[(.*?)\]\s(.*)$/);
+                        let category = match ? match[1] : 'Process';
+                        let pureName = match ? match[2].trim() : n.trim(); 
+                        let q = (+pQtys[i]||0);
+                        let analysis = pAnals[i] ? pAnals[i].trim() : '';
+                        
+                        // Populate Defect Pareto Map
+                        defectMap[pureName] = (defectMap[pureName] || 0) + q;
+
+                        // Populate Matrix Defect Map
+                        if(matrix.daily[date]) {
+                            matrix.defectStages[pureName] = category;
+                            matrix.daily[date].defects[pureName] = (matrix.daily[date].defects[pureName]||0) + q;
+                        }
+
+                        // Merge Analysis & Root Cause into a unified cell
+                        let causeInfo = rowCauses[pureName];
+                        let rText = [];
+                        if(analysis) rText.push(`<i>Remarks:</i> ${analysis}`);
+                        if(causeInfo && causeInfo.cause) rText.push(`<b style="color:var(--c-danger);">Cause:</b> ${causeInfo.cause}`);
+                        if(causeInfo && causeInfo.action) rText.push(`<b style="color:var(--c-success);">Action:</b> ${causeInfo.action}`);
+
+                        detailedLogs.push({
+                            date: date,
+                            category: category,
+                            defect: pureName,
+                            qty: q,
+                            remarks: rText.join(' | ') || '-'
+                        });
+                    }
+                });
+            }
+        });
+
+        // Finalize matrix sets to arrays
+        datesArr.forEach(d => { matrix.daily[d].models = Array.from(matrix.daily[d].models); });
+        window.currentMatrixData = matrix;
+
+        Object.keys(tempDateMap).sort().forEach(d => {
+            let r = tempDateMap[d].inp > 0 ? (tempDateMap[d].def/tempDateMap[d].inp*100) : 0;
+            dateTrendData.push([d.split('-')[2] || d, r, r.toFixed(1)+'%']);
+        });
+
+        let rRate = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "0.00"; 
+        let fRate = tInp > 0 ? (100 - parseFloat(rRate)).toFixed(2) : "0.00";
+        let rmdR = tInp > 0 ? (tRMD/tInp*100).toFixed(2) : "0.00"; 
+        let procR = tInp > 0 ? (tProc/tInp*100).toFixed(2) : "0.00"; 
+        let smtR = tInp > 0 ? (tSMT/tInp*100).toFixed(2) : "0.00";
+        let rateColor = parseFloat(rRate) > 3 ? 'var(--c-danger)' : (parseFloat(rRate) > 1.5 ? 'var(--c-smt)' : 'var(--c-success)');
+
+        // BUILD TOP 5 DEFECTS HTML
+        let topDefectsHtml = `<table class="modal-inner-table"><thead><tr><th>Top Defects</th><th>Qty</th><th>% Share</th></tr></thead><tbody>`;
+        let sortedDefects = Object.entries(defectMap).sort((a,b)=>b[1]-a[1]).slice(0, 5);
+        if(sortedDefects.length === 0) {
+            topDefectsHtml += `<tr><td colspan="3" style="text-align:center;">No Defect Data</td></tr>`;
+        } else {
+            sortedDefects.forEach(([name, qty]) => {
+                let pct = tDef > 0 ? ((qty/tDef)*100).toFixed(1) : 0;
+                topDefectsHtml += `<tr><td><b>${name}</b></td><td>${qty}</td><td><div style="display:flex; align-items:center; gap:5px;"><span style="min-width:35px; font-weight:800; font-size:11px;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:5px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--c-proc); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
+            });
+        }
+        topDefectsHtml += `</tbody></table>`;
+
+        // BUILD DETAILED LOGS TABLE HTML WITH DATE-WISE RATES
+        let logTableHtml = `<table class="modal-inner-table" style="margin:0;">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Defect Name</th>
+                    <th>Qty</th>
+                    <th title="Defect Qty / Daily Line Input">Defect Rate</th>
+                    <th title="Total Daily Line Rejection Rate">Line Daily Rej %</th>
+                    <th>Analysis / Root Cause</th>
+                </tr>
+            </thead>
+            <tbody>`;
+        detailedLogs.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(log => {
+            let catBadge = log.category === 'RMD' ? 'b-rmd' : (log.category === 'SMT' ? 'b-smt' : 'b-proc');
+            let dailyStat = tempDateMap[log.date];
+            let dailyInp = dailyStat ? dailyStat.inp : 0;
+            let lineDailyRej = dailyInp > 0 ? (dailyStat.def / dailyInp * 100).toFixed(1) + '%' : '0%';
+            let defectDailyRate = dailyInp > 0 ? (log.qty / dailyInp * 100).toFixed(1) + '%' : '0%';
+
+            logTableHtml += `<tr>
+                <td style="white-space:nowrap; font-weight:800;">${log.date}</td>
+                <td><span class="badge-rate ${catBadge}">${log.category}</span></td>
+                <td style="font-weight:700;">${log.defect}</td>
+                <td><span style="background:#e2e8f0; padding:2px 8px; border-radius:4px; font-weight:800;">${log.qty}</span></td>
+                <td><span style="color:var(--c-smt); font-weight:800;">${defectDailyRate}</span></td>
+                <td><span style="color:var(--c-danger); font-weight:800;">${lineDailyRej}</span></td>
+                <td style="font-size:11px; color:#475569; line-height:1.4;">${log.remarks}</td>
+            </tr>`;
+        });
+        if(detailedLogs.length === 0) logTableHtml += `<tr><td colspan="7" style="text-align:center;">No detailed logs found.</td></tr>`;
+        logTableHtml += `</tbody></table>`;
+
+        // INJECT MODAL CONTENT (WITH TABS FOR MATRIX VIEW)
+        document.getElementById('modalTitleMain').innerText = `${entityLabel.toUpperCase()} ${safeEntityValue} PERFORMANCE`;
+        document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
+
+        document.getElementById("previewContent").innerHTML = `
+            ${entityLabel === 'Line' ? `
+            <div class="def-tabs" style="margin: -10px auto 25px auto; width: fit-content; display: flex; justify-content: center; background: #e2e8f0; padding: 5px; border-radius: 10px;">
+                <button class="def-tab-btn modal-main-tab active" onclick="switchModalView('exec')" style="padding: 8px 25px; font-size:13px;">Executive Summary</button>
+                <button class="def-tab-btn modal-main-tab" onclick="switchModalView('matrix')" style="padding: 8px 25px; font-size:13px;">Daily Matrix Report</button>
+            </div>
+            ` : ''}
+
+            <!-- VIEW 1: EXECUTIVE SUMMARY -->
+            <div id="modal_exec_view">
+                <div class="exec-kpi-wrap">
+                    <div class="exec-kpi"><div class="exec-kpi-lbl">Total Output</div><div class="exec-kpi-val">${tInp.toLocaleString()}</div></div>
+                    <div class="exec-kpi"><div class="exec-kpi-lbl">Total Defects</div><div class="exec-kpi-val" style="color:var(--c-danger);">${tDef.toLocaleString()}</div></div>
+                    <div class="exec-kpi"><div class="exec-kpi-lbl">First Pass Yield</div><div class="exec-kpi-val" style="color:var(--c-success);">${fRate}%</div></div>
+                    <div class="exec-kpi" style="border-bottom: 4px solid ${rateColor};"><div class="exec-kpi-lbl">Rejection Rate</div><div class="exec-kpi-val" style="color:${rateColor};">${rRate}%</div></div>
+                </div>
+
+                <div class="pv-split" style="margin-bottom:20px;">
+                    <div class="pv-card">
+                        <div class="pv-card-header"><i class="fa fa-chart-line" style="color:var(--primary);"></i> Daily Rejection Trend</div>
+                        <div id="modal_trend_chart" style="width:100%; height:250px;"></div>
+                    </div>
+                    <div class="pv-card">
+                        <div class="pv-card-header"><i class="fa fa-bug" style="color:var(--c-danger);"></i> Top 5 Defect Contributors</div>
+                        <div style="max-height: 250px; overflow-y:auto;">${topDefectsHtml}</div>
+                    </div>
+                </div>
+
+                <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Defect Breakdown</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-bottom:30px;">
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-rmd); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">RMD Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${tRMD}</div><span style="font-size:12px; font-weight:700; color:var(--c-rmd); background:#eff6ff; padding:2px 8px; border-radius:10px;">${rmdR}% Rate</span></div>
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-proc); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Process Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${tProc}</div><span style="font-size:12px; font-weight:700; color:var(--c-proc); background:#f5f3ff; padding:2px 8px; border-radius:10px;">${procR}% Rate</span></div>
+                    <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-smt); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">SMT Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${tSMT}</div><span style="font-size:12px; font-weight:700; color:var(--c-smt); background:#fffbeb; padding:2px 8px; border-radius:10px;">${smtR}% Rate</span></div>
+                </div>
+
+                <div class="pv-section-head"><i class="fa fa-list-alt" style="color:var(--text-main);"></i> Detailed Defect Log</div>
+                <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; max-height:300px; overflow-y:auto; box-shadow:0 4px 10px rgba(0,0,0,0.02);">
+                    ${logTableHtml}
+                </div>
+            </div>
+
+            <!-- VIEW 2: EXCEL MATRIX (ONLY FOR LINES) -->
+            ${entityLabel === 'Line' ? `
+            <div id="modal_matrix_view" style="display:none; animation: fadeIn 0.4s;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px;">
+                    <div>
+                        <div class="pv-section-head" style="margin:0;"><i class="fa fa-calendar-day" style="color:var(--primary);"></i> Daily Report Matrix</div>
+                        <div style="font-size:11px; color:var(--text-light); font-weight:700;">Filter the defect rows by stage:</div>
+                    </div>
+                    <div class="def-tabs" style="margin: 0;">
+                        <button class="def-tab-btn matrix-tab-btn active" onclick="renderLineMatrix('Overall')">Overall</button>
+                        <button class="def-tab-btn matrix-tab-btn" onclick="renderLineMatrix('Process')">Process</button>
+                        <button class="def-tab-btn matrix-tab-btn" onclick="renderLineMatrix('RMD')">RMD</button>
+                        <button class="def-tab-btn matrix-tab-btn" onclick="renderLineMatrix('SMT')">SMT</button>
+                    </div>
+                </div>
+                <div id="modal_matrix_container" class="table-responsive" style="max-height: 580px; overflow-y:auto; overflow-x:auto; border-radius:12px; border:1px solid #e2e8f0;">
+                    <!-- Inserted by renderLineMatrix() -->
+                </div>
+            </div>
+            ` : ''}
+        `;
+
+        document.getElementById("overlay").style.display = 'block'; 
+        document.getElementById("previewModal").style.display = 'block';
+
+        if(entityLabel === 'Line') {
+            window.renderLineMatrix('Overall'); // Pre-render the matrix
+        }
+
+        setTimeout(() => {
+            if(typeof google !== 'undefined' && google.visualization && dateTrendData.length > 1) {
+                new google.visualization.LineChart(document.getElementById('modal_trend_chart')).draw(google.visualization.arrayToDataTable(dateTrendData), { legend:'none', pointSize:5, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, hAxis:{title:'Day'} });
+            }
+        }, 100);
+
+    } catch (e) { console.error("Error displaying entity summary:", e); alert("An error occurred generating the report.\n" + e.message); }
+}
+
+// 📌 IMPROVED EXECUTIVE DEFECT SUMMARY
+function executeDefectDeepDive(pureDefectName) {
+    try {
+        let rows = getDashFilteredRows();
+        let lineMap = {}; let causeMap = {}; let actionMap = {};
+        let totalQty = 0; let totalDashboardDefects = 0; let tempDateMap = {}; let dateTrendData = [['Date', 'Occurrences', {role:'annotation'}]];
+
+        rows.forEach(r => {
+            let date = fixDate(r[0]); let line = r[2] || 'Unknown';
+            let foundQty = 0; 
+            
+            totalDashboardDefects += (+r[5]||0);
+
+            if(r[14]) {
+                let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n');
+                pNames.forEach((n, i) => { 
+                    let match = n.match(/^\[(.*?)\]\s(.*)$/); let dName = match ? match[2].trim() : n.trim();
+                    if(dName === pureDefectName) { let q = (+pQtys[i]||0); foundQty += q; } 
+                });
+            }
+            
+            const checkCause = (dIdx, cIdx, aIdx) => { 
+                if(r[dIdx] && r[dIdx].trim() === pureDefectName) { 
+                    let c = r[cIdx]||'Not Specified'; let a = r[aIdx]||'Monitoring';
+                    causeMap[c] = (causeMap[c]||0) + 1; actionMap[a] = (actionMap[a]||0) + 1;
+                } 
+            };
+            checkCause(17, 19, 20); checkCause(21, 23, 24); checkCause(25, 27, 28);
+
+            if(foundQty > 0) {
+                totalQty += foundQty; 
+                lineMap[line] = (lineMap[line]||0) + foundQty;
+                if(!tempDateMap[date]) tempDateMap[date] = 0;
+                tempDateMap[date] += foundQty;
+            }
+        });
+
+        if(totalQty === 0 && Object.keys(causeMap).length === 0) { alert(`No occurrences found for ${pureDefectName} in the selected range.`); return; }
+
+        Object.keys(tempDateMap).sort().forEach(d => { dateTrendData.push([d.split('-')[2] || d, tempDateMap[d], tempDateMap[d].toString()]); });
+
+        let sharePct = totalDashboardDefects > 0 ? ((totalQty / totalDashboardDefects) * 100).toFixed(1) : 0;
+        let worstLine = Object.keys(lineMap).length > 0 ? Object.entries(lineMap).sort((a,b)=>b[1]-a[1])[0][0] : "N/A";
+        
+        let causeHtml = `<table class="modal-inner-table"><thead><tr><th>Root Cause</th><th>Count</th></tr></thead><tbody>`;
+        let sortedCauses = Object.entries(causeMap).sort((a,b)=>b[1]-a[1]);
+        if(sortedCauses.length === 0) causeHtml += `<tr><td colspan="2" style="text-align:center;">No Root Cause Analysis Logged</td></tr>`;
+        sortedCauses.forEach(([c, q]) => { causeHtml += `<tr><td><b>${c}</b></td><td><span style="background:#fef2f2; color:var(--c-danger); padding:2px 8px; border-radius:6px; font-weight:800;">${q}</span></td></tr>`; });
+        causeHtml += `</tbody></table>`;
+
+        let actionHtml = `<table class="modal-inner-table"><thead><tr><th>Corrective Action Taken</th><th>Count</th></tr></thead><tbody>`;
+        let sortedActions = Object.entries(actionMap).sort((a,b)=>b[1]-a[1]);
+        if(sortedActions.length === 0) actionHtml += `<tr><td colspan="2" style="text-align:center;">No Corrective Actions Logged</td></tr>`;
+        sortedActions.forEach(([a, q]) => { actionHtml += `<tr><td><b style="color:var(--c-success);">${a}</b></td><td><span style="background:#ecfdf5; color:var(--c-success); padding:2px 8px; border-radius:6px; font-weight:800;">${q}</span></td></tr>`; });
+        actionHtml += `</tbody></table>`;
+
+        document.getElementById('modalTitleMain').innerText = `DEFECT DEEP DIVE: ${pureDefectName.toUpperCase()}`; 
+        document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
+
+        document.getElementById("previewContent").innerHTML = `
+            <div class="exec-kpi-wrap">
+                <div class="exec-kpi"><div class="exec-kpi-lbl">Total Occurrences</div><div class="exec-kpi-val" style="color:var(--c-danger);">${totalQty.toLocaleString()}</div></div>
+                <div class="exec-kpi"><div class="exec-kpi-lbl">% of All Defects</div><div class="exec-kpi-val" style="color:var(--c-smt);">${sharePct}%</div></div>
+                <div class="exec-kpi"><div class="exec-kpi-lbl">Most Affected Line</div><div class="exec-kpi-val">Line ${worstLine}</div></div>
+            </div>
+
+            <div class="pv-split" style="margin-bottom:20px;">
+                <div class="pv-card">
+                    <div class="pv-card-header"><i class="fa fa-chart-line" style="color:var(--primary);"></i> Occurrence Trend (Daily)</div>
+                    <div id="modal_defect_trend" style="width:100%; height:250px;"></div>
+                </div>
+                <div class="pv-card">
+                    <div class="pv-card-header"><i class="fa fa-industry" style="color:var(--c-proc);"></i> Impact by Line</div>
+                    <div id="modal_defect_line" style="width:100%; height:250px;"></div>
+                </div>
+            </div>
+
+            <div class="pv-section-head"><i class="fa fa-search" style="color:var(--c-danger);"></i> Root Cause & Action Matrix</div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <div class="pv-card"><div class="pv-card-header" style="color:var(--c-danger);">Primary Root Causes</div><div style="max-height:200px; overflow-y:auto;">${causeHtml}</div></div>
+                <div class="pv-card"><div class="pv-card-header" style="color:var(--c-success);">Corrective Actions Executed</div><div style="max-height:200px; overflow-y:auto;">${actionHtml}</div></div>
+            </div>
+        `;
+
+        document.getElementById("overlay").style.display = 'block'; 
+        document.getElementById("previewModal").style.display = 'block';
+
+        setTimeout(() => {
+            if(typeof google !== 'undefined' && google.visualization && dateTrendData.length > 1) {
+                new google.visualization.LineChart(document.getElementById('modal_defect_trend')).draw(google.visualization.arrayToDataTable(dateTrendData), { legend:'none', pointSize:5, colors:['#ef4444'], chartArea:{width:'85%',height:'70%'}, hAxis:{title:'Day'} });
+            }
+            
+            let lineChartArr = [['Line', 'Qty', {role:'annotation'}]];
+            Object.entries(lineMap).sort((a,b)=>b[1]-a[1]).slice(0,8).forEach(([l, q]) => lineChartArr.push(['L'+l, q, q.toString()]));
+            if(typeof google !== 'undefined' && google.visualization && lineChartArr.length > 1) {
+                new google.visualization.ColumnChart(document.getElementById('modal_defect_line')).draw(google.visualization.arrayToDataTable(lineChartArr), { legend:'none', colors:['#8b5cf6'], chartArea:{width:'85%',height:'70%'} });
+            }
+        }, 100);
+
+    } catch (e) { console.error("Error displaying defect summary:", e); alert("An error occurred generating the report.\n" + e.message); }
+}
+
+window.renderDefectTable = function(tabName) {
+    document.querySelectorAll('.def-tab-btn').forEach(btn => btn.classList.toggle('active', btn.innerText === tabName));
+    let map = window.currentDefectMaps[tabName] || {}; let total = window.currentDefectTotals[tabName] || 0; let sorted = Object.entries(map).sort((a,b) => b[1]-a[1]);
+    let html = "";
+    sorted.forEach(d => {
+        let pct = total > 0 ? ((d[1]/total)*100).toFixed(1) : 0; let badgeClass = tabName === 'Overall' ? 'b-proc' : (tabName==='SMT'?'b-smt':(tabName==='RMD'?'b-rmd':'b-proc'));
+        html += `<tr><td><span class="badge-rate ${badgeClass}">${tabName === 'Overall' ? 'All Stages' : tabName}</span></td><td><span class="line-link" onclick="window.showDefectSummary('${d[0].replace(/'/g, "\\'")}')"><b>${d[0]}</b></span></td><td>${d[1]}</td><td><div style="display:flex; align-items:center; gap:5px;"><span style="font-size:11px; font-weight:800; min-width:35px;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:4px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--primary); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
+    });
     document.getElementById('d_defect_table_body').innerHTML = html || "<tr><td colspan='4' style='text-align:center;'>No Defects Found</td></tr>";
 };
 
-function addDefectRow(catVal="Process", dVal="", qVal="", aVal="") {
-    const div = document.createElement('div');
-    div.className = 'process-row form-row';
+// 📌 UPDATED: Data Entry Rows now have Root Cause & Action Inputs Built-In
+function addDefectRow(catVal="Process", dVal="", qVal="", cVal="", aVal="", remVal="") {
+    const div = document.createElement('div'); 
+    div.className = 'process-row';
     div.innerHTML = `
-        <div class="form-group" style="max-width:120px;"><select class="dc-inp" onchange="calcDefects()"><option value="Process" ${catVal==='Process'?'selected':''}>Process</option><option value="SMT" ${catVal==='SMT'?'selected':''}>SMT</option><option value="RMD" ${catVal==='RMD'?'selected':''}>RMD</option></select></div>
-        <div class="form-group"><input class="pd-inp" list="defect_list" placeholder="Defect Name" value="${dVal}" oninput="calcDefects()"></div>
-        <div class="form-group" style="max-width:100px;"><input class="pq-inp" type="number" placeholder="Qty" value="${qVal}" oninput="calcDefects()"></div>
-        <div class="form-group" style="flex:2;"><input class="pa-inp" placeholder="Analysis / Remarks" value="${aVal}"></div>
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove(); calcDefects();"><i class="fa fa-times"></i></button>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <div style="display:flex; gap:10px; flex:1; flex-wrap:wrap;">
+                <select class="dc-inp" onchange="calcDefects()" style="width:120px; font-size:12px;">
+                    <option value="Process" ${catVal==='Process'?'selected':''}>Process</option>
+                    <option value="SMT" ${catVal==='SMT'?'selected':''}>SMT</option>
+                    <option value="RMD" ${catVal==='RMD'?'selected':''}>RMD</option>
+                </select>
+                <input class="pd-inp" list="defect_list" placeholder="Defect Name" value="${dVal}" oninput="calcDefects()" style="flex:1; min-width:150px; font-size:12px;">
+                <input class="pq-inp" type="number" placeholder="Qty" value="${qVal}" oninput="calcDefects()" style="width:80px; font-size:12px;">
+            </div>
+            <button type="button" class="remove-btn" onclick="this.parentElement.parentElement.remove(); calcDefects();" style="margin-left:10px;"><i class="fa fa-times"></i></button>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input class="pc-inp" list="cause_list" placeholder="Root Cause (Optional)" value="${cVal}" style="flex:1; min-width:150px; font-size:12px;">
+            <input class="pact-inp" placeholder="Action Taken (Optional)" value="${aVal}" style="flex:1; min-width:150px; font-size:12px;">
+            <input class="pa-inp" placeholder="Additional Remarks" value="${remVal}" style="flex:1.5; min-width:150px; font-size:12px;">
+        </div>
     `;
     document.getElementById('process_container').appendChild(div);
 }
 
 function calcDefects() {
     let rmdTotal = 0, procTotal = 0, smtTotal = 0;
-    let defectMap = {};
-
-    const cats = document.querySelectorAll('.dc-inp');
-    const names = document.querySelectorAll('.pd-inp');
+    const cats = document.querySelectorAll('.dc-inp'); 
     const qtys = document.querySelectorAll('.pq-inp');
 
     for(let i=0; i<cats.length; i++) {
-        let cat = cats[i].value; let name = names[i].value.trim(); let qty = parseInt(qtys[i].value) || 0;
-
-        if(cat === 'RMD') rmdTotal += qty;
-        else if(cat === 'Process') procTotal += qty;
+        let cat = cats[i].value; 
+        let qty = parseInt(qtys[i].value) || 0;
+        if(cat === 'RMD') rmdTotal += qty; 
+        else if(cat === 'Process') procTotal += qty; 
         else if(cat === 'SMT') smtTotal += qty;
-
-        if(name && qty > 0) defectMap[name] = (defectMap[name] || 0) + qty;
     }
 
-    document.getElementById('rmd').value = rmdTotal || '';
-    document.getElementById('proc').value = procTotal || '';
+    document.getElementById('rmd').value = rmdTotal || ''; 
+    document.getElementById('proc').value = procTotal || ''; 
     document.getElementById('smt').value = smtTotal || '';
-    
-    let totalSum = rmdTotal + procTotal + smtTotal;
-    document.getElementById('f_def').value = totalSum || '';
+    document.getElementById('f_def').value = (rmdTotal + procTotal + smtTotal) || '';
 
-    let sorted = Object.entries(defectMap).sort((a,b) => b[1] - a[1]);
-    for(let i=1; i<=3; i++) {
-        let dName = sorted[i-1] ? sorted[i-1][0] : ''; let dQty = sorted[i-1] ? sorted[i-1][1] : '';
-        document.getElementById('d'+i).value = dName; document.getElementById('q'+i).value = dQty;
-    }
     autoCalc(); 
 }
 
 function autoCalc(){
     let i = +f_input.value || 0; let d = +f_def.value || 0;
-    if(i > 0){ f_rej.value = ((d/i)*100).toFixed(2); f_fpy.value = (100 - (d/i*100)).toFixed(2); } 
-    else { f_rej.value = ''; f_fpy.value = ''; }
-    
-    rmd_r.value = i && rmd.value ? ((+rmd.value||0)/i*100).toFixed(2) : '';
-    proc_r.value = i && proc.value ? ((+proc.value||0)/i*100).toFixed(2) : '';
+    if(i > 0){ f_rej.value = ((d/i)*100).toFixed(2); f_fpy.value = (100 - (d/i*100)).toFixed(2); } else { f_rej.value = ''; f_fpy.value = ''; }
+    rmd_r.value = i && rmd.value ? ((+rmd.value||0)/i*100).toFixed(2) : ''; 
+    proc_r.value = i && proc.value ? ((+proc.value||0)/i*100).toFixed(2) : ''; 
     smt_r.value = i && smt.value ? ((+smt.value||0)/i*100).toFixed(2) : '';
-
-    let q1v = +q1.value||0, q2v = +q2.value||0, q3v = +q3.value||0;
-    document.getElementById('r1_span').innerText = (i && q1v) ? `(${(q1v/i*100).toFixed(1)}%)` : '';
-    document.getElementById('r2_span').innerText = (i && q2v) ? `(${(q2v/i*100).toFixed(1)}%)` : '';
-    document.getElementById('r3_span').innerText = (i && q3v) ? `(${(q3v/i*100).toFixed(1)}%)` : '';
 }
 
 function switchCategory(cat) {
     currentCategory = cat;
-    document.getElementById('btnEarbuds').classList.remove('active');
-    document.getElementById('btnCase').classList.remove('active');
-    if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active');
-    else document.getElementById('btnCase').classList.add('active');
+    document.getElementById('btnEarbuds').classList.remove('active'); document.getElementById('btnCase').classList.remove('active');
+    if(cat === 'Earbuds') document.getElementById('btnEarbuds').classList.add('active'); else document.getElementById('btnCase').classList.add('active');
     document.getElementById('entryCatName').innerText = cat;
     allData = []; document.getElementById('tbody').innerHTML = ""; document.getElementById('d_inp').innerText = "...";
     load(); 
@@ -844,45 +1136,37 @@ function fixDate(dateValue) {
     return d.toLocaleDateString('en-CA');
 }
 
-function switchTab(tabId) {
+function switchTab(tabId, btn) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
-    if(tabId==='dashboard') document.querySelectorAll('.tab-btn')[0].classList.add('active');
-    if(tabId==='entry') document.querySelectorAll('.tab-btn')[1].classList.add('active');
-    if(tabId==='report') document.querySelectorAll('.tab-btn')[2].classList.add('active');
+    if(btn) btn.classList.add('active');
+
+    if(tabId === 'dashboard') filterDashboard();
+    if(tabId === 'monthly') renderMonthlyReview();
 }
 
 function switchDashSubTab(view, btn) {
     document.querySelectorAll('.dash-view').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.ds-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('view_'+view).classList.add('active');
-    btn.classList.add('active');
+    document.getElementById('view_'+view).classList.add('active'); btn.classList.add('active');
 }
 
 function populateFilters() {
-    let models = new Set();
-    allData.slice(1).forEach(r => { if(r[3]) models.add(r[3]); });
-    let mHtml = '<option value="all">All</option>';
-    models.forEach(m => mHtml += `<option value="${m}">${m}</option>`);
+    let models = new Set(); allData.slice(1).forEach(r => { if(r[3]) models.add(r[3]); });
+    let mHtml = '<option value="all">All</option>'; models.forEach(m => mHtml += `<option value="${m}">${m}</option>`);
     document.getElementById('dash_model').innerHTML = mHtml;
 }
 
 function filterDashboard() {
     if(!allData || allData.length === 0) { document.getElementById('d_inp').innerText = "0"; return; }
-    let dashRows = getDashFilteredRows();
-    renderDashboardStats(dashRows);
+    renderDashboardStats(getDashFilteredRows());
 }
 
 function renderDashboardStats(rows) {
     let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
-    
-    // Clear global Maps so they re-calculate perfectly on filter
-    window.currentDefectMaps = { Overall: {}, Process: {}, SMT: {}, RMD: {} };
-    window.currentDefectTotals = { Overall: 0, Process: 0, SMT: 0, RMD: 0 };
-    
-    let actionedDefectMap = {}; 
-    let lineData = {}; let dateMap = {}; let modelData = {};
+    window.currentDefectMaps = { Overall: {}, Process: {}, SMT: {}, RMD: {} }; window.currentDefectTotals = { Overall: 0, Process: 0, SMT: 0, RMD: 0 };
+    let causeMapDash = {}; let lineData = {}; let dateMap = {}; let modelData = {};
     let floorData = {'Floor 1':{inp:0,rmd:0,proc:0,smt:0}, 'Floor 2':{inp:0,rmd:0,proc:0,smt:0}, 'Basement':{inp:0,rmd:0,proc:0,smt:0}};
 
     rows.forEach(r => {
@@ -890,30 +1174,20 @@ function renderDashboardStats(rows) {
         let inp = (+r[4]||0); let def = (+r[5]||0); let rmdQ = (+r[8]||0); let procQ = (+r[10]||0); let smtQ = (+r[12]||0);
         tInp += inp; tDef += def; tRMD += rmdQ; tProc += procQ; tSMT += smtQ;
         
-        // Populate the 4-way Global Map dynamically
         if(r[14]) { 
             let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); 
             pNames.forEach((n, i) => { 
                 if(n) { 
-                    let match = n.match(/^\[(.*?)\]\s(.*)$/);
-                    let stage = match ? match[1] : 'Process';
-                    let pureName = match ? match[2] : n;
-                    let q = (+pQtys[i]||0);
-
-                    // Add to Overall
-                    window.currentDefectMaps['Overall'][pureName] = (window.currentDefectMaps['Overall'][pureName]||0) + q;
-                    window.currentDefectTotals['Overall'] += q;
-
-                    // Add to Specific Stage
+                    let match = n.match(/^\[(.*?)\]\s(.*)$/); let stage = match ? match[1] : 'Process'; let pureName = match ? match[2] : n; let q = (+pQtys[i]||0);
+                    window.currentDefectMaps['Overall'][pureName] = (window.currentDefectMaps['Overall'][pureName]||0) + q; window.currentDefectTotals['Overall'] += q;
                     if(!window.currentDefectMaps[stage]) window.currentDefectMaps[stage] = {};
-                    window.currentDefectMaps[stage][pureName] = (window.currentDefectMaps[stage][pureName]||0) + q;
-                    window.currentDefectTotals[stage] = (window.currentDefectTotals[stage]||0) + q;
+                    window.currentDefectMaps[stage][pureName] = (window.currentDefectMaps[stage][pureName]||0) + q; window.currentDefectTotals[stage] = (window.currentDefectTotals[stage]||0) + q;
                 } 
             }); 
         }
         
-        const addActioned = (name, qty) => { if(name) { actionedDefectMap[name] = (actionedDefectMap[name]||0) + (+qty||0); } };
-        addActioned(r[17], r[18]); addActioned(r[21], r[22]); addActioned(r[25], r[26]);
+        const addCauseDash = (cause, qty) => { if(cause && cause !== '-') { causeMapDash[cause] = (causeMapDash[cause]||0) + (+qty||1); } };
+        addCauseDash(r[19], r[18]); addCauseDash(r[23], r[22]); addCauseDash(r[27], r[26]);
 
         const addToObj = (obj, key) => { if(!obj[key]) obj[key] = {inp:0, def:0, rmd:0, proc:0, smt:0}; obj[key].inp += inp; obj[key].def += def; obj[key].rmd += rmdQ; obj[key].proc += procQ; obj[key].smt += smtQ; };
         addToObj(lineData, line); addToObj(modelData, model);
@@ -930,27 +1204,13 @@ function renderDashboardStats(rows) {
     document.getElementById('d_fpy').innerText = avgFpy + "%"; document.getElementById('d_rej').innerText = avgRej + "%";
     const getRate = (v) => tInp > 0 ? (v/tInp*100).toFixed(2)+"%" : "0%";
 
-    // Overviews
-    let sortedAll = Object.entries(window.currentDefectMaps['Overall']).sort((a,b)=>b[1]-a[1]);
-    let allDefHtml = ""; 
-    sortedAll.slice(0,5).forEach(d => { 
-        let rate = getRate(d[1]); 
-        allDefHtml += `<tr><td><span class="line-link" onclick="showDefectSummary('${d[0].replace(/'/g, "\\'")}')" title="Deep Dive this Defect">${d[0]}</span></td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-smt);">${rate}</div></td></tr>`; 
-    });
+    let sortedAll = Object.entries(window.currentDefectMaps['Overall']).sort((a,b)=>b[1]-a[1]); let allDefHtml = ""; 
+    sortedAll.slice(0,5).forEach(d => { let rate = getRate(d[1]); allDefHtml += `<tr><td><span class="line-link" onclick="window.showDefectSummary('${d[0].replace(/'/g, "\\'")}')" title="Deep Dive this Defect">${d[0]}</span></td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-smt);">${rate}</div></td></tr>`; });
     document.getElementById('d_process_defects_list').innerHTML = allDefHtml || "<tr><td colspan='3'>No Data</td></tr>";
 
-    let sortedAct = Object.entries(actionedDefectMap).sort((a,b)=>b[1]-a[1]);
-    let actDefHtml = ""; 
-    sortedAct.slice(0,3).forEach(d => { 
-        let rate = getRate(d[1]); 
-        actDefHtml += `<tr><td><span class="line-link" onclick="showDefectSummary('${d[0].replace(/'/g, "\\'")}')" title="Deep Dive this Defect">${d[0]}</span></td><td><b>${d[1]}</b></td><td><div style="font-weight:700; font-size:12px; color:var(--c-danger);">${rate}</div></td></tr>`; 
-    });
-    document.getElementById('d_functional_defects_list').innerHTML = actDefHtml || "<tr><td colspan='3'>No Data</td></tr>";
-
-    // Call dynamic Table generator to populate initial "Overall" view 
     renderDefectTable('Overall');
 
-    if(google && google.visualization && tInp > 0) {
+    if(typeof google !== 'undefined' && google.visualization && tInp > 0) {
         let trendArr = [['Date', 'Rejection %', {role:'annotation'}]]; Object.keys(dateMap).sort().forEach(d => { let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0; trendArr.push([d, r, r.toFixed(1)+'%']); });
         new google.visualization.LineChart(document.getElementById('d_trend_chart')).draw(google.visualization.arrayToDataTable(trendArr), { legend:'none', pointSize:6, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, vAxis:{format:'#.#'}, annotations:{alwaysOutside:true} });
 
@@ -961,7 +1221,7 @@ function renderDashboardStats(rows) {
         Object.keys(lineData).sort((a,b)=>parseInt(a)-parseInt(b)).forEach(l => {
             let d = lineData[l]; let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0; let tot = rr+pr+sr;
             lineRMD.push(['L'+l, rr, '#3b82f6', rr.toFixed(1)+'%']); lineProc.push(['L'+l, pr, '#8b5cf6', pr.toFixed(1)+'%']); lineSMT.push(['L'+l, sr, '#f59e0b', sr.toFixed(1)+'%']);
-            lineTableHtml += `<tr><td><span class="line-link" onclick="showLineSummary('${l}')" title="Click to view detailed line history"><b>L-${l}</b></span></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
+            lineTableHtml += `<tr><td><span class="line-link" onclick="window.showLineSummary('${l}')" title="Click to view detailed line history"><b>L-${l}</b></span></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
         });
         document.getElementById('d_line_table_body').innerHTML = lineTableHtml;
         new google.visualization.ColumnChart(document.getElementById('d_line_rmd_chart')).draw(google.visualization.arrayToDataTable(lineRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'90%',height:'70%'} });
@@ -972,36 +1232,208 @@ function renderDashboardStats(rows) {
         Object.entries(modelData).sort((a,b) => (b[1].def/b[1].inp) - (a[1].def/a[1].inp)).forEach(([m, d]) => {
             let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0; let tot = rr+pr+sr;
             modelArr.push([m, rr, pr, sr, tot.toFixed(1)+'%']);
-            modelTableHtml += `<tr><td><span class="line-link" onclick="showModelSummary('${m}')" title="Deep Dive this Model"><b>${m}</b></span></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
+            modelTableHtml += `<tr><td><span class="line-link" onclick="window.showModelSummary('${m}')"><b>${m}</b></span></td><td>${d.inp}</td><td>${d.def}</td><td><span class="badge-rate b-rmd">${rr.toFixed(2)}%</span></td><td><span class="badge-rate b-proc">${pr.toFixed(2)}%</span></td><td><span class="badge-rate b-smt">${sr.toFixed(2)}%</span></td><td><span class="badge-rate b-high">${tot.toFixed(2)}%</span></td></tr>`;
         });
         document.getElementById('d_model_table_body').innerHTML = modelTableHtml;
         new google.visualization.BarChart(document.getElementById('d_model_chart')).draw(google.visualization.arrayToDataTable(modelArr), { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'80%',height:'75%'}, hAxis:{title:'Rate %'} });
 
-        let paretoAllData = [['Defect', 'Qty', {role:'annotation'}]]; 
-        sortedAll.slice(0,10).forEach(d => { paretoAllData.push([d[0], d[1], d[1].toString()]); });
+        // PARETO CHARTS CREATION
+        let paretoAllData = [['Defect', 'Qty', {role:'annotation'}]]; sortedAll.slice(0,10).forEach(d => { paretoAllData.push([d[0], d[1], d[1].toString()]); });
         
-        let paretoActData = [['Defect', 'Qty', {role:'annotation'}]]; 
-        sortedAct.slice(0,10).forEach(d => { paretoActData.push([d[0], d[1], d[1].toString()]); });
+        let sortedCauseDash = Object.entries(causeMapDash).sort((a,b)=>b[1]-a[1]);
+        let paretoCauseData = [['Cause', 'Qty', {role:'annotation'}]]; 
+        sortedCauseDash.slice(0,10).forEach(d => { paretoCauseData.push([d[0], d[1], d[1].toString()]); });
         
-        if(paretoAllData.length>1) new google.visualization.ColumnChart(document.getElementById('d_pareto_proc')).draw(google.visualization.arrayToDataTable(paretoAllData), { legend:'none', colors:['#8b5cf6'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
-        if(paretoActData.length>1) new google.visualization.ColumnChart(document.getElementById('d_pareto_func')).draw(google.visualization.arrayToDataTable(paretoActData), { legend:'none', colors:['#ef4444'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+        if(paretoAllData.length > 1) {
+            let dtDef = google.visualization.arrayToDataTable(paretoAllData);
+            new google.visualization.ColumnChart(document.getElementById('d_overview_defect_pareto')).draw(dtDef, { legend:'none', colors:['#8b5cf6'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+            new google.visualization.ColumnChart(document.getElementById('d_pareto_proc')).draw(dtDef, { legend:'none', colors:['#8b5cf6'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+        }
+        
+        if(paretoCauseData.length > 1) {
+            let dtCause = google.visualization.arrayToDataTable(paretoCauseData);
+            new google.visualization.ColumnChart(document.getElementById('d_overview_cause_pareto')).draw(dtCause, { legend:'none', colors:['#ef4444'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+            new google.visualization.ColumnChart(document.getElementById('d_pareto_func')).draw(dtCause, { legend:'none', colors:['#ef4444'], chartArea:{width:'85%',height:'60%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+        }
+    }
+}
 
-        let fRMD = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]]; let fProc = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]]; let fSMT = [['Floor', 'Rate %', {role:'style'}, {role:'annotation'}]];
-        ['Floor 1', 'Floor 2', 'Basement'].forEach(f => {
-            let d = floorData[f]; let rr = d.inp > 0 ? (d.rmd/d.inp*100) : 0; let pr = d.inp > 0 ? (d.proc/d.inp*100) : 0; let sr = d.inp > 0 ? (d.smt/d.inp*100) : 0;
-            fRMD.push([f, rr, '#3b82f6', rr.toFixed(2)+'%']); fProc.push([f, pr, '#8b5cf6', pr.toFixed(2)+'%']); fSMT.push([f, sr, '#f59e0b', sr.toFixed(2)+'%']);
+// 📌 MONTHLY REVIEW LOGIC (Fixed Dates to prevent timezone shifting)
+function renderMonthlyReview() {
+    if(!allData || allData.length === 0) return;
+    
+    let monthFilter = document.getElementById('mr_month').value;
+    if(!monthFilter) return;
+
+    let parts = monthFilter.split('-'); let year = parts[0]; let monthNum = parts[1];
+    let firstDay = `${year}-${monthNum}-01`;
+    let daysInMonth = new Date(year, parseInt(monthNum), 0).getDate();
+    let lastDay = `${year}-${monthNum}-${String(daysInMonth).padStart(2, '0')}`;
+    let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let monthName = monthNames[parseInt(monthNum) - 1];
+
+    document.getElementById('dash_from').value = firstDay; 
+    document.getElementById('dash_to').value = lastDay;
+
+    let dateKeys = []; 
+    let displayDates = []; 
+    for(let i=1; i<=daysInMonth; i++) {
+        let dayStr = String(i).padStart(2, '0');
+        dateKeys.push(`${year}-${monthNum}-${dayStr}`);
+        displayDates.push(`${dayStr}-${monthName}`);
+    }
+
+    let rows = allData.slice(1).filter(r => fixDate(r[0]).startsWith(monthFilter));
+    
+    let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
+    let dateMap = {}, lineMap = {}, defectMap = {}, causeMap = {}, actionPlanMap = {};
+    let dailyMatrixStats = {}; 
+    let dailyTotals = {};
+    dateKeys.forEach(dk => dailyTotals[dk] = { prod: 0, def: 0 });
+    
+    rows.forEach(r => {
+        let date = fixDate(r[0]); let line = r[2] ? r[2].toString().trim() : 'Unknown';
+        let inp = (+r[4]||0); let def = (+r[5]||0); let rmdQ = (+r[8]||0); let procQ = (+r[10]||0); let smtQ = (+r[12]||0);
+        
+        tInp += inp; tDef += def; tRMD += rmdQ; tProc += procQ; tSMT += smtQ;
+        
+        if(!dateMap[date]) dateMap[date] = {inp:0, def:0}; 
+        dateMap[date].inp += inp; dateMap[date].def += def;
+        
+        if(!lineMap[line]) lineMap[line] = {inp:0, def:0, rmd:0, proc:0, smt:0};
+        lineMap[line].inp += inp; lineMap[line].def += def; lineMap[line].rmd += rmdQ; lineMap[line].proc += procQ; lineMap[line].smt += smtQ;
+        
+        if(!dailyMatrixStats[line]) dailyMatrixStats[line] = {};
+        dailyMatrixStats[line][date] = (dailyMatrixStats[line][date] || 0) + def;
+
+        if(dailyTotals[date]) {
+            dailyTotals[date].prod += inp;
+            dailyTotals[date].def += def;
+        }
+
+        if(r[14]) { 
+            let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); 
+            pNames.forEach((n, i) => { 
+                if(n) { 
+                    let match = n.match(/^\[(.*?)\]\s(.*)$/); let pureName = match ? match[2].trim() : n.trim(); let q = (+pQtys[i]||0);
+                    defectMap[pureName] = (defectMap[pureName]||0) + q; 
+                } 
+            }); 
+        }
+
+        const processTopDefect = (defect, qty, cause, action) => {
+            if(!defect || !cause) return;
+            let q = parseInt(qty) || 1; causeMap[cause] = (causeMap[cause] || 0) + q;
+            if(!actionPlanMap[defect]) actionPlanMap[defect] = { count: 0, causes: {}, actions: {} };
+            actionPlanMap[defect].count += q; actionPlanMap[defect].causes[cause] = (actionPlanMap[defect].causes[cause] || 0) + q;
+            if(action && action !== '-') actionPlanMap[defect].actions[action] = (actionPlanMap[defect].actions[action] || 0) + q;
+        };
+        processTopDefect(r[17], r[18], r[19], r[20]); processTopDefect(r[21], r[22], r[23], r[24]); processTopDefect(r[25], r[26], r[27], r[28]);
+    });
+
+    let avgFpy = tInp > 0 ? (100 - (tDef/tInp*100)).toFixed(2) : "0.00"; let avgRej = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "0.00";
+    document.getElementById('mr_inp').innerText = tInp.toLocaleString(); document.getElementById('mr_def').innerText = tDef.toLocaleString();
+    document.getElementById('mr_rej').innerText = avgRej + "%"; document.getElementById('mr_fpy').innerText = avgFpy + "%";
+
+    let actionHtml = "";
+    Object.entries(actionPlanMap).sort((a,b) => b[1].count - a[1].count).slice(0, 10).forEach(([defect, data]) => {
+        let topCause = Object.keys(data.causes).sort((a,b)=>data.causes[b]-data.causes[a])[0] || "-"; let topAction = Object.keys(data.actions).sort((a,b)=>data.actions[b]-data.actions[a])[0] || "Monitoring";
+        actionHtml += `<tr><td><span class="line-link" onclick="window.showDefectSummary('${defect.replace(/'/g, "\\'")}')" title="Click for Defect Deep Dive"><b>${defect}</b></span></td><td>${data.count}</td><td style="color:var(--c-danger); font-weight:800;">${topCause}</td><td style="color:var(--c-success); font-weight:800;">${topAction}</td></tr>`;
+    });
+    document.getElementById('mr_action_table').innerHTML = actionHtml || "<tr><td colspan='4' style='text-align:center;'>No root cause data logged for this month.</td></tr>";
+
+    // -----------------------------------------------
+    // 1. BUILD DAILY DEFECT MONITORING MATRIX
+    // -----------------------------------------------
+    let dailyMatrixHtml = `<thead><tr>
+        <th class="sticky-col" style="background:#e0f2fe; color:var(--primary); font-size:18px; width:130px; text-align:center;">Defect<br>Monitoring</th>`;
+    displayDates.forEach(dd => dailyMatrixHtml += `<th class="th-slant"><span>${dd}</span></th>`);
+    dailyMatrixHtml += `</tr></thead><tbody>`;
+
+    let sortedMatrixLines = Object.keys(lineMap).sort((a,b)=>parseInt(a)-parseInt(b));
+    sortedMatrixLines.forEach(l => {
+        dailyMatrixHtml += `<tr><td class="sticky-col" style="font-weight:800; background:#f8fafc;"><span class="line-link" onclick="window.showLineSummary('${l}')" style="color:purple; text-decoration:underline;">B${String(l).padStart(2, '0')}</span></td>`;
+        dateKeys.forEach(dk => {
+            let val = dailyMatrixStats[l] && dailyMatrixStats[l][dk] ? dailyMatrixStats[l][dk] : 0;
+            dailyMatrixHtml += `<td>${val}</td>`;
         });
-        new google.visualization.ColumnChart(document.getElementById('d_floor_rmd_chart')).draw(google.visualization.arrayToDataTable(fRMD), { legend:'none', vAxis:{title:'RMD %'}, chartArea:{width:'80%',height:'75%'} });
-        new google.visualization.ColumnChart(document.getElementById('d_floor_proc_chart')).draw(google.visualization.arrayToDataTable(fProc), { legend:'none', vAxis:{title:'Proc %'}, chartArea:{width:'80%',height:'75%'} });
-        new google.visualization.ColumnChart(document.getElementById('d_floor_smt_chart')).draw(google.visualization.arrayToDataTable(fSMT), { legend:'none', vAxis:{title:'SMT %'}, chartArea:{width:'80%',height:'75%'} });
+        dailyMatrixHtml += `</tr>`;
+    });
+
+    let rDef = `<tr style="background:#e2e8f0; font-weight:800; border-top:2px solid #cbd5e1;"><td class="sticky-col" style="background:#e2e8f0; text-align:center;">Total Defects</td>`;
+    let rProd = `<tr style="background:#d1fae5; font-weight:800;"><td class="sticky-col" style="background:#d1fae5; text-align:center;">Total Prod</td>`;
+    let rPct = `<tr style="background:#dbeafe; font-weight:800;"><td class="sticky-col" style="background:#dbeafe; text-align:center;">Def Percentage</td>`;
+    let rFpy = `<tr style="background:#ecfdf5; font-weight:800; border-bottom:2px solid #cbd5e1;"><td class="sticky-col" style="background:#ecfdf5; text-align:center;">Line FPY</td>`;
+
+    dateKeys.forEach(dk => {
+        let p = dailyTotals[dk].prod; let d = dailyTotals[dk].def;
+        let pct = p > 0 ? (d/p*100) : 0; let fpy = p > 0 ? (100 - pct) : 0;
+
+        rDef += `<td>${d}</td>`;
+        rProd += `<td>${p === 0 ? '' : p}</td>`;
+        rPct += `<td>${p > 0 ? pct.toFixed(2)+'%' : '#DIV/0!'}</td>`;
+        rFpy += `<td>${p > 0 ? fpy.toFixed(2)+'%' : '#DIV/0!'}</td>`;
+    });
+    dailyMatrixHtml += rDef + '</tr>' + rProd + '</tr>' + rPct + '</tr>' + rFpy + '</tr></tbody>';
+    document.getElementById('mr_daily_matrix').innerHTML = dailyMatrixHtml;
+
+    // -----------------------------------------------
+    // 2. BUILD TOTAL SUMMARY MATRIX (LINE-WISE)
+    // -----------------------------------------------
+    let lines = Object.keys(lineMap).sort((a,b)=>parseInt(a)-parseInt(b));
+    let excelHtml = `<thead><tr><th class="sticky-col row-title bg-white">TOTAL SUMMARY</th><th style="background:#e2e8f0;">Total</th>`;
+    lines.forEach(l => excelHtml += `<th><span class="line-link" onclick="window.showLineSummary('${l}')" title="View detailed history for Line ${l}">B${String(l).padStart(2, '0')}</span></th>`);
+    excelHtml += `</tr></thead><tbody>`;
+
+    const makeExRow = (title, dataKey, isRate, rowClass) => {
+        let html = `<tr><td class="sticky-col row-title ${rowClass}">${title}</td>`; let totalVal = 0;
+        if(!isRate) {
+            if(dataKey === 'inp') totalVal = tInp; else if(dataKey === 'def') totalVal = tDef; else if(dataKey === 'rmd') totalVal = tRMD; else if(dataKey === 'proc') totalVal = tProc; else if(dataKey === 'smt') totalVal = tSMT;
+            html += `<td class="${rowClass}" style="font-weight:800;">${totalVal}</td>`; lines.forEach(l => html += `<td class="${rowClass}">${lineMap[l][dataKey]}</td>`);
+        } else {
+            let tr = tInp > 0;
+            if(dataKey === 'totR') totalVal = tr ? (tDef/tInp*100) : 0; else if(dataKey === 'rmdR') totalVal = tr ? (tRMD/tInp*100) : 0; else if(dataKey === 'procR') totalVal = tr ? (tProc/tInp*100) : 0; else if(dataKey === 'smtR') totalVal = tr ? (tSMT/tInp*100) : 0; else if(dataKey === 'fpy') totalVal = tr ? (100 - (tDef/tInp*100)) : 0;
+            html += `<td class="${rowClass}" style="font-weight:800;">${totalVal.toFixed(2)}%</td>`;
+            lines.forEach(l => {
+                let d = lineMap[l]; let lr = d.inp > 0; let lVal = 0;
+                if(dataKey === 'totR') lVal = lr ? (d.def/d.inp*100) : 0; else if(dataKey === 'rmdR') lVal = lr ? (d.rmd/d.inp*100) : 0; else if(dataKey === 'procR') lVal = lr ? (d.proc/d.inp*100) : 0; else if(dataKey === 'smtR') lVal = lr ? (d.smt/d.inp*100) : 0; else if(dataKey === 'fpy') lVal = lr ? (100 - (d.def/d.inp*100)) : 0;
+                html += `<td class="${rowClass}">${lVal.toFixed(2)}%</td>`;
+            });
+        }
+        return html + `</tr>`;
+    };
+
+    excelHtml += makeExRow('Prod. Qty.', 'inp', false, 'ex-prod'); excelHtml += makeExRow('Process Defect Qty.', 'proc', false, 'ex-def'); excelHtml += makeExRow('RMD Defect Qty.', 'rmd', false, 'ex-def'); excelHtml += makeExRow('SMT Defect Qty.', 'smt', false, 'ex-def'); excelHtml += makeExRow('Total Defects Qty.', 'def', false, 'ex-def'); excelHtml += makeExRow('Process Rej. Rate%', 'procR', true, 'ex-rate'); excelHtml += makeExRow('RMD Rej. Rate%', 'rmdR', true, 'ex-rate'); excelHtml += makeExRow('SMT Rej. Rate%', 'smtR', true, 'ex-rate'); excelHtml += makeExRow('Total Rejection Rate%', 'totR', true, 'ex-rate'); excelHtml += makeExRow('FPY', 'fpy', true, 'ex-rate'); excelHtml += `</tbody>`;
+    document.getElementById('mr_excel_table').innerHTML = excelHtml;
+
+    if(typeof google !== 'undefined' && google.visualization && tInp > 0) {
+        let trendArr = [['Date', 'Rejection %', {role:'annotation'}]]; Object.keys(dateMap).sort().forEach(d => { let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0; trendArr.push([d.split('-')[2] || d, r, r.toFixed(1)+'%']); });
+        new google.visualization.LineChart(document.getElementById('mr_date_chart')).draw(google.visualization.arrayToDataTable(trendArr), { legend:'none', pointSize:5, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, hAxis:{title:'Day of Month'} });
+        new google.visualization.PieChart(document.getElementById('mr_stage_chart')).draw(google.visualization.arrayToDataTable([['Stage', 'Qty'], ['RMD', tRMD], ['Process', tProc], ['SMT', tSMT]]), { colors:['#3b82f6', '#8b5cf6', '#f59e0b'], chartArea:{width:'90%',height:'80%'}, pieHole: 0.4 });
+        
+        let lineArr = [['Line', 'Rate %', {role:'style'}, {role:'annotation'}]]; lines.forEach(l => { let d = lineMap[l]; let r = d.inp > 0 ? (d.def/d.inp*100) : 0; lineArr.push(['L'+l, r, '#ef4444', r.toFixed(1)+'%']); });
+        new google.visualization.ColumnChart(document.getElementById('mr_line_chart')).draw(google.visualization.arrayToDataTable(lineArr), { legend:'none', chartArea:{width:'90%',height:'70%'} });
+
+        let dParetoArr = [['Defect', 'Qty', {role:'annotation'}]]; Object.entries(defectMap).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(d => { dParetoArr.push([d[0], d[1], d[1].toString()]); });
+        if(dParetoArr.length > 1) new google.visualization.ColumnChart(document.getElementById('mr_defect_pareto')).draw(google.visualization.arrayToDataTable(dParetoArr), { legend:'none', colors:['#8b5cf6'], chartArea:{width:'85%',height:'55%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
+
+        let cParetoArr = [['Cause', 'Qty', {role:'annotation'}]]; Object.entries(causeMap).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(c => { cParetoArr.push([c[0], c[1], c[1].toString()]); });
+        if(cParetoArr.length > 1) new google.visualization.ColumnChart(document.getElementById('mr_cause_pareto')).draw(google.visualization.arrayToDataTable(cParetoArr), { legend:'none', colors:['#f59e0b'], chartArea:{width:'85%',height:'55%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
     }
 }
 
 function downloadDashboardPDF() {
     const dashboard = document.getElementById('dashboard'); const header = document.querySelector('.header-box'); document.querySelector('.dash-top-bar').style.display = 'none';
     let tempContainer = document.createElement('div'); tempContainer.appendChild(header.cloneNode(true)); tempContainer.appendChild(dashboard.cloneNode(true)); 
-    var opt = { margin: 5, filename: 'TWS_Dashboard_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
+    var opt = { margin: 5, filename: 'TWS_Dashboard.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
     html2pdf().set(opt).from(tempContainer).save().then(() => { document.querySelector('.dash-top-bar').style.display = 'flex'; });
+}
+
+function downloadMonthlyPDF() {
+    const report = document.getElementById('monthlyReportContainer'); 
+    const bars = report.querySelectorAll('.dash-top-bar'); bars.forEach(b => b.style.display = 'none');
+    var opt = { margin: 5, filename: `Monthly_Review_${document.getElementById('mr_month').value}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
+    html2pdf().set(opt).from(report).save().then(() => { bars.forEach(b => b.style.display = 'flex'); });
 }
 
 function createGauge(value, title, isInverse) {
@@ -1019,41 +1451,37 @@ function showDetailedPreview(r){
   let pHtml = "";
   if(r[14]) {
       let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n');
-      pNames.forEach((n, i) => { if(n) pHtml += `<div class="pv-defect-box" style="border-left:3px solid var(--c-proc);"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;"><span>${n}</span><span>Qty: ${pQtys[i]||0}</span></div><div style="font-size:11px;color:#666;margin-top:4px;">Analysis: ${pAnals[i]||'-'}</div></div>`; });
+      pNames.forEach((n, i) => { if(n) pHtml += `<div class="pv-defect-box" style="border-left:3px solid var(--c-proc); padding:10px; margin-bottom:8px; background:#f8fafc; border-radius:8px;"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;"><span>${n}</span><span>Qty: ${pQtys[i]||0}</span></div><div style="font-size:11px;color:#666;margin-top:4px;">Remarks: ${pAnals[i]||'-'}</div></div>`; });
   }
   
-  document.getElementById('modalTitleMain').innerText = `INSPECTION DETAILS`;
-  document.getElementById('modalTitleSub').innerText = `Daily Quality Report`;
-
+  document.getElementById('modalTitleMain').innerText = `INSPECTION DETAILS`; document.getElementById('modalTitleSub').innerText = `Daily Quality Report`;
   document.getElementById("previewContent").innerHTML = `
-    <div class="pv-meta-grid" style="grid-template-columns: repeat(5, 1fr);">
-        <div class="pv-meta-item"><div class="pv-label">Date</div><div class="pv-value">${d}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Line</div><div class="pv-value">L-${r[2]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Model</div><div class="pv-value">${r[3]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">Shift</div><div class="pv-value">${r[1]}</div></div>
-        <div class="pv-meta-item"><div class="pv-label">User</div><div class="pv-value">${r[29]}</div></div>
+    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:15px; margin-bottom:20px; background:#fff; border:1px solid #e5e7eb; padding:20px; border-radius:12px;">
+        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Date</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${d}</div></div>
+        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Line</div><div style="font-size:16px; font-weight:800; color:#1f2937;">L-${r[2]}</div></div>
+        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Model</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[3]}</div></div>
+        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Shift</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[1]}</div></div>
+        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">User</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[29]}</div></div>
     </div>
-    <div class="pv-gauge-row">
-        ${createGauge(rejRate, 'Rejection Rate', true)}
-        ${createGauge(fpyRate, 'First Pass Yield', false)}
-    </div>
+    <div style="display:flex; justify-content:center; gap:40px; margin-bottom:30px; padding:20px; background:#fff; border-radius:16px; border:1px solid #e5e7eb;">${createGauge(rejRate, 'Rejection Rate', true)} ${createGauge(fpyRate, 'First Pass Yield', false)}</div>
     <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Analysis</div>
-    <div class="pv-stage-cards">
-        <div class="pv-scard sc-blue"><div class="sc-title">RMD</div><div class="sc-val">${r[8]||0}</div><div class="sc-sub"><span class="sc-rate" style="background:#eff6ff; color:#3b82f6;">${rmdR}%</span></div></div>
-        <div class="pv-scard sc-purple"><div class="sc-title">Process</div><div class="sc-val">${r[10]||0}</div><div class="sc-sub"><span class="sc-rate" style="background:#f5f3ff; color:#8b5cf6;">${procR}%</span></div></div>
-        <div class="pv-scard sc-orange"><div class="sc-title">SMT</div><div class="sc-val">${r[12]||0}</div><div class="sc-sub"><span class="sc-rate" style="background:#fff7ed; color:#f59e0b;">${smtR}%</span></div></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-bottom:30px;">
+        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-rmd); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">RMD Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[8]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-rmd); background:#eff6ff; padding:2px 8px; border-radius:10px;">${rmdR}%</span></div>
+        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-proc); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Process Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[10]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-proc); background:#f5f3ff; padding:2px 8px; border-radius:10px;">${procR}%</span></div>
+        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-smt); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">SMT Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[12]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-smt); background:#fffbeb; padding:2px 8px; border-radius:10px;">${smtR}%</span></div>
     </div>
     <div class="pv-split">
         <div><h4 class="pv-section-head" style="color:var(--c-proc); border-color:var(--c-proc);"><i class="fa fa-cogs"></i> Stage Defect Logs</h4>${pHtml}</div>
         <div><h4 class="pv-section-head" style="color:var(--c-danger); border-color:var(--c-danger);"><i class="fa fa-bug"></i> Top Actioned Defects</h4>
-            ${r[17] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#1 ${r[17]}</span><span class="pv-dc-badge">${r[18]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[19]}<br><b>Action:</b> ${r[20]}</div></div>` : ''}
-            ${r[21] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#2 ${r[21]}</span><span class="pv-dc-badge">${r[22]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[23]}<br><b>Action:</b> ${r[24]}</div></div>` : ''}
-            ${r[25] ? `<div class="pv-d-card"><div class="pv-dc-top"><span>#3 ${r[25]}</span><span class="pv-dc-badge">${r[26]}</span></div><div class="pv-dc-content"><b>Cause:</b> ${r[27]}<br><b>Action:</b> ${r[28]}</div></div>` : ''}
+            ${r[17] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#1 ${r[17]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[18]}</span></div><div><b>Cause:</b> ${r[19]}<br><b>Action:</b> ${r[20]}</div></div>` : ''}
+            ${r[21] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#2 ${r[21]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[22]}</span></div><div><b>Cause:</b> ${r[23]}<br><b>Action:</b> ${r[24]}</div></div>` : ''}
+            ${r[25] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#3 ${r[25]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[26]}</span></div><div><b>Cause:</b> ${r[27]}<br><b>Action:</b> ${r[28]}</div></div>` : ''}
         </div>
     </div>`;
   document.getElementById("overlay").style.display = 'block'; document.getElementById("previewModal").style.display = 'block';
 }
 
+// 📌 UPDATED SAVE LOGIC - Auto-calculates Top 3 from dynamic rows to preserve Database Structure
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
 
@@ -1065,11 +1493,49 @@ async function saveData(){
   const pInputs = document.querySelectorAll('.pd-inp');
   for(let inp of pInputs){ if(inp.value && !validDefects.includes(inp.value)){ alert("❌ Invalid Defect Name: " + inp.value + "\nPlease select from the list."); return; } }
 
-  const pNames = Array.from(document.querySelectorAll('.pd-inp')).map((inp, i) => "[" + document.querySelectorAll('.dc-inp')[i].value + "] " + inp.value).join('\n');
-  const pQtys = Array.from(document.querySelectorAll('.pq-inp')).map(i => i.value).join('\n');
-  const pAnals = Array.from(document.querySelectorAll('.pa-inp')).map(i => i.value).join('\n');
-  
-  const row = [f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value, rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value, pNames, pQtys, pAnals, d1.value, q1.value, c1.value, a1.value, d2.value, q2.value, c2.value, a2.value, d3.value, q3.value, c3.value, a3.value, prep.value];
+  // Extract variables
+  let pNamesArr = [], pQtysArr = [], pAnalsArr = [];
+  let defectAgg = {};
+
+  const cats = document.querySelectorAll('.dc-inp');
+  const names = document.querySelectorAll('.pd-inp');
+  const qtys = document.querySelectorAll('.pq-inp');
+  const causes = document.querySelectorAll('.pc-inp');
+  const actions = document.querySelectorAll('.pact-inp');
+  const rems = document.querySelectorAll('.pa-inp');
+
+  for(let i=0; i<cats.length; i++) {
+      let cat = cats[i].value;
+      let name = names[i].value.trim();
+      let qty = parseInt(qtys[i].value) || 0;
+      let cse = causes[i].value.trim();
+      let act = actions[i].value.trim();
+      let rem = rems[i].value.trim();
+
+      if(name && qty > 0) {
+          pNamesArr.push(`[${cat}] ${name}`);
+          pQtysArr.push(qty);
+          pAnalsArr.push(rem);
+
+          if(!defectAgg[name]) defectAgg[name] = { qty: 0, cause: cse, action: act };
+          defectAgg[name].qty += qty;
+          if(cse) defectAgg[name].cause = cse;
+          if(act) defectAgg[name].action = act;
+      }
+  }
+
+  // Sort to get Top 3 silently to save in DB for backward compatibility
+  let sorted = Object.entries(defectAgg).sort((a,b) => b[1].qty - a[1].qty);
+  let top1 = sorted[0] ? [sorted[0][0], sorted[0][1].qty, sorted[0][1].cause, sorted[0][1].action] : ["", "", "", ""];
+  let top2 = sorted[1] ? [sorted[1][0], sorted[1][1].qty, sorted[1][1].cause, sorted[1][1].action] : ["", "", "", ""];
+  let top3 = sorted[2] ? [sorted[2][0], sorted[2][1].qty, sorted[2][1].cause, sorted[2][1].action] : ["", "", "", ""];
+
+  const row = [
+      f_date.value, f_shift.value, f_line.value, f_model.value, f_input.value, f_def.value, f_rej.value, f_fpy.value,
+      rmd.value, rmd_r.value, proc.value, proc_r.value, smt.value, smt_r.value,
+      pNamesArr.join('\n'), pQtysArr.join('\n'), pAnalsArr.join('\n'),
+      ...top1, ...top2, ...top3, prep.value
+  ];
   
   const btn = document.getElementById("saveBtn"); btn.innerText = "⏳ SAVING..."; btn.disabled = true;
   try {
@@ -1084,26 +1550,42 @@ async function deleteRow(idx) {
     try { const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) }); load(); } catch(e) { alert("Network Error"); }
 }
 
+// 📌 UPDATED: Edit row maps Top 3 Causes back to individual rows accurately
 function editRow(idx) {
     let r = allData[idx]; editingRowIndex = idx;
     f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
     rmd.value=r[8]; rmd_r.value=r[9]; proc.value=r[10]; proc_r.value=r[11]; smt.value=r[12]; smt_r.value=r[13];
     
     document.getElementById('process_container').innerHTML = '';
+
+    // Build map of Top 3 causes to re-assign to rows
+    let topMap = {};
+    if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
+    if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
+    if(r[25]) topMap[r[25].trim()] = { c: r[27]||'', a: r[28]||'' };
+
     if(r[14]) { 
-        let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n'); 
+        let pNames = r[14].toString().split('\n'); 
+        let pQtys = r[15].toString().split('\n'); 
+        let pAnals = (r[16]||"").toString().split('\n'); 
+        
         pNames.forEach((n, i) => {
-            let match = n.match(/^\[(.*?)\]\s(.*)$/);
-            let cat = match ? match[1] : 'Process'; let dName = match ? match[2] : n;
-            addDefectRow(cat, dName, pQtys[i], pAnals[i]);
+            let match = n.match(/^\[(.*?)\]\s(.*)$/); 
+            let cat = match ? match[1] : 'Process'; 
+            let dName = match ? match[2] : n.trim();
+            
+            let cse = topMap[dName] ? topMap[dName].c : '';
+            let act = topMap[dName] ? topMap[dName].a : '';
+
+            addDefectRow(cat, dName, pQtys[i]||'', cse, act, pAnals[i]||'');
         }); 
-    } else { 
-        addDefectRow('Process'); 
-    }
+    } else { addDefectRow('Process'); }
     
-    d1.value=r[17]; q1.value=r[18]; c1.value=r[19]; a1.value=r[20]; d2.value=r[21]; q2.value=r[22]; c2.value=r[23]; a2.value=r[24]; d3.value=r[25]; q3.value=r[26]; c3.value=r[27]; a3.value=r[28]; prep.value=r[29];
-    calcDefects();
-    switchTab('entry'); document.getElementById("saveBtn").innerText = "UPDATE RECORD"; document.getElementById("saveBtn").style.background = "#f59e0b";
+    prep.value=r[29]||'';
+    calcDefects(); 
+    switchTab('entry', document.querySelectorAll('.tab-btn')[2]); 
+    document.getElementById("saveBtn").innerText = "UPDATE RECORD"; 
+    document.getElementById("saveBtn").style.background = "#f59e0b";
 }
 
 function applyFilters() {
@@ -1116,38 +1598,24 @@ function applyFilters() {
     
     let hasRecords = false;
     allData.slice(1).forEach((r, index) => {
-        let rDate = fixDate(r[0]); let rLine = r[2].toString(); let match = true;
+        let rDate = fixDate(r[0]); let rLine = r[2] ? r[2].toString().trim() : ""; let match = true;
         if(dFrom && rDate < dFrom) match = false; if(dTo && rDate > dTo) match = false; if(selectedLines.length > 0 && !selectedLines.includes(rLine)) match = false;
         if(match) {
-            hasRecords = true;
-            filteredData.push(r); let tr = document.createElement("tr");
-            
-            r.forEach((c, i) => {
-                if(i === 2 && c) {
-                    tr.innerHTML += `<td><span class="line-link" onclick="showLineSummary('${c}')" title="Filter by Line ${c}">L-${c}</span></td>`;
-                } else if(i === 3 && c) {
-                    tr.innerHTML += `<td><span class="line-link" onclick="showModelSummary('${c}')" title="Filter by Model ${c}">${c}</span></td>`;
-                } else {
-                    tr.innerHTML += `<td>${i===0 ? fixDate(c) : c||""}</td>`;
-                }
-            });
-            
+            hasRecords = true; filteredData.push(r); let tr = document.createElement("tr");
+            r.forEach((c, i) => { if(i === 2 && c) { tr.innerHTML += `<td><span class="line-link" onclick="window.showLineSummary('${c}')">L-${c}</span></td>`; } else if(i === 3 && c) { tr.innerHTML += `<td><span class="line-link" onclick="window.showModelSummary('${c}')">${c}</span></td>`; } else { tr.innerHTML += `<td>${i===0 ? fixDate(c) : c||""}</td>`; } });
             let realIdx = index + 1;
-            tr.innerHTML += `<td><button onclick='showDetailedPreview(allData[${realIdx}])' style="padding:6px; margin-right:5px; background:var(--c-proc); border-radius:5px; color:white;"><i class="fa fa-eye"></i></button><button onclick='editRow(${realIdx})' style="padding:6px; background:var(--c-smt); border-radius:5px; margin-right:5px; color:white;"><i class="fa fa-edit"></i></button><button onclick='deleteRow(${realIdx})' style="padding:6px; background:var(--c-danger); border-radius:5px; color:white;"><i class="fa fa-trash"></i></button></td>`;
-            t.appendChild(tr);
+            tr.innerHTML += `<td><button onclick='showDetailedPreview(allData[${realIdx}])' style="padding:6px; margin-right:5px; background:var(--c-proc); border-radius:5px; color:white;"><i class="fa fa-eye"></i></button><button onclick='editRow(${realIdx})' style="padding:6px; background:var(--c-smt); border-radius:5px; margin-right:5px; color:white;"><i class="fa fa-edit"></i></button><button onclick='deleteRow(${realIdx})' style="padding:6px; background:var(--c-danger); border-radius:5px; color:white;"><i class="fa fa-trash"></i></button></td>`; t.appendChild(tr);
         }
     });
-    
     document.getElementById("noDataMsg").style.display = hasRecords ? "none" : "block";
 }
 
 function downloadExcel() { if(filteredData.length <= 1) { alert("No data"); return; } var ws = XLSX.utils.aoa_to_sheet(filteredData); var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, "PQC_Data.xlsx"); }
 function downloadPDF() { const el = document.getElementById('tableContainer'); if(!el) return; html2pdf().set({ margin: 5, filename: 'PQC_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } }).from(el).save(); }
-async function load(){ try { const res = await fetch(API + "?sheet=" + currentCategory); const j = await res.json(); allData = j.rows; populateFilters(); applyFilters(); filterDashboard(); } catch(e) { console.error(e); } }
+async function load(){ try { const res = await fetch(API + "?sheet=" + currentCategory); const j = await res.json(); allData = j.rows; populateFilters(); applyFilters(); filterDashboard(); renderMonthlyReview(); } catch(e) { console.error(e); } }
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 function resetForm(){ document.querySelectorAll('#entryForm input').forEach(i => i.value = ''); editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; document.getElementById('process_container').innerHTML = ''; addDefectRow('Process'); }
 
-// ENSURE GOOGLE CHARTS LOADS BEFORE RUNNING THE INITIAL LOAD
 google.charts.setOnLoadCallback(load);
 </script>
 </body>
