@@ -383,7 +383,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
         <!-- DATA LISTS FOR DROPDOWNS -->
         <datalist id="all_models">
             <option value="Ad Unity ANC"> <option value="Ace"> <option value="Ad 111v2">
-            <option value="Ad 118"> <option value="Ad 120"> <option value="Ad 121Pro Plus"> <option value="Ad 71 Gen 2"> <option value="Ad Aura Plus"> <option value="Ad Pro Clip">
+            <option value="Ad 118"> <option value="Ad 120"> <option value="Ad 121Pro Plus">
             <option value="Ad 131 Elite Anc"> <option value="Ad 131 Gen 2"> <option value="Ad 131 Pro Buds">
             <option value="Ad 138 Gen 2"> <option value="Ad 141 Anc"> <option value="Ad 141 Anc Elite">
             <option value="Ad 141 Gen 2"> <option value="Ad 141 Pro Buds"> <option value="Ad 148 Gen 2">
@@ -538,6 +538,7 @@ let expandedLines = false;
 window.currentDefectMaps = { Overall: {}, Process: {}, SMT: {}, RMD: {} };
 window.currentDefectTotals = { Overall: 0, Process: 0, SMT: 0, RMD: 0 };
 window.currentMatrixData = {};
+window.currentMatrixEntity = 'Line';
 
 function init() {
     const box = document.getElementById('lineSelectBox');
@@ -617,6 +618,7 @@ window.switchModalView = function(view) {
 window.renderLineMatrix = function(filterStage) {
     let data = window.currentMatrixData;
     let dates = data.dates;
+    let entityType = window.currentMatrixEntity;
     
     let html = '<table class="excel-table line-matrix-table" style="min-width: 1000px; white-space: nowrap;">';
     
@@ -630,9 +632,10 @@ window.renderLineMatrix = function(filterStage) {
     });
     html += '</tr></thead><tbody>';
     
-    // Model
-    html += '<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">Model Name</td>';
-    dates.forEach(d => html += `<td class="bg-peach" style="font-weight:800;">${data.daily[d].models.join(', ')}</td>`);
+    // Entity Row (Model or Lines)
+    let entityRowHeader = entityType === 'Line' ? 'Models Active' : 'Lines Active';
+    html += `<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">${entityRowHeader}</td>`;
+    dates.forEach(d => html += `<td class="bg-peach" style="font-weight:800;">${data.daily[d].entities.join(', ')}</td>`);
     html += '</tr>';
     
     // Production
@@ -707,6 +710,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
     try {
         let rawRows = getDashFilteredRows();
         let safeEntityValue = entityValue ? entityValue.toString().trim() : "";
+        window.currentMatrixEntity = entityLabel;
         
         let rows = rawRows.filter(r => r[filterKeyIndex] && r[filterKeyIndex].toString().trim() === safeEntityValue);
 
@@ -738,7 +742,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         
         let matrix = { dates: datesArr, daily: {}, defectStages: {} };
         datesArr.forEach(d => {
-            matrix.daily[d] = { models: new Set(), prod: 0, proc: 0, rmd: 0, smt: 0, tot: 0, defects: {}, hasInput: false };
+            matrix.daily[d] = { entities: new Set(), prod: 0, proc: 0, rmd: 0, smt: 0, tot: 0, defects: {}, hasInput: false };
         });
 
         rows.forEach(r => {
@@ -750,7 +754,9 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
 
             // Fill Matrix Daily Info
             if(matrix.daily[date]) {
-                if(r[3]) matrix.daily[date].models.add(r[3]);
+                if(entityLabel === 'Line' && r[3]) matrix.daily[date].entities.add(r[3]);
+                if(entityLabel === 'Model' && r[2]) matrix.daily[date].entities.add("L-" + r[2]);
+
                 matrix.daily[date].hasInput = true;
                 matrix.daily[date].prod += inp;
                 matrix.daily[date].tot += def;
@@ -759,16 +765,16 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                 matrix.daily[date].smt += (+r[12]||0);
             }
 
-            // Extract Top 3 causes into a map for this specific row to match later
-            let rowCauses = {};
-            if(r[17]) rowCauses[r[17].trim()] = { cause: r[19] || '', action: r[20] || '' };
-            if(r[21]) rowCauses[r[21].trim()] = { cause: r[23] || '', action: r[24] || '' };
-            if(r[25]) rowCauses[r[25].trim()] = { cause: r[27] || '', action: r[28] || '' };
+            // Fallback for old records
+            let topMap = {};
+            if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
+            if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
+            if(r[25]) topMap[r[25].trim()] = { c: r[27]||'', a: r[28]||'' };
 
             if(r[14]) {
                 let pNames = r[14].toString().split('\n'); 
                 let pQtys = r[15].toString().split('\n');
-                let pAnals = r[16] ? r[16].toString().split('\n') : [];
+                let pAnals = (r[16]||"").toString().split('\n');
 
                 pNames.forEach((n, i) => {
                     if(n) {
@@ -776,7 +782,16 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                         let category = match ? match[1] : 'Process';
                         let pureName = match ? match[2].trim() : n.trim(); 
                         let q = (+pQtys[i]||0);
-                        let analysis = pAnals[i] ? pAnals[i].trim() : '';
+                        
+                        let rawRem = pAnals[i] || '';
+                        let rem = rawRem, cse = '', act = '';
+                        if(rawRem.includes('|~|')) {
+                            let parts = rawRem.split('|~|');
+                            rem = parts[0]; cse = parts[1]; act = parts[2];
+                        } else {
+                            cse = topMap[pureName] ? topMap[pureName].c : '';
+                            act = topMap[pureName] ? topMap[pureName].a : '';
+                        }
                         
                         // Populate Defect Pareto Map
                         defectMap[pureName] = (defectMap[pureName] || 0) + q;
@@ -788,11 +803,10 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                         }
 
                         // Merge Analysis & Root Cause into a unified cell
-                        let causeInfo = rowCauses[pureName];
                         let rText = [];
-                        if(analysis) rText.push(`<i>Remarks:</i> ${analysis}`);
-                        if(causeInfo && causeInfo.cause) rText.push(`<b style="color:var(--c-danger);">Cause:</b> ${causeInfo.cause}`);
-                        if(causeInfo && causeInfo.action) rText.push(`<b style="color:var(--c-success);">Action:</b> ${causeInfo.action}`);
+                        if(rem && rem !== '-') rText.push(`<i>Remarks:</i> ${rem}`);
+                        if(cse) rText.push(`<b style="color:var(--c-danger);">Cause:</b> ${cse}`);
+                        if(act) rText.push(`<b style="color:var(--c-success);">Action:</b> ${act}`);
 
                         detailedLogs.push({
                             date: date,
@@ -807,12 +821,13 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         });
 
         // Finalize matrix sets to arrays
-        datesArr.forEach(d => { matrix.daily[d].models = Array.from(matrix.daily[d].models); });
+        datesArr.forEach(d => { matrix.daily[d].entities = Array.from(matrix.daily[d].entities); });
         window.currentMatrixData = matrix;
 
         Object.keys(tempDateMap).sort().forEach(d => {
             let r = tempDateMap[d].inp > 0 ? (tempDateMap[d].def/tempDateMap[d].inp*100) : 0;
-            dateTrendData.push([d.split('-')[2] || d, r, r.toFixed(1)+'%']);
+            let shortD = d.split('-').slice(1).join('-'); // Make MM-DD for cleaner chart
+            dateTrendData.push([shortD, r, r.toFixed(1)+'%']);
         });
 
         let rRate = tInp > 0 ? (tDef/tInp*100).toFixed(2) : "0.00"; 
@@ -830,7 +845,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         } else {
             sortedDefects.forEach(([name, qty]) => {
                 let pct = tDef > 0 ? ((qty/tDef)*100).toFixed(1) : 0;
-                topDefectsHtml += `<tr><td><b>${name}</b></td><td>${qty}</td><td><div style="display:flex; align-items:center; gap:5px;"><span style="min-width:35px; font-weight:800; font-size:11px;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:5px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--c-proc); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
+                topDefectsHtml += `<tr><td><b><span class="line-link" onclick="window.showDefectSummary('${name.replace(/'/g, "\\'")}')">${name}</span></b></td><td>${qty}</td><td><div style="display:flex; align-items:center; gap:5px;"><span style="min-width:35px; font-weight:800; font-size:11px;">${pct}%</span><div style="flex:1; background:#f1f5f9; height:5px; border-radius:4px;"><div style="width:${Math.min(pct,100)}%; background:var(--c-proc); height:100%; border-radius:4px;"></div></div></div></td></tr>`;
             });
         }
         topDefectsHtml += `</tbody></table>`;
@@ -843,8 +858,8 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                     <th>Category</th>
                     <th>Defect Name</th>
                     <th>Qty</th>
-                    <th title="Defect Qty / Daily Line Input">Defect Rate</th>
-                    <th title="Total Daily Line Rejection Rate">Line Daily Rej %</th>
+                    <th title="Defect Qty / Daily Entity Input">Defect Rate</th>
+                    <th title="Total Daily Entity Rejection Rate">Daily Rej %</th>
                     <th>Analysis / Root Cause</th>
                 </tr>
             </thead>
@@ -869,17 +884,15 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         if(detailedLogs.length === 0) logTableHtml += `<tr><td colspan="7" style="text-align:center;">No detailed logs found.</td></tr>`;
         logTableHtml += `</tbody></table>`;
 
-        // INJECT MODAL CONTENT (WITH TABS FOR MATRIX VIEW)
+        // INJECT MODAL CONTENT (WITH TABS FOR MATRIX VIEW AVAILABLE TO BOTH)
         document.getElementById('modalTitleMain').innerText = `${entityLabel.toUpperCase()} ${safeEntityValue} PERFORMANCE`;
         document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
 
         document.getElementById("previewContent").innerHTML = `
-            ${entityLabel === 'Line' ? `
             <div class="def-tabs" style="margin: -10px auto 25px auto; width: fit-content; display: flex; justify-content: center; background: #e2e8f0; padding: 5px; border-radius: 10px;">
                 <button class="def-tab-btn modal-main-tab active" onclick="switchModalView('exec')" style="padding: 8px 25px; font-size:13px;">Executive Summary</button>
                 <button class="def-tab-btn modal-main-tab" onclick="switchModalView('matrix')" style="padding: 8px 25px; font-size:13px;">Daily Matrix Report</button>
             </div>
-            ` : ''}
 
             <!-- VIEW 1: EXECUTIVE SUMMARY -->
             <div id="modal_exec_view">
@@ -914,8 +927,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                 </div>
             </div>
 
-            <!-- VIEW 2: EXCEL MATRIX (ONLY FOR LINES) -->
-            ${entityLabel === 'Line' ? `
+            <!-- VIEW 2: EXCEL MATRIX -->
             <div id="modal_matrix_view" style="display:none; animation: fadeIn 0.4s;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px;">
                     <div>
@@ -933,19 +945,20 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                     <!-- Inserted by renderLineMatrix() -->
                 </div>
             </div>
-            ` : ''}
         `;
 
         document.getElementById("overlay").style.display = 'block'; 
         document.getElementById("previewModal").style.display = 'block';
 
-        if(entityLabel === 'Line') {
-            window.renderLineMatrix('Overall'); // Pre-render the matrix
-        }
+        window.renderLineMatrix('Overall'); // Pre-render the matrix
 
         setTimeout(() => {
             if(typeof google !== 'undefined' && google.visualization && dateTrendData.length > 1) {
-                new google.visualization.LineChart(document.getElementById('modal_trend_chart')).draw(google.visualization.arrayToDataTable(dateTrendData), { legend:'none', pointSize:5, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, hAxis:{title:'Day'} });
+                new google.visualization.LineChart(document.getElementById('modal_trend_chart')).draw(google.visualization.arrayToDataTable(dateTrendData), { 
+                    legend:'none', pointSize:5, colors:['#2563eb'], 
+                    chartArea:{width:'85%',height:'65%'}, 
+                    hAxis: {slantedText: true, slantedTextAngle: 45, textStyle: {fontSize: 10}} 
+                });
             }
         }, 100);
 
@@ -973,15 +986,33 @@ function executeDefectDeepDive(pureDefectName) {
                 });
             }
             
-            const checkCause = (dIdx, cIdx, aIdx) => { 
-                if(r[dIdx] && r[dIdx].trim() === pureDefectName) { 
-                    let c = r[cIdx]||'Not Specified'; let a = r[aIdx]||'Monitoring';
-                    causeMap[c] = (causeMap[c]||0) + 1; actionMap[a] = (actionMap[a]||0) + 1;
-                } 
-            };
-            checkCause(17, 19, 20); checkCause(21, 23, 24); checkCause(25, 27, 28);
+            // Rebuild Map to find Cause/Action
+            let topMap = {};
+            if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
+            if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
+            if(r[25]) topMap[r[25].trim()] = { c: r[27]||'', a: r[28]||'' };
 
             if(foundQty > 0) {
+                // Find if packed in Anals, otherwise fallback
+                let pNames = r[14].toString().split('\n');
+                let pAnals = (r[16]||"").toString().split('\n');
+                pNames.forEach((n, i) => {
+                    let match = n.match(/^\[(.*?)\]\s(.*)$/); 
+                    let dName = match ? match[2].trim() : n.trim();
+                    if(dName === pureDefectName) {
+                        let rawRem = pAnals[i] || '';
+                        let cse = '', act = '';
+                        if(rawRem.includes('|~|')) {
+                            let parts = rawRem.split('|~|'); cse = parts[1]; act = parts[2];
+                        } else {
+                            cse = topMap[dName] ? topMap[dName].c : '';
+                            act = topMap[dName] ? topMap[dName].a : '';
+                        }
+                        if(cse) causeMap[cse] = (causeMap[cse]||0) + 1;
+                        if(act) actionMap[act] = (actionMap[act]||0) + 1;
+                    }
+                });
+
                 totalQty += foundQty; 
                 lineMap[line] = (lineMap[line]||0) + foundQty;
                 if(!tempDateMap[date]) tempDateMap[date] = 0;
@@ -991,7 +1022,10 @@ function executeDefectDeepDive(pureDefectName) {
 
         if(totalQty === 0 && Object.keys(causeMap).length === 0) { alert(`No occurrences found for ${pureDefectName} in the selected range.`); return; }
 
-        Object.keys(tempDateMap).sort().forEach(d => { dateTrendData.push([d.split('-')[2] || d, tempDateMap[d], tempDateMap[d].toString()]); });
+        Object.keys(tempDateMap).sort().forEach(d => { 
+            let shortD = d.split('-').slice(1).join('-'); 
+            dateTrendData.push([shortD, tempDateMap[d], tempDateMap[d].toString()]); 
+        });
 
         let sharePct = totalDashboardDefects > 0 ? ((totalQty / totalDashboardDefects) * 100).toFixed(1) : 0;
         let worstLine = Object.keys(lineMap).length > 0 ? Object.entries(lineMap).sort((a,b)=>b[1]-a[1])[0][0] : "N/A";
@@ -1041,7 +1075,7 @@ function executeDefectDeepDive(pureDefectName) {
 
         setTimeout(() => {
             if(typeof google !== 'undefined' && google.visualization && dateTrendData.length > 1) {
-                new google.visualization.LineChart(document.getElementById('modal_defect_trend')).draw(google.visualization.arrayToDataTable(dateTrendData), { legend:'none', pointSize:5, colors:['#ef4444'], chartArea:{width:'85%',height:'70%'}, hAxis:{title:'Day'} });
+                new google.visualization.LineChart(document.getElementById('modal_defect_trend')).draw(google.visualization.arrayToDataTable(dateTrendData), { legend:'none', pointSize:5, colors:['#ef4444'], chartArea:{width:'85%',height:'65%'}, hAxis:{slantedText:true, slantedTextAngle:45, textStyle:{fontSize:10}} });
             }
             
             let lineChartArr = [['Line', 'Qty', {role:'annotation'}]];
@@ -1211,8 +1245,18 @@ function renderDashboardStats(rows) {
     renderDefectTable('Overall');
 
     if(typeof google !== 'undefined' && google.visualization && tInp > 0) {
-        let trendArr = [['Date', 'Rejection %', {role:'annotation'}]]; Object.keys(dateMap).sort().forEach(d => { let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0; trendArr.push([d, r, r.toFixed(1)+'%']); });
-        new google.visualization.LineChart(document.getElementById('d_trend_chart')).draw(google.visualization.arrayToDataTable(trendArr), { legend:'none', pointSize:6, colors:['#2563eb'], chartArea:{width:'85%',height:'70%'}, vAxis:{format:'#.#'}, annotations:{alwaysOutside:true} });
+        let trendArr = [['Date', 'Rejection %', {role:'annotation'}]]; Object.keys(dateMap).sort().forEach(d => { 
+            let r = dateMap[d].inp > 0 ? (dateMap[d].def/dateMap[d].inp*100) : 0; 
+            let shortDate = d.split('-').slice(1).join('-');
+            trendArr.push([shortDate, r, r.toFixed(1)+'%']); 
+        });
+        new google.visualization.LineChart(document.getElementById('d_trend_chart')).draw(google.visualization.arrayToDataTable(trendArr), { 
+            legend:'none', pointSize:6, colors:['#2563eb'], 
+            chartArea:{width:'85%',height:'65%'}, 
+            vAxis:{format:'#.#'}, 
+            hAxis: {slantedText: true, slantedTextAngle: 45, textStyle: {fontSize: 10}},
+            annotations:{alwaysOutside:true} 
+        });
 
         let rmdR = tInp > 0 ? (tRMD/tInp*100) : 0; let procR = tInp > 0 ? (tProc/tInp*100) : 0; let smtR = tInp > 0 ? (tSMT/tInp*100) : 0;
         new google.visualization.ColumnChart(document.getElementById('d_bar')).draw(google.visualization.arrayToDataTable([['Stage', 'Rate %', {role:'style'}, {role:'annotation'}], ['RMD', rmdR, '#3b82f6', rmdR.toFixed(2)+'%'], ['Process', procR, '#8b5cf6', procR.toFixed(2)+'%'], ['SMT', smtR, '#f59e0b', smtR.toFixed(2)+'%']]), { legend:'none', chartArea:{width:'85%',height:'75%'}, vAxis:{title:'Defect Rate %'} });
@@ -1437,47 +1481,165 @@ function downloadMonthlyPDF() {
 }
 
 function createGauge(value, title, isInverse) {
-    const r = 80; const cx = 100; const cy = 100; const angle = Math.min(Math.max((value / 100) * 180 - 90, -90), 90);
+    const r = 40; const cx = 50; const cy = 50; const angle = Math.min(Math.max((value / 100) * 180 - 90, -90), 90);
     const color = isInverse ? (value < 2 ? '#10b981' : (value < 5 ? '#f59e0b' : '#ef4444')) : (value > 98 ? '#10b981' : (value > 95 ? '#f59e0b' : '#ef4444'));
-    const rad = angle * (Math.PI / 180); const nx = cx + (r - 10) * Math.cos(rad); const ny = cy + (r - 10) * Math.sin(rad);
-    return `<div style="text-align:center; width:200px;"><svg viewBox="0 0 200 110" style="width:100%;"><path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e2e8f0" stroke-width="20" /><text x="15" y="100" font-size="10" fill="#94a3b8">0</text><text x="100" y="15" font-size="10" fill="#94a3b8" text-anchor="middle">50</text><text x="185" y="100" font-size="10" fill="#94a3b8">100</text><line x1="100" y1="100" x2="${nx}" y2="${ny}" stroke="#1e293b" stroke-width="4" stroke-linecap="round" /><circle cx="100" cy="100" r="6" fill="#1e293b" /><text x="100" y="80" font-size="18" font-weight="800" fill="${color}" text-anchor="middle">${value}%</text></svg><div style="font-size:12px; font-weight:700; color:#64748b; margin-top:-10px;">${title}</div></div>`;
+    const rad = angle * (Math.PI / 180); const nx = cx + (r - 5) * Math.cos(rad); const ny = cy + (r - 5) * Math.sin(rad);
+    return `<div style="text-align:center; width:120px;"><svg viewBox="0 0 100 55" style="width:100%;"><path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="10" /><line x1="50" y1="50" x2="${nx}" y2="${ny}" stroke="#1e293b" stroke-width="3" stroke-linecap="round" /><circle cx="50" cy="50" r="4" fill="#1e293b" /></svg><div style="font-size:16px; font-weight:800; fill:${color}; color:${color}; margin-top:-5px;">${value}%</div><div style="font-size:10px; font-weight:700; color:#64748b;">${title}</div></div>`;
 }
+
+// Global filter function for the modal preview
+window.filterPvDefects = function(cat, btn) {
+    document.querySelectorAll('.pv-filter-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    
+    document.querySelectorAll('.pv-defect-box').forEach(box => {
+        if(cat === 'Overall' || box.getAttribute('data-cat') === cat) {
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    });
+};
 
 function showDetailedPreview(r){
   const d = fixDate(r[0]); 
-  let input = +r[4] || 1; let rejRate = (+r[6]||0); let fpyRate = (100 - rejRate).toFixed(2);
-  let rmdR = ((+r[8]||0) / input * 100).toFixed(2); let procR = ((+r[10]||0) / input * 100).toFixed(2); let smtR = ((+r[12]||0) / input * 100).toFixed(2);
+  let input = +r[4] || 1; 
+  let totalDef = +r[5] || 0;
+  let rejRate = (+r[6]||0); 
+  let fpyRate = (100 - rejRate).toFixed(2);
+  
+  let rmdQty = (+r[8]||0);
+  let procQty = (+r[10]||0);
+  let smtQty = (+r[12]||0);
 
-  let pHtml = "";
+  // Stacked Bar calculations
+  let pctRMD = totalDef ? (rmdQty/totalDef*100) : 0;
+  let pctProc = totalDef ? (procQty/totalDef*100) : 0;
+  let pctSMT = totalDef ? (smtQty/totalDef*100) : 0;
+
+  // Parse legacy top 3 for fallback
+  let topMap = {};
+  if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
+  if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
+  if(r[25]) topMap[r[25].trim()] = { c: r[27]||'', a: r[28]||'' };
+
+  let defectHtmlAll = "";
   if(r[14]) {
-      let pNames = r[14].toString().split('\n'); let pQtys = r[15].toString().split('\n'); let pAnals = r[16].toString().split('\n');
-      pNames.forEach((n, i) => { if(n) pHtml += `<div class="pv-defect-box" style="border-left:3px solid var(--c-proc); padding:10px; margin-bottom:8px; background:#f8fafc; border-radius:8px;"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;"><span>${n}</span><span>Qty: ${pQtys[i]||0}</span></div><div style="font-size:11px;color:#666;margin-top:4px;">Remarks: ${pAnals[i]||'-'}</div></div>`; });
+      let pNames = r[14].toString().split('\n'); 
+      let pQtys = r[15].toString().split('\n'); 
+      let pAnals = (r[16]||"").toString().split('\n');
+      
+      pNames.forEach((n, i) => { 
+          if(!n) return;
+          let match = n.match(/^\[(.*?)\]\s(.*)$/);
+          let cat = match ? match[1] : 'Process';
+          let dName = match ? match[2].trim() : n.trim();
+          let qty = pQtys[i] || 0;
+          let pctDef = totalDef ? (qty/totalDef*100) : 0;
+          
+          let rawRem = pAnals[i] || '';
+          let rem = rawRem, cse = '', act = '';
+          if(rawRem.includes('|~|')) {
+              let parts = rawRem.split('|~|');
+              rem = parts[0]; cse = parts[1]; act = parts[2];
+          } else {
+              cse = topMap[dName] ? topMap[dName].c : '';
+              act = topMap[dName] ? topMap[dName].a : '';
+          }
+
+          let cssCat = cat === 'Process' ? 'proc' : cat.toLowerCase();
+          let badgeClass = cat === 'RMD' ? 'b-rmd' : (cat === 'SMT' ? 'b-smt' : 'b-proc');
+
+          defectHtmlAll += `
+          <div class="pv-defect-box" data-cat="${cat}" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; overflow:hidden; margin-bottom:15px; box-shadow:0 4px 6px rgba(0,0,0,0.02);">
+              <div style="display:flex; background:#f8fafc; padding:12px 20px; border-bottom:1px solid #e2e8f0; align-items:center; justify-content:space-between; border-left:4px solid var(--c-${cssCat});">
+                  <div style="display:flex; align-items:center; gap:12px;">
+                      <span class="badge-rate ${badgeClass}">${cat}</span>
+                      <span style="font-size:15px; font-weight:800; color:#0f172a;">${dName}</span>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:15px;">
+                      <span style="font-size:12px; font-weight:700; color:#64748b;">Share: ${pctDef.toFixed(1)}%</span>
+                      <span style="background:var(--text-main); color:white; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800;">Qty: ${qty}</span>
+                  </div>
+              </div>
+              <div style="padding:15px 20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                  ${cse ? `<div><div style="font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Root Cause</div><div style="font-size:13px; font-weight:600; color:var(--c-danger); display:flex; gap:8px;"><i class="fa fa-exclamation-circle" style="margin-top:2px;"></i> <span>${cse}</span></div></div>` : ''}
+                  ${act ? `<div><div style="font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Corrective Action</div><div style="font-size:13px; font-weight:600; color:var(--c-success); display:flex; gap:8px;"><i class="fa fa-check-circle" style="margin-top:2px;"></i> <span>${act}</span></div></div>` : ''}
+                  ${rem && rem !== '-' ? `<div style="grid-column: 1 / -1; background:#f8fafc; padding:10px 15px; border-radius:8px; border:1px solid #f1f5f9;"><div style="font-size:10px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Remarks & Analysis</div><div style="font-size:12px; font-weight:600; color:#334155;">${rem}</div></div>` : ''}
+              </div>
+          </div>`;
+      });
   }
   
-  document.getElementById('modalTitleMain').innerText = `INSPECTION DETAILS`; document.getElementById('modalTitleSub').innerText = `Daily Quality Report`;
+  if(!defectHtmlAll) {
+      defectHtmlAll = `<div style="text-align:center; padding:20px; color:#64748b; font-weight:700;">No defects recorded for this entry.</div>`;
+  }
+  
+  document.getElementById('modalTitleMain').innerText = `EXECUTIVE INSPECTION REPORT`; 
+  document.getElementById('modalTitleSub').innerText = `Data Entry & Analysis Preview`;
+  
   document.getElementById("previewContent").innerHTML = `
-    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:15px; margin-bottom:20px; background:#fff; border:1px solid #e5e7eb; padding:20px; border-radius:12px;">
-        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Date</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${d}</div></div>
-        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Line</div><div style="font-size:16px; font-weight:800; color:#1f2937;">L-${r[2]}</div></div>
-        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Model</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[3]}</div></div>
-        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">Shift</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[1]}</div></div>
-        <div style="text-align:center;"><div style="font-size:10px; font-weight:800; color:#9ca3af; text-transform:uppercase;">User</div><div style="font-size:16px; font-weight:800; color:#1f2937;">${r[29]}</div></div>
-    </div>
-    <div style="display:flex; justify-content:center; gap:40px; margin-bottom:30px; padding:20px; background:#fff; border-radius:16px; border:1px solid #e5e7eb;">${createGauge(rejRate, 'Rejection Rate', true)} ${createGauge(fpyRate, 'First Pass Yield', false)}</div>
-    <div class="pv-section-head"><i class="fa fa-chart-pie" style="color:var(--primary);"></i> Stage Analysis</div>
-    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-bottom:30px;">
-        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-rmd); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">RMD Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[8]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-rmd); background:#eff6ff; padding:2px 8px; border-radius:10px;">${rmdR}%</span></div>
-        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-proc); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">Process Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[10]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-proc); background:#f5f3ff; padding:2px 8px; border-radius:10px;">${procR}%</span></div>
-        <div style="background:#fff; border:1px solid #e2e8f0; border-top: 4px solid var(--c-smt); padding:20px; border-radius:12px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.02);"><div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; margin-bottom:5px;">SMT Stage</div><div style="font-size:24px; font-weight:800; color:#1e293b;">${r[12]||0}</div><span style="font-size:12px; font-weight:700; color:var(--c-smt); background:#fffbeb; padding:2px 8px; border-radius:10px;">${smtR}%</span></div>
-    </div>
-    <div class="pv-split">
-        <div><h4 class="pv-section-head" style="color:var(--c-proc); border-color:var(--c-proc);"><i class="fa fa-cogs"></i> Stage Defect Logs</h4>${pHtml}</div>
-        <div><h4 class="pv-section-head" style="color:var(--c-danger); border-color:var(--c-danger);"><i class="fa fa-bug"></i> Top Actioned Defects</h4>
-            ${r[17] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#1 ${r[17]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[18]}</span></div><div><b>Cause:</b> ${r[19]}<br><b>Action:</b> ${r[20]}</div></div>` : ''}
-            ${r[21] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#2 ${r[21]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[22]}</span></div><div><b>Cause:</b> ${r[23]}<br><b>Action:</b> ${r[24]}</div></div>` : ''}
-            ${r[25] ? `<div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #e5e7eb; margin-bottom:15px;"><div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:8px;"><span>#3 ${r[25]}</span><span style="background:#f3f4f6; padding:3px 8px; border-radius:6px; font-size:11px;">Qty: ${r[26]}</span></div><div><b>Cause:</b> ${r[27]}<br><b>Action:</b> ${r[28]}</div></div>` : ''}
+    <!-- Top Meta Header -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+        <div>
+            <div style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:8px;">${r[3]}</div>
+            <div style="color:var(--text-light); font-size:12px; font-weight:700;">
+                <span style="background:#eff6ff; color:var(--primary); padding:3px 8px; border-radius:6px; margin-right:10px;"><i class="fa fa-industry"></i> Line ${r[2]}</span>
+                <i class="fa fa-calendar-alt"></i> ${d} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                <i class="fa fa-clock"></i> Shift ${r[1]} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                <i class="fa fa-user"></i> ${r[29]}
+            </div>
         </div>
-    </div>`;
+    </div>
+
+    <!-- Snapshot Metrics -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr auto auto; gap:20px; background:#fff; border:1px solid #e2e8f0; padding:25px; border-radius:16px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.02); align-items:center;">
+        <div>
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">Total Input</div>
+            <div style="font-size:36px; font-weight:800; color:#0f172a; line-height:1;">${input.toLocaleString()}</div>
+        </div>
+        <div>
+            <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">Total Defects</div>
+            <div style="font-size:36px; font-weight:800; color:var(--c-danger); line-height:1;">${totalDef.toLocaleString()}</div>
+        </div>
+        <div style="border-left:1px solid #e2e8f0; padding-left:20px; display:flex; justify-content:center;">
+            ${createGauge(fpyRate, 'First Pass Yield', false)}
+        </div>
+        <div style="border-left:1px solid #e2e8f0; padding-left:20px; display:flex; justify-content:center;">
+            ${createGauge(rejRate, 'Rejection Rate', true)}
+        </div>
+    </div>
+    
+    <!-- Stage Analysis Visual -->
+    <div class="pv-section-head"><i class="fa fa-layer-group" style="color:var(--primary);"></i> Defect Stage Distribution</div>
+    <div style="background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:12px; margin-bottom:30px; box-shadow:0 4px 10px rgba(0,0,0,0.02);">
+        <div style="display:flex; width:100%; height:12px; border-radius:10px; overflow:hidden; background:#f1f5f9; margin-bottom:15px;">
+            ${pctRMD > 0 ? `<div style="width:${pctRMD}%; background:var(--c-rmd);" title="RMD: ${rmdQty}"></div>` : ''}
+            ${pctProc > 0 ? `<div style="width:${pctProc}%; background:var(--c-proc);" title="Process: ${procQty}"></div>` : ''}
+            ${pctSMT > 0 ? `<div style="width:${pctSMT}%; background:var(--c-smt);" title="SMT: ${smtQty}"></div>` : ''}
+        </div>
+        <div style="display:flex; justify-content:space-between; text-align:center;">
+            <div style="flex:1;"><div style="font-size:16px; font-weight:800; color:#0f172a;">${rmdQty}</div><div style="font-size:11px; font-weight:700; color:var(--c-rmd);">RMD (${pctRMD.toFixed(1)}%)</div></div>
+            <div style="flex:1; border-left:1px solid #e2e8f0; border-right:1px solid #e2e8f0;"><div style="font-size:16px; font-weight:800; color:#0f172a;">${procQty}</div><div style="font-size:11px; font-weight:700; color:var(--c-proc);">PROCESS (${pctProc.toFixed(1)}%)</div></div>
+            <div style="flex:1;"><div style="font-size:16px; font-weight:800; color:#0f172a;">${smtQty}</div><div style="font-size:11px; font-weight:700; color:var(--c-smt);">SMT (${pctSMT.toFixed(1)}%)</div></div>
+        </div>
+    </div>
+
+    <!-- NEW COMPREHENSIVE DEFECT LOG -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
+        <h4 class="pv-section-head" style="margin:0;"><i class="fa fa-list" style="color:var(--primary);"></i> Defect Logs & Action Plan</h4>
+        <div class="def-tabs" style="margin:0;">
+            <button class="def-tab-btn pv-filter-btn active" onclick="window.filterPvDefects('Overall', this)">Overall</button>
+            <button class="def-tab-btn pv-filter-btn" onclick="window.filterPvDefects('Process', this)">Process</button>
+            <button class="def-tab-btn pv-filter-btn" onclick="window.filterPvDefects('RMD', this)">RMD</button>
+            <button class="def-tab-btn pv-filter-btn" onclick="window.filterPvDefects('SMT', this)">SMT</button>
+        </div>
+    </div>
+    
+    <div id="pv_defect_list_container" style="display:grid; grid-template-columns: 1fr; padding-bottom:20px;">
+        ${defectHtmlAll}
+    </div>
+  `;
   document.getElementById("overlay").style.display = 'block'; document.getElementById("previewModal").style.display = 'block';
 }
 
@@ -1515,7 +1677,15 @@ async function saveData(){
       if(name && qty > 0) {
           pNamesArr.push(`[${cat}] ${name}`);
           pQtysArr.push(qty);
-          pAnalsArr.push(rem);
+          
+          // Pack everything tightly into pAnals array to preserve data for all rows
+          let remPack = rem;
+          if(cse || act) {
+              remPack = `${rem}|~|${cse}|~|${act}`;
+          } else {
+              remPack = `${rem}|~||~|`;
+          }
+          pAnalsArr.push(remPack);
 
           if(!defectAgg[name]) defectAgg[name] = { qty: 0, cause: cse, action: act };
           defectAgg[name].qty += qty;
@@ -1550,7 +1720,7 @@ async function deleteRow(idx) {
     try { const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) }); load(); } catch(e) { alert("Network Error"); }
 }
 
-// 📌 UPDATED: Edit row maps Top 3 Causes back to individual rows accurately
+// 📌 UPDATED: Edit row maps all Causes back to individual rows accurately
 function editRow(idx) {
     let r = allData[idx]; editingRowIndex = idx;
     f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
@@ -1558,7 +1728,7 @@ function editRow(idx) {
     
     document.getElementById('process_container').innerHTML = '';
 
-    // Build map of Top 3 causes to re-assign to rows
+    // Build map of legacy Top 3 causes to re-assign to rows (fallback)
     let topMap = {};
     if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
     if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
@@ -1574,10 +1744,20 @@ function editRow(idx) {
             let cat = match ? match[1] : 'Process'; 
             let dName = match ? match[2] : n.trim();
             
-            let cse = topMap[dName] ? topMap[dName].c : '';
-            let act = topMap[dName] ? topMap[dName].a : '';
+            let rawRem = pAnals[i] || '';
+            let rem = rawRem, cse = '', act = '';
+            
+            // Check if data was packed in the new method
+            if(rawRem.includes('|~|')) {
+                let parts = rawRem.split('|~|');
+                rem = parts[0]; cse = parts[1]; act = parts[2];
+            } else {
+                // Fallback to legacy top 3 mapping
+                cse = topMap[dName] ? topMap[dName].c : '';
+                act = topMap[dName] ? topMap[dName].a : '';
+            }
 
-            addDefectRow(cat, dName, pQtys[i]||'', cse, act, pAnals[i]||'');
+            addDefectRow(cat, dName, pQtys[i]||'', cse, act, rem);
         }); 
     } else { addDefectRow('Process'); }
     
