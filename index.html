@@ -614,7 +614,7 @@ window.switchModalView = function(view) {
     }
 }
 
-// 📌 MATRIX RENDERING FUNCTION
+// 📌 UPDATED: MATRIX RENDERING FUNCTION (Hides unrelated summary rows)
 window.renderLineMatrix = function(filterStage) {
     let data = window.currentMatrixData;
     let dates = data.dates;
@@ -643,27 +643,26 @@ window.renderLineMatrix = function(filterStage) {
     dates.forEach(d => html += `<td class="bg-peach fw-800">${data.daily[d].prod || ''}</td>`);
     html += '</tr>';
     
-    // Qtys
-    let qtyRows = [
-        { label: 'Process Defect Qty.', key: 'proc' },
-        { label: 'RMD Defect Qty.', key: 'rmd' },
-        { label: 'SMT Defect Qty.', key: 'smt' },
-        { label: 'Total Defects', key: 'tot', bg: 'bg-white' }
-    ];
-    qtyRows.forEach((r, i) => {
-        let bg = i === 3 ? 'background:#e2e8f0;' : 'background:#cffafe;';
-        html += `<tr><td class="sticky-col row-title" style="${bg} font-size:11px; border-right:2px solid #cbd5e1 !important;">${r.label}</td>`;
-        dates.forEach(d => html += `<td style="${bg} font-weight:800;">${data.daily[d].prod > 0 ? (data.daily[d][r.key] || '0') : ''}</td>`);
+    // Dynamically Filtered Qty Summary Rows
+    let qtyRows = [];
+    if(filterStage === 'Overall' || filterStage === 'Process') qtyRows.push({ label: 'Process Defect Qty.', key: 'proc', bg: 'background:#cffafe;' });
+    if(filterStage === 'Overall' || filterStage === 'RMD') qtyRows.push({ label: 'RMD Defect Qty.', key: 'rmd', bg: 'background:#cffafe;' });
+    if(filterStage === 'Overall' || filterStage === 'SMT') qtyRows.push({ label: 'SMT Defect Qty.', key: 'smt', bg: 'background:#cffafe;' });
+    if(filterStage === 'Overall') qtyRows.push({ label: 'Total Defects', key: 'tot', bg: 'background:#e2e8f0;' });
+
+    qtyRows.forEach((r) => {
+        html += `<tr><td class="sticky-col row-title" style="${r.bg} font-size:11px; border-right:2px solid #cbd5e1 !important;">${r.label}</td>`;
+        dates.forEach(d => html += `<td style="${r.bg} font-weight:800;">${data.daily[d].prod > 0 ? (data.daily[d][r.key] || '0') : ''}</td>`);
         html += '</tr>';
     });
     
-    // Rates
-    let rateRows = [
-        { label: 'Process Rate', key: 'proc' },
-        { label: 'RMD Rate', key: 'rmd' },
-        { label: 'SMT Rate', key: 'smt' },
-        { label: 'Total Rejection Rate', key: 'tot' }
-    ];
+    // Dynamically Filtered Rate Summary Rows
+    let rateRows = [];
+    if(filterStage === 'Overall' || filterStage === 'Process') rateRows.push({ label: 'Process Rate', key: 'proc' });
+    if(filterStage === 'Overall' || filterStage === 'RMD') rateRows.push({ label: 'RMD Rate', key: 'rmd' });
+    if(filterStage === 'Overall' || filterStage === 'SMT') rateRows.push({ label: 'SMT Rate', key: 'smt' });
+    if(filterStage === 'Overall') rateRows.push({ label: 'Total Rejection Rate', key: 'tot' });
+
     rateRows.forEach(r => {
         html += `<tr><td class="sticky-col row-title bg-yellow" style="font-size:11px;">${r.label}</td>`;
         dates.forEach(d => {
@@ -675,14 +674,8 @@ window.renderLineMatrix = function(filterStage) {
         html += '</tr>';
     });
     
-    // Defects
-    let defectsToShow = [];
-    if(filterStage === 'Overall') {
-        defectsToShow = Object.keys(data.defectStages);
-    } else {
-        defectsToShow = Object.keys(data.defectStages).filter(k => data.defectStages[k] === filterStage);
-    }
-    defectsToShow.sort(); 
+    // Defects List Setup
+    let defectsToShow = Array.from(data.defectStages[filterStage] || []).sort();
     
     if(defectsToShow.length === 0) {
         html += `<tr><td class="sticky-col bg-white" style="color:var(--text-light); text-align:center;">No ${filterStage !== 'Overall' ? filterStage : ''} Defects</td><td colspan="${dates.length}"></td></tr>`;
@@ -691,7 +684,7 @@ window.renderLineMatrix = function(filterStage) {
     defectsToShow.forEach(def => {
         html += `<tr><td class="sticky-col row-title bg-white" style="font-weight:600; font-size:11px; color:#333;">${def}</td>`;
         dates.forEach(d => {
-            let q = data.daily[d].defects[def];
+            let q = data.daily[d].defects[filterStage][def];
             html += `<td>${q ? q : ''}</td>`;
         });
         html += '</tr>';
@@ -740,9 +733,18 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
             curr.setDate(curr.getDate() + 1);
         }
         
-        let matrix = { dates: datesArr, daily: {}, defectStages: {} };
+        // FIX: Track defects perfectly isolated by category so none overwrite each other
+        let matrix = { 
+            dates: datesArr, 
+            daily: {}, 
+            defectStages: { Process: new Set(), RMD: new Set(), SMT: new Set(), Overall: new Set() } 
+        };
+        
         datesArr.forEach(d => {
-            matrix.daily[d] = { entities: new Set(), prod: 0, proc: 0, rmd: 0, smt: 0, tot: 0, defects: {}, hasInput: false };
+            matrix.daily[d] = { 
+                entities: new Set(), prod: 0, proc: 0, rmd: 0, smt: 0, tot: 0, hasInput: false, 
+                defects: { Process: {}, RMD: {}, SMT: {}, Overall: {} }
+            };
         });
 
         rows.forEach(r => {
@@ -779,7 +781,8 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                 pNames.forEach((n, i) => {
                     if(n) {
                         let match = n.match(/^\[(.*?)\]\s(.*)$/);
-                        let category = match ? match[1] : 'Process';
+                        let rawCat = match ? match[1] : 'Process';
+                        let category = ['Process', 'SMT', 'RMD'].includes(rawCat) ? rawCat : 'Process';
                         let pureName = match ? match[2].trim() : n.trim(); 
                         let q = (+pQtys[i]||0);
                         
@@ -793,13 +796,16 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                             act = topMap[pureName] ? topMap[pureName].a : '';
                         }
                         
-                        // Populate Defect Pareto Map
+                        // Populate Defect Pareto Map (Overall Dashboard Modal View)
                         defectMap[pureName] = (defectMap[pureName] || 0) + q;
 
-                        // Populate Matrix Defect Map
+                        // FIX: Populate Matrix Defect Map strictly by Category AND Overall
                         if(matrix.daily[date]) {
-                            matrix.defectStages[pureName] = category;
-                            matrix.daily[date].defects[pureName] = (matrix.daily[date].defects[pureName]||0) + q;
+                            matrix.defectStages[category].add(pureName);
+                            matrix.defectStages['Overall'].add(pureName);
+                            
+                            matrix.daily[date].defects[category][pureName] = (matrix.daily[date].defects[category][pureName]||0) + q;
+                            matrix.daily[date].defects['Overall'][pureName] = (matrix.daily[date].defects['Overall'][pureName]||0) + q;
                         }
 
                         // Merge Analysis & Root Cause into a unified cell
@@ -820,7 +826,12 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
             }
         });
 
-        // Finalize matrix sets to arrays
+        // Convert Sets to Arrays for Matrix Usage
+        matrix.defectStages.Process = Array.from(matrix.defectStages.Process);
+        matrix.defectStages.RMD = Array.from(matrix.defectStages.RMD);
+        matrix.defectStages.SMT = Array.from(matrix.defectStages.SMT);
+        matrix.defectStages.Overall = Array.from(matrix.defectStages.Overall);
+        
         datesArr.forEach(d => { matrix.daily[d].entities = Array.from(matrix.daily[d].entities); });
         window.currentMatrixData = matrix;
 
@@ -965,11 +976,11 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
     } catch (e) { console.error("Error displaying entity summary:", e); alert("An error occurred generating the report.\n" + e.message); }
 }
 
-// 📌 IMPROVED EXECUTIVE DEFECT SUMMARY
+// 📌 UPDATED: EXECUTIVE DEFECT SUMMARY (Summing Root Cause Qty & Removed Actions)
 function executeDefectDeepDive(pureDefectName) {
     try {
         let rows = getDashFilteredRows();
-        let lineMap = {}; let causeMap = {}; let actionMap = {};
+        let lineMap = {}; let causeMap = {}; 
         let totalQty = 0; let totalDashboardDefects = 0; let tempDateMap = {}; let dateTrendData = [['Date', 'Occurrences', {role:'annotation'}]];
 
         rows.forEach(r => {
@@ -986,30 +997,32 @@ function executeDefectDeepDive(pureDefectName) {
                 });
             }
             
-            // Rebuild Map to find Cause/Action
+            // Rebuild Map to find Cause
             let topMap = {};
-            if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
-            if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
-            if(r[25]) topMap[r[25].trim()] = { c: r[27]||'', a: r[28]||'' };
+            if(r[17]) topMap[r[17].trim()] = { c: r[19]||'' };
+            if(r[21]) topMap[r[21].trim()] = { c: r[23]||'' };
+            if(r[25]) topMap[r[25].trim()] = { c: r[27]||'' };
 
             if(foundQty > 0) {
-                // Find if packed in Anals, otherwise fallback
                 let pNames = r[14].toString().split('\n');
+                let pQtys = r[15].toString().split('\n');
                 let pAnals = (r[16]||"").toString().split('\n');
+                
                 pNames.forEach((n, i) => {
                     let match = n.match(/^\[(.*?)\]\s(.*)$/); 
                     let dName = match ? match[2].trim() : n.trim();
                     if(dName === pureDefectName) {
+                        let q = (+pQtys[i]||0); // Quantity to sum
                         let rawRem = pAnals[i] || '';
-                        let cse = '', act = '';
+                        let cse = '';
                         if(rawRem.includes('|~|')) {
-                            let parts = rawRem.split('|~|'); cse = parts[1]; act = parts[2];
+                            let parts = rawRem.split('|~|'); cse = parts[1]; 
                         } else {
                             cse = topMap[dName] ? topMap[dName].c : '';
-                            act = topMap[dName] ? topMap[dName].a : '';
                         }
-                        if(cse) causeMap[cse] = (causeMap[cse]||0) + 1;
-                        if(act) actionMap[act] = (actionMap[act]||0) + 1;
+                        
+                        // FIX: Use 'q' (quantity) instead of '1' (count)
+                        if(cse) causeMap[cse] = (causeMap[cse]||0) + q; 
                     }
                 });
 
@@ -1030,21 +1043,17 @@ function executeDefectDeepDive(pureDefectName) {
         let sharePct = totalDashboardDefects > 0 ? ((totalQty / totalDashboardDefects) * 100).toFixed(1) : 0;
         let worstLine = Object.keys(lineMap).length > 0 ? Object.entries(lineMap).sort((a,b)=>b[1]-a[1])[0][0] : "N/A";
         
-        let causeHtml = `<table class="modal-inner-table"><thead><tr><th>Root Cause</th><th>Count</th></tr></thead><tbody>`;
+        // Setup Cause HTML rendering
+        let causeHtml = `<table class="modal-inner-table"><thead><tr><th>Root Cause</th><th>Qty</th></tr></thead><tbody>`;
         let sortedCauses = Object.entries(causeMap).sort((a,b)=>b[1]-a[1]);
         if(sortedCauses.length === 0) causeHtml += `<tr><td colspan="2" style="text-align:center;">No Root Cause Analysis Logged</td></tr>`;
         sortedCauses.forEach(([c, q]) => { causeHtml += `<tr><td><b>${c}</b></td><td><span style="background:#fef2f2; color:var(--c-danger); padding:2px 8px; border-radius:6px; font-weight:800;">${q}</span></td></tr>`; });
         causeHtml += `</tbody></table>`;
 
-        let actionHtml = `<table class="modal-inner-table"><thead><tr><th>Corrective Action Taken</th><th>Count</th></tr></thead><tbody>`;
-        let sortedActions = Object.entries(actionMap).sort((a,b)=>b[1]-a[1]);
-        if(sortedActions.length === 0) actionHtml += `<tr><td colspan="2" style="text-align:center;">No Corrective Actions Logged</td></tr>`;
-        sortedActions.forEach(([a, q]) => { actionHtml += `<tr><td><b style="color:var(--c-success);">${a}</b></td><td><span style="background:#ecfdf5; color:var(--c-success); padding:2px 8px; border-radius:6px; font-weight:800;">${q}</span></td></tr>`; });
-        actionHtml += `</tbody></table>`;
-
         document.getElementById('modalTitleMain').innerText = `DEFECT DEEP DIVE: ${pureDefectName.toUpperCase()}`; 
         document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
 
+        // Updated HTML Injection (Removed Action Matrix & changed layout to 1 column)
         document.getElementById("previewContent").innerHTML = `
             <div class="exec-kpi-wrap">
                 <div class="exec-kpi"><div class="exec-kpi-lbl">Total Occurrences</div><div class="exec-kpi-val" style="color:var(--c-danger);">${totalQty.toLocaleString()}</div></div>
@@ -1063,10 +1072,9 @@ function executeDefectDeepDive(pureDefectName) {
                 </div>
             </div>
 
-            <div class="pv-section-head"><i class="fa fa-search" style="color:var(--c-danger);"></i> Root Cause & Action Matrix</div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                <div class="pv-card"><div class="pv-card-header" style="color:var(--c-danger);">Primary Root Causes</div><div style="max-height:200px; overflow-y:auto;">${causeHtml}</div></div>
-                <div class="pv-card"><div class="pv-card-header" style="color:var(--c-success);">Corrective Actions Executed</div><div style="max-height:200px; overflow-y:auto;">${actionHtml}</div></div>
+            <div class="pv-section-head"><i class="fa fa-search" style="color:var(--c-danger);"></i> Primary Root Cause Breakdown</div>
+            <div style="display:grid; grid-template-columns: 1fr; gap:20px;">
+                <div class="pv-card"><div class="pv-card-header" style="color:var(--c-danger);">Primary Root Causes (By Quantity)</div><div style="max-height:200px; overflow-y:auto;">${causeHtml}</div></div>
             </div>
         `;
 
@@ -1302,7 +1310,7 @@ function renderDashboardStats(rows) {
     }
 }
 
-// 📌 MONTHLY REVIEW LOGIC (Fixed Dates to prevent timezone shifting)
+// 📌 UPDATED MONTHLY REVIEW LOGIC (Fixed Matrix display for missing days)
 function renderMonthlyReview() {
     if(!allData || allData.length === 0) return;
     
@@ -1347,8 +1355,11 @@ function renderMonthlyReview() {
         if(!lineMap[line]) lineMap[line] = {inp:0, def:0, rmd:0, proc:0, smt:0};
         lineMap[line].inp += inp; lineMap[line].def += def; lineMap[line].rmd += rmdQ; lineMap[line].proc += procQ; lineMap[line].smt += smtQ;
         
+        // FIX for proper Matrix displaying (Tracking empty production vs 0 defects)
         if(!dailyMatrixStats[line]) dailyMatrixStats[line] = {};
-        dailyMatrixStats[line][date] = (dailyMatrixStats[line][date] || 0) + def;
+        if(!dailyMatrixStats[line][date]) dailyMatrixStats[line][date] = { def: 0, ran: false };
+        dailyMatrixStats[line][date].def += def;
+        dailyMatrixStats[line][date].ran = true; // Mark that production occurred
 
         if(dailyTotals[date]) {
             dailyTotals[date].prod += inp;
@@ -1394,11 +1405,22 @@ function renderMonthlyReview() {
     displayDates.forEach(dd => dailyMatrixHtml += `<th class="th-slant"><span>${dd}</span></th>`);
     dailyMatrixHtml += `</tr></thead><tbody>`;
 
-    let sortedMatrixLines = Object.keys(lineMap).sort((a,b)=>parseInt(a)-parseInt(b));
+    // Advanced sorting to handle non-numeric lines cleanly
+    let sortedMatrixLines = Object.keys(lineMap).sort((a,b) => {
+        let numA = parseInt(a.toString().replace(/\D/g, ''));
+        let numB = parseInt(b.toString().replace(/\D/g, ''));
+        if(isNaN(numA)) numA = 999;
+        if(isNaN(numB)) numB = 999;
+        return numA - numB;
+    });
+
     sortedMatrixLines.forEach(l => {
-        dailyMatrixHtml += `<tr><td class="sticky-col" style="font-weight:800; background:#f8fafc;"><span class="line-link" onclick="window.showLineSummary('${l}')" style="color:purple; text-decoration:underline;">B${String(l).padStart(2, '0')}</span></td>`;
+        let safeLName = l === 'Unknown' ? 'UNK' : `B${String(l).replace(/\D/g, '').padStart(2, '0')}`;
+        dailyMatrixHtml += `<tr><td class="sticky-col" style="font-weight:800; background:#f8fafc;"><span class="line-link" onclick="window.showLineSummary('${l}')" style="color:purple; text-decoration:underline;">${safeLName}</span></td>`;
         dateKeys.forEach(dk => {
-            let val = dailyMatrixStats[l] && dailyMatrixStats[l][dk] ? dailyMatrixStats[l][dk] : 0;
+            // Check if line actually ran that day
+            let hasRun = dailyMatrixStats[l] && dailyMatrixStats[l][dk] && dailyMatrixStats[l][dk].ran;
+            let val = hasRun ? dailyMatrixStats[l][dk].def : ''; // Render blank instead of false '0'
             dailyMatrixHtml += `<td>${val}</td>`;
         });
         dailyMatrixHtml += `</tr>`;
@@ -1424,9 +1446,12 @@ function renderMonthlyReview() {
     // -----------------------------------------------
     // 2. BUILD TOTAL SUMMARY MATRIX (LINE-WISE)
     // -----------------------------------------------
-    let lines = Object.keys(lineMap).sort((a,b)=>parseInt(a)-parseInt(b));
+    let lines = sortedMatrixLines; // Re-use the sorted version
     let excelHtml = `<thead><tr><th class="sticky-col row-title bg-white">TOTAL SUMMARY</th><th style="background:#e2e8f0;">Total</th>`;
-    lines.forEach(l => excelHtml += `<th><span class="line-link" onclick="window.showLineSummary('${l}')" title="View detailed history for Line ${l}">B${String(l).padStart(2, '0')}</span></th>`);
+    lines.forEach(l => {
+        let safeLName = l === 'Unknown' ? 'UNK' : `B${String(l).replace(/\D/g, '').padStart(2, '0')}`;
+        excelHtml += `<th><span class="line-link" onclick="window.showLineSummary('${l}')" title="View detailed history for Line ${l}">${safeLName}</span></th>`;
+    });
     excelHtml += `</tr></thead><tbody>`;
 
     const makeExRow = (title, dataKey, isRate, rowClass) => {
