@@ -10,8 +10,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Charts -->
 <script src="https://www.gstatic.com/charts/loader.js"></script>
-<!-- SheetJS & PDF -->
+<!-- SheetJS, ExcelJS, FileSaver & PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -203,6 +205,11 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
                 <div class="d-filter-group"><span class="d-label">MODEL</span><select id="dash_model" class="d-inp" style="min-width:80px;"><option value="all">All</option></select></div>
                 <button onclick="filterDashboard()" style="padding:8px 15px; font-size:12px;">Apply</button>
                 <button onclick="downloadDashboardPDF()" style="padding:8px 15px; font-size:12px; background:#b30b00;"><i class="fa fa-file-pdf"></i> PDF</button>
+                
+                <!-- NEW MASTER EXCEL REPORT EXPORT BUTTON -->
+                <button type="button" id="btnMasterExportDash" onclick="exportMasterQualityReport()" style="padding:8px 16px; font-size:12px; background:#107c41; display:flex; align-items:center; gap:6px;">
+                    <i class="fa fa-file-excel"></i> 📥 Export Master Excel
+                </button>
             </div>
         </div>
 
@@ -301,6 +308,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
                 </div>
                 <button onclick="renderMonthlyReview()" style="padding:8px 15px; font-size:12px;">Generate</button>
                 <button onclick="downloadMonthlyPDF()" style="padding:8px 15px; font-size:12px; background:#b30b00;"><i class="fa fa-file-pdf"></i> Export PDF</button>
+                <button type="button" onclick="exportMasterQualityReport()" style="padding:8px 15px; font-size:12px; background:#107c41;"><i class="fa fa-file-excel"></i> 📥 Export Master Excel</button>
             </div>
         </div>
 
@@ -319,9 +327,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
                     <div class="mc-title"><i class="fa fa-calendar-day" style="color:var(--c-proc);"></i> Daily Defect Monitoring Matrix <span style="font-size:10px; font-weight:600; background:#eff6ff; padding:4px 8px; border-radius:4px; margin-left:10px; color:var(--primary);">💡 Click a Line No. to view Date-wise Defect Details</span></div>
                 </div>
                 <div class="table-responsive" style="max-height: 550px; overflow-y:auto; padding:20px;">
-                    <table class="excel-table" id="mr_daily_matrix">
-                        <!-- Populated dynamically via JS -->
-                    </table>
+                    <table class="excel-table" id="mr_daily_matrix"></table>
                 </div>
             </div>
         </div>
@@ -333,9 +339,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
                     <div class="mc-title"><i class="fa fa-table" style="color:var(--primary);"></i> Total Summary Matrix (Line-Wise Aggregation)</div>
                 </div>
                 <div class="table-responsive" style="max-height: 500px; overflow-y:auto; padding:20px;">
-                    <table class="excel-table" id="mr_excel_table">
-                        <!-- Populated dynamically via JS -->
-                    </table>
+                    <table class="excel-table" id="mr_excel_table"></table>
                 </div>
             </div>
         </div>
@@ -398,7 +402,7 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
             <option value="Ad Nirvana Crystal"> <option value="Ad Nirvana Iris"> <option value="Ad Nirvana X"> <option value="Rockerz Plus 435">
             <option value="Ad Plus 311"> <option value="Ad Plus 318"> <option value="Ad Prime 412">
             <option value="Ad Prime 513 Anc"> <option value="Ad Primo"> <option value="Ad Pulse">
-            <option value="AD Supreme"> <option value="Ad Ultra Pro"> <option value="Ad Plus Nova">
+            <option value="AD Supreme"> <option value="Ad Ultra Pro"> <option value="Ad100">
             <option value="Ad121 Pro"> <option value="Rockerz 430 Gen2"> <option value="Ad131">
             <option value="Nirvana ion V2"> <option value="Ad138"> <option value="Ad138 Pro">
             <option value="Ad141"> <option value="Ad148"> <option value="Ad161">
@@ -493,13 +497,16 @@ button:hover { background: #1e40af; transform: translateY(-2px); }
                 <div class="form-group" style="flex:1; justify-content: flex-end;"><label>&nbsp;</label><button onclick="applyFilters()" style="width:100%;">Search Records</button></div>
             </div>
         </div>
-        <div class="export-btn-group" style="display:flex; gap:10px;">
-            <button class="btn-excel" onclick="downloadExcel()" style="background:#107c41;"><i class="fa fa-file-excel"></i> Excel Export</button>
+        <div class="export-btn-group" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <button class="btn-excel" onclick="downloadExcel()" style="background:#107c41;"><i class="fa fa-file-excel"></i> Standard Excel Export</button>
             <button class="btn-pdf" onclick="downloadPDF()" style="background:#b30b00;"><i class="fa fa-file-pdf"></i> PDF Export</button>
+            <button type="button" onclick="exportMasterQualityReport()" style="background:#0284c7; padding:10px 20px; font-size:13px; font-weight:800; border-radius:10px; color:#fff; display:flex; align-items:center; gap:8px;">
+                <i class="fa fa-file-excel"></i> 📥 Export Master Quality Excel (All Sheets + CAPA)
+            </button>
         </div>
-        <div id="tableContainer" class="table-responsive">
+        <div id="tableContainer" class="table-responsive" style="margin-top:20px;">
             <table class="table" id="dataTable"><thead><tr id="thead"></tr></thead><tbody id="tbody"></tbody></table>
-            <div id="noDataMsg" style="text-align:center; padding:40px; display:none; color:var(--text-light);">No records found matching criterea.</div>
+            <div id="noDataMsg" style="text-align:center; padding:40px; display:none; color:var(--text-light);">No records found matching criteria.</div>
         </div>
     </div>
 </div>
@@ -554,6 +561,8 @@ function init() {
     const today = new Date(); const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
     document.getElementById('dash_from').value = firstDay.toISOString().slice(0,10);
     document.getElementById('dash_to').value = today.toISOString().slice(0,10);
+    document.getElementById('date_from').value = firstDay.toISOString().slice(0,10);
+    document.getElementById('date_to').value = today.toISOString().slice(0,10);
 
     const yyyy = today.getFullYear();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -587,7 +596,6 @@ function getDashFilteredRows() {
     });
 }
 
-// 📌 100% BULLETPROOF GLOBAL ATTACHMENTS
 window.showLineSummary = function(lineNo) {
     showEntitySummary(lineNo, 2, 'Line');
 };
@@ -614,7 +622,6 @@ window.switchModalView = function(view) {
     }
 }
 
-// 📌 UPDATED: MATRIX RENDERING FUNCTION (Hides unrelated summary rows)
 window.renderLineMatrix = function(filterStage) {
     let data = window.currentMatrixData;
     let dates = data.dates;
@@ -622,7 +629,6 @@ window.renderLineMatrix = function(filterStage) {
     
     let html = '<table class="excel-table line-matrix-table" style="min-width: 1000px; white-space: nowrap;">';
     
-    // Header Row (Dates)
     html += '<thead><tr><th class="sticky-col bg-white" style="width: 200px; font-size:18px; color:var(--primary); padding:10px !important;">Defect<br>Monitoring</th>';
     dates.forEach(d => {
         let dObj = new Date(d);
@@ -632,18 +638,15 @@ window.renderLineMatrix = function(filterStage) {
     });
     html += '</tr></thead><tbody>';
     
-    // Entity Row (Model or Lines)
     let entityRowHeader = entityType === 'Line' ? 'Models Active' : 'Lines Active';
     html += `<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">${entityRowHeader}</td>`;
     dates.forEach(d => html += `<td class="bg-peach" style="font-weight:800;">${data.daily[d].entities.join(', ')}</td>`);
     html += '</tr>';
     
-    // Production
     html += '<tr><td class="sticky-col row-title bg-peach" style="font-size:11px;">Production</td>';
     dates.forEach(d => html += `<td class="bg-peach fw-800">${data.daily[d].prod || ''}</td>`);
     html += '</tr>';
     
-    // Dynamically Filtered Qty Summary Rows
     let qtyRows = [];
     if(filterStage === 'Overall' || filterStage === 'Process') qtyRows.push({ label: 'Process Defect Qty.', key: 'proc', bg: 'background:#cffafe;' });
     if(filterStage === 'Overall' || filterStage === 'RMD') qtyRows.push({ label: 'RMD Defect Qty.', key: 'rmd', bg: 'background:#cffafe;' });
@@ -656,7 +659,6 @@ window.renderLineMatrix = function(filterStage) {
         html += '</tr>';
     });
     
-    // Dynamically Filtered Rate Summary Rows
     let rateRows = [];
     if(filterStage === 'Overall' || filterStage === 'Process') rateRows.push({ label: 'Process Rate', key: 'proc' });
     if(filterStage === 'Overall' || filterStage === 'RMD') rateRows.push({ label: 'RMD Rate', key: 'rmd' });
@@ -674,7 +676,6 @@ window.renderLineMatrix = function(filterStage) {
         html += '</tr>';
     });
     
-    // Defects List Setup
     let defectsToShow = Array.from(data.defectStages[filterStage] || []).sort();
     
     if(defectsToShow.length === 0) {
@@ -698,7 +699,6 @@ window.renderLineMatrix = function(filterStage) {
     });
 };
 
-// 📌 IMPROVED EXECUTIVE LINE/MODEL SUMMARY WITH DETAILED TABLE & DAILY MATRIX
 function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
     try {
         let rawRows = getDashFilteredRows();
@@ -708,7 +708,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         let rows = rawRows.filter(r => r[filterKeyIndex] && r[filterKeyIndex].toString().trim() === safeEntityValue);
 
         if(rows.length === 0) { 
-            alert(`No historical data found for ${entityLabel} ${safeEntityValue} in the selected date range.\n\nPlease adjust your Dashboard Filters to ensure dates are correct.`); 
+            alert(`No historical data found for ${entityLabel} ${safeEntityValue} in the selected date range.`); 
             return; 
         }
         
@@ -717,12 +717,8 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         let tInp = 0, tDef = 0, tRMD = 0, tProc = 0, tSMT = 0;
         let defectMap = {}; let dateTrendData = [['Date', 'Rejection %', {role:'annotation'}]]; 
         let tempDateMap = {};
-        
         let detailedLogs = []; 
 
-        // ----------------------------------------------------
-        // BUILD MATRIX DATA ARCHITECTURE
-        // ----------------------------------------------------
         let fromDate = document.getElementById('dash_from').value;
         let toDate = document.getElementById('dash_to').value;
         let datesArr = [];
@@ -733,7 +729,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
             curr.setDate(curr.getDate() + 1);
         }
         
-        // FIX: Track defects perfectly isolated by category so none overwrite each other
         let matrix = { 
             dates: datesArr, 
             daily: {}, 
@@ -754,7 +749,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
             if(!tempDateMap[date]) tempDateMap[date] = {inp:0, def:0};
             tempDateMap[date].inp += inp; tempDateMap[date].def += def;
 
-            // Fill Matrix Daily Info
             if(matrix.daily[date]) {
                 if(entityLabel === 'Line' && r[3]) matrix.daily[date].entities.add(r[3]);
                 if(entityLabel === 'Model' && r[2]) matrix.daily[date].entities.add("L-" + r[2]);
@@ -767,7 +761,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                 matrix.daily[date].smt += (+r[12]||0);
             }
 
-            // Fallback for old records
             let topMap = {};
             if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
             if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
@@ -796,10 +789,8 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                             act = topMap[pureName] ? topMap[pureName].a : '';
                         }
                         
-                        // Populate Defect Pareto Map (Overall Dashboard Modal View)
                         defectMap[pureName] = (defectMap[pureName] || 0) + q;
 
-                        // FIX: Populate Matrix Defect Map strictly by Category AND Overall
                         if(matrix.daily[date]) {
                             matrix.defectStages[category].add(pureName);
                             matrix.defectStages['Overall'].add(pureName);
@@ -808,7 +799,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                             matrix.daily[date].defects['Overall'][pureName] = (matrix.daily[date].defects['Overall'][pureName]||0) + q;
                         }
 
-                        // Merge Analysis & Root Cause into a unified cell
                         let rText = [];
                         if(rem && rem !== '-') rText.push(`<i>Remarks:</i> ${rem}`);
                         if(cse) rText.push(`<b style="color:var(--c-danger);">Cause:</b> ${cse}`);
@@ -826,7 +816,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
             }
         });
 
-        // Convert Sets to Arrays for Matrix Usage
         matrix.defectStages.Process = Array.from(matrix.defectStages.Process);
         matrix.defectStages.RMD = Array.from(matrix.defectStages.RMD);
         matrix.defectStages.SMT = Array.from(matrix.defectStages.SMT);
@@ -837,7 +826,7 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
 
         Object.keys(tempDateMap).sort().forEach(d => {
             let r = tempDateMap[d].inp > 0 ? (tempDateMap[d].def/tempDateMap[d].inp*100) : 0;
-            let shortD = d.split('-').slice(1).join('-'); // Make MM-DD for cleaner chart
+            let shortD = d.split('-').slice(1).join('-'); 
             dateTrendData.push([shortD, r, r.toFixed(1)+'%']);
         });
 
@@ -848,7 +837,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         let smtR = tInp > 0 ? (tSMT/tInp*100).toFixed(2) : "0.00";
         let rateColor = parseFloat(rRate) > 3 ? 'var(--c-danger)' : (parseFloat(rRate) > 1.5 ? 'var(--c-smt)' : 'var(--c-success)');
 
-        // BUILD TOP 5 DEFECTS HTML
         let topDefectsHtml = `<table class="modal-inner-table"><thead><tr><th>Top Defects</th><th>Qty</th><th>% Share</th></tr></thead><tbody>`;
         let sortedDefects = Object.entries(defectMap).sort((a,b)=>b[1]-a[1]).slice(0, 5);
         if(sortedDefects.length === 0) {
@@ -861,7 +849,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         }
         topDefectsHtml += `</tbody></table>`;
 
-        // BUILD DETAILED LOGS TABLE HTML WITH DATE-WISE RATES
         let logTableHtml = `<table class="modal-inner-table" style="margin:0;">
             <thead>
                 <tr>
@@ -895,7 +882,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
         if(detailedLogs.length === 0) logTableHtml += `<tr><td colspan="7" style="text-align:center;">No detailed logs found.</td></tr>`;
         logTableHtml += `</tbody></table>`;
 
-        // INJECT MODAL CONTENT (WITH TABS FOR MATRIX VIEW AVAILABLE TO BOTH)
         document.getElementById('modalTitleMain').innerText = `${entityLabel.toUpperCase()} ${safeEntityValue} PERFORMANCE`;
         document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
 
@@ -952,16 +938,14 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
                         <button class="def-tab-btn matrix-tab-btn" onclick="renderLineMatrix('SMT')">SMT</button>
                     </div>
                 </div>
-                <div id="modal_matrix_container" class="table-responsive" style="max-height: 580px; overflow-y:auto; overflow-x:auto; border-radius:12px; border:1px solid #e2e8f0;">
-                    <!-- Inserted by renderLineMatrix() -->
-                </div>
+                <div id="modal_matrix_container" class="table-responsive" style="max-height: 580px; overflow-y:auto; overflow-x:auto; border-radius:12px; border:1px solid #e2e8f0;"></div>
             </div>
         `;
 
         document.getElementById("overlay").style.display = 'block'; 
         document.getElementById("previewModal").style.display = 'block';
 
-        window.renderLineMatrix('Overall'); // Pre-render the matrix
+        window.renderLineMatrix('Overall');
 
         setTimeout(() => {
             if(typeof google !== 'undefined' && google.visualization && dateTrendData.length > 1) {
@@ -976,7 +960,6 @@ function showEntitySummary(entityValue, filterKeyIndex, entityLabel) {
     } catch (e) { console.error("Error displaying entity summary:", e); alert("An error occurred generating the report.\n" + e.message); }
 }
 
-// 📌 UPDATED: EXECUTIVE DEFECT SUMMARY (Summing Root Cause Qty & Removed Actions)
 function executeDefectDeepDive(pureDefectName) {
     try {
         let rows = getDashFilteredRows();
@@ -997,7 +980,6 @@ function executeDefectDeepDive(pureDefectName) {
                 });
             }
             
-            // Rebuild Map to find Cause
             let topMap = {};
             if(r[17]) topMap[r[17].trim()] = { c: r[19]||'' };
             if(r[21]) topMap[r[21].trim()] = { c: r[23]||'' };
@@ -1012,7 +994,7 @@ function executeDefectDeepDive(pureDefectName) {
                     let match = n.match(/^\[(.*?)\]\s(.*)$/); 
                     let dName = match ? match[2].trim() : n.trim();
                     if(dName === pureDefectName) {
-                        let q = (+pQtys[i]||0); // Quantity to sum
+                        let q = (+pQtys[i]||0);
                         let rawRem = pAnals[i] || '';
                         let cse = '';
                         if(rawRem.includes('|~|')) {
@@ -1020,8 +1002,6 @@ function executeDefectDeepDive(pureDefectName) {
                         } else {
                             cse = topMap[dName] ? topMap[dName].c : '';
                         }
-                        
-                        // FIX: Use 'q' (quantity) instead of '1' (count)
                         if(cse) causeMap[cse] = (causeMap[cse]||0) + q; 
                     }
                 });
@@ -1043,7 +1023,6 @@ function executeDefectDeepDive(pureDefectName) {
         let sharePct = totalDashboardDefects > 0 ? ((totalQty / totalDashboardDefects) * 100).toFixed(1) : 0;
         let worstLine = Object.keys(lineMap).length > 0 ? Object.entries(lineMap).sort((a,b)=>b[1]-a[1])[0][0] : "N/A";
         
-        // Setup Cause HTML rendering
         let causeHtml = `<table class="modal-inner-table"><thead><tr><th>Root Cause</th><th>Qty</th></tr></thead><tbody>`;
         let sortedCauses = Object.entries(causeMap).sort((a,b)=>b[1]-a[1]);
         if(sortedCauses.length === 0) causeHtml += `<tr><td colspan="2" style="text-align:center;">No Root Cause Analysis Logged</td></tr>`;
@@ -1053,7 +1032,6 @@ function executeDefectDeepDive(pureDefectName) {
         document.getElementById('modalTitleMain').innerText = `DEFECT DEEP DIVE: ${pureDefectName.toUpperCase()}`; 
         document.getElementById('modalTitleSub').innerText = `${document.getElementById('dash_from').value} to ${document.getElementById('dash_to').value} | ${currentCategory}`;
 
-        // Updated HTML Injection (Removed Action Matrix & changed layout to 1 column)
         document.getElementById("previewContent").innerHTML = `
             <div class="exec-kpi-wrap">
                 <div class="exec-kpi"><div class="exec-kpi-lbl">Total Occurrences</div><div class="exec-kpi-val" style="color:var(--c-danger);">${totalQty.toLocaleString()}</div></div>
@@ -1107,7 +1085,6 @@ window.renderDefectTable = function(tabName) {
     document.getElementById('d_defect_table_body').innerHTML = html || "<tr><td colspan='4' style='text-align:center;'>No Defects Found</td></tr>";
 };
 
-// 📌 UPDATED: Data Entry Rows now have Root Cause & Action Inputs Built-In
 function addDefectRow(catVal="Process", dVal="", qVal="", cVal="", aVal="", remVal="") {
     const div = document.createElement('div'); 
     div.className = 'process-row';
@@ -1289,7 +1266,6 @@ function renderDashboardStats(rows) {
         document.getElementById('d_model_table_body').innerHTML = modelTableHtml;
         new google.visualization.BarChart(document.getElementById('d_model_chart')).draw(google.visualization.arrayToDataTable(modelArr), { isStacked: true, colors:['#3b82f6', '#8b5cf6', '#f59e0b'], legend:{position:'bottom'}, chartArea:{width:'80%',height:'75%'}, hAxis:{title:'Rate %'} });
 
-        // PARETO CHARTS CREATION
         let paretoAllData = [['Defect', 'Qty', {role:'annotation'}]]; sortedAll.slice(0,10).forEach(d => { paretoAllData.push([d[0], d[1], d[1].toString()]); });
         
         let sortedCauseDash = Object.entries(causeMapDash).sort((a,b)=>b[1]-a[1]);
@@ -1310,7 +1286,6 @@ function renderDashboardStats(rows) {
     }
 }
 
-// 📌 UPDATED MONTHLY REVIEW LOGIC (Fixed Matrix display for missing days)
 function renderMonthlyReview() {
     if(!allData || allData.length === 0) return;
     
@@ -1355,11 +1330,10 @@ function renderMonthlyReview() {
         if(!lineMap[line]) lineMap[line] = {inp:0, def:0, rmd:0, proc:0, smt:0};
         lineMap[line].inp += inp; lineMap[line].def += def; lineMap[line].rmd += rmdQ; lineMap[line].proc += procQ; lineMap[line].smt += smtQ;
         
-        // FIX for proper Matrix displaying (Tracking empty production vs 0 defects)
         if(!dailyMatrixStats[line]) dailyMatrixStats[line] = {};
         if(!dailyMatrixStats[line][date]) dailyMatrixStats[line][date] = { def: 0, ran: false };
         dailyMatrixStats[line][date].def += def;
-        dailyMatrixStats[line][date].ran = true; // Mark that production occurred
+        dailyMatrixStats[line][date].ran = true;
 
         if(dailyTotals[date]) {
             dailyTotals[date].prod += inp;
@@ -1397,15 +1371,11 @@ function renderMonthlyReview() {
     });
     document.getElementById('mr_action_table').innerHTML = actionHtml || "<tr><td colspan='4' style='text-align:center;'>No root cause data logged for this month.</td></tr>";
 
-    // -----------------------------------------------
-    // 1. BUILD DAILY DEFECT MONITORING MATRIX
-    // -----------------------------------------------
     let dailyMatrixHtml = `<thead><tr>
         <th class="sticky-col" style="background:#e0f2fe; color:var(--primary); font-size:18px; width:130px; text-align:center;">Defect<br>Monitoring</th>`;
     displayDates.forEach(dd => dailyMatrixHtml += `<th class="th-slant"><span>${dd}</span></th>`);
     dailyMatrixHtml += `</tr></thead><tbody>`;
 
-    // Advanced sorting to handle non-numeric lines cleanly
     let sortedMatrixLines = Object.keys(lineMap).sort((a,b) => {
         let numA = parseInt(a.toString().replace(/\D/g, ''));
         let numB = parseInt(b.toString().replace(/\D/g, ''));
@@ -1418,9 +1388,8 @@ function renderMonthlyReview() {
         let safeLName = l === 'Unknown' ? 'UNK' : `B${String(l).replace(/\D/g, '').padStart(2, '0')}`;
         dailyMatrixHtml += `<tr><td class="sticky-col" style="font-weight:800; background:#f8fafc;"><span class="line-link" onclick="window.showLineSummary('${l}')" style="color:purple; text-decoration:underline;">${safeLName}</span></td>`;
         dateKeys.forEach(dk => {
-            // Check if line actually ran that day
             let hasRun = dailyMatrixStats[l] && dailyMatrixStats[l][dk] && dailyMatrixStats[l][dk].ran;
-            let val = hasRun ? dailyMatrixStats[l][dk].def : ''; // Render blank instead of false '0'
+            let val = hasRun ? dailyMatrixStats[l][dk].def : '';
             dailyMatrixHtml += `<td>${val}</td>`;
         });
         dailyMatrixHtml += `</tr>`;
@@ -1443,10 +1412,7 @@ function renderMonthlyReview() {
     dailyMatrixHtml += rDef + '</tr>' + rProd + '</tr>' + rPct + '</tr>' + rFpy + '</tr></tbody>';
     document.getElementById('mr_daily_matrix').innerHTML = dailyMatrixHtml;
 
-    // -----------------------------------------------
-    // 2. BUILD TOTAL SUMMARY MATRIX (LINE-WISE)
-    // -----------------------------------------------
-    let lines = sortedMatrixLines; // Re-use the sorted version
+    let lines = sortedMatrixLines;
     let excelHtml = `<thead><tr><th class="sticky-col row-title bg-white">TOTAL SUMMARY</th><th style="background:#e2e8f0;">Total</th>`;
     lines.forEach(l => {
         let safeLName = l === 'Unknown' ? 'UNK' : `B${String(l).replace(/\D/g, '').padStart(2, '0')}`;
@@ -1512,7 +1478,6 @@ function createGauge(value, title, isInverse) {
     return `<div style="text-align:center; width:120px;"><svg viewBox="0 0 100 55" style="width:100%;"><path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#e2e8f0" stroke-width="10" /><line x1="50" y1="50" x2="${nx}" y2="${ny}" stroke="#1e293b" stroke-width="3" stroke-linecap="round" /><circle cx="50" cy="50" r="4" fill="#1e293b" /></svg><div style="font-size:16px; font-weight:800; fill:${color}; color:${color}; margin-top:-5px;">${value}%</div><div style="font-size:10px; font-weight:700; color:#64748b;">${title}</div></div>`;
 }
 
-// Global filter function for the modal preview
 window.filterPvDefects = function(cat, btn) {
     document.querySelectorAll('.pv-filter-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
@@ -1537,12 +1502,10 @@ function showDetailedPreview(r){
   let procQty = (+r[10]||0);
   let smtQty = (+r[12]||0);
 
-  // Stacked Bar calculations
   let pctRMD = totalDef ? (rmdQty/totalDef*100) : 0;
   let pctProc = totalDef ? (procQty/totalDef*100) : 0;
   let pctSMT = totalDef ? (smtQty/totalDef*100) : 0;
 
-  // Parse legacy top 3 for fallback
   let topMap = {};
   if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
   if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
@@ -1604,7 +1567,6 @@ function showDetailedPreview(r){
   document.getElementById('modalTitleSub').innerText = `Data Entry & Analysis Preview`;
   
   document.getElementById("previewContent").innerHTML = `
-    <!-- Top Meta Header -->
     <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
         <div>
             <div style="font-size:20px; font-weight:800; color:var(--text-main); margin-bottom:8px;">${r[3]}</div>
@@ -1617,7 +1579,6 @@ function showDetailedPreview(r){
         </div>
     </div>
 
-    <!-- Snapshot Metrics -->
     <div style="display:grid; grid-template-columns: 1fr 1fr auto auto; gap:20px; background:#fff; border:1px solid #e2e8f0; padding:25px; border-radius:16px; margin-bottom:25px; box-shadow:0 4px 10px rgba(0,0,0,0.02); align-items:center;">
         <div>
             <div style="font-size:11px; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:5px;">Total Input</div>
@@ -1635,7 +1596,6 @@ function showDetailedPreview(r){
         </div>
     </div>
     
-    <!-- Stage Analysis Visual -->
     <div class="pv-section-head"><i class="fa fa-layer-group" style="color:var(--primary);"></i> Defect Stage Distribution</div>
     <div style="background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:12px; margin-bottom:30px; box-shadow:0 4px 10px rgba(0,0,0,0.02);">
         <div style="display:flex; width:100%; height:12px; border-radius:10px; overflow:hidden; background:#f1f5f9; margin-bottom:15px;">
@@ -1650,7 +1610,6 @@ function showDetailedPreview(r){
         </div>
     </div>
 
-    <!-- NEW COMPREHENSIVE DEFECT LOG -->
     <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:15px; border-bottom:2px solid #f1f5f9; padding-bottom:10px;">
         <h4 class="pv-section-head" style="margin:0;"><i class="fa fa-list" style="color:var(--primary);"></i> Defect Logs & Action Plan</h4>
         <div class="def-tabs" style="margin:0;">
@@ -1668,7 +1627,6 @@ function showDetailedPreview(r){
   document.getElementById("overlay").style.display = 'block'; document.getElementById("previewModal").style.display = 'block';
 }
 
-// 📌 UPDATED SAVE LOGIC - Auto-calculates Top 3 from dynamic rows to preserve Database Structure
 async function saveData(){
   if(!f_line.value || !f_input.value) { alert("⚠️ Line & Input Required!"); return; }
 
@@ -1680,7 +1638,6 @@ async function saveData(){
   const pInputs = document.querySelectorAll('.pd-inp');
   for(let inp of pInputs){ if(inp.value && !validDefects.includes(inp.value)){ alert("❌ Invalid Defect Name: " + inp.value + "\nPlease select from the list."); return; } }
 
-  // Extract variables
   let pNamesArr = [], pQtysArr = [], pAnalsArr = [];
   let defectAgg = {};
 
@@ -1703,7 +1660,6 @@ async function saveData(){
           pNamesArr.push(`[${cat}] ${name}`);
           pQtysArr.push(qty);
           
-          // Pack everything tightly into pAnals array to preserve data for all rows
           let remPack = rem;
           if(cse || act) {
               remPack = `${rem}|~|${cse}|~|${act}`;
@@ -1719,7 +1675,6 @@ async function saveData(){
       }
   }
 
-  // Sort to get Top 3 silently to save in DB for backward compatibility
   let sorted = Object.entries(defectAgg).sort((a,b) => b[1].qty - a[1].qty);
   let top1 = sorted[0] ? [sorted[0][0], sorted[0][1].qty, sorted[0][1].cause, sorted[0][1].action] : ["", "", "", ""];
   let top2 = sorted[1] ? [sorted[1][0], sorted[1][1].qty, sorted[1][1].cause, sorted[1][1].action] : ["", "", "", ""];
@@ -1745,7 +1700,6 @@ async function deleteRow(idx) {
     try { const res = await fetch(API, { method: "POST", body: JSON.stringify({ sheet: currentCategory, action: "delete", rowIndex: idx }) }); load(); } catch(e) { alert("Network Error"); }
 }
 
-// 📌 UPDATED: Edit row maps all Causes back to individual rows accurately
 function editRow(idx) {
     let r = allData[idx]; editingRowIndex = idx;
     f_date.value=fixDate(r[0]); f_shift.value=r[1]; f_line.value=r[2]; f_model.value=r[3]; f_input.value=r[4]; f_def.value=r[5]; f_rej.value=r[6]; f_fpy.value=r[7];
@@ -1753,7 +1707,6 @@ function editRow(idx) {
     
     document.getElementById('process_container').innerHTML = '';
 
-    // Build map of legacy Top 3 causes to re-assign to rows (fallback)
     let topMap = {};
     if(r[17]) topMap[r[17].trim()] = { c: r[19]||'', a: r[20]||'' };
     if(r[21]) topMap[r[21].trim()] = { c: r[23]||'', a: r[24]||'' };
@@ -1772,12 +1725,10 @@ function editRow(idx) {
             let rawRem = pAnals[i] || '';
             let rem = rawRem, cse = '', act = '';
             
-            // Check if data was packed in the new method
             if(rawRem.includes('|~|')) {
                 let parts = rawRem.split('|~|');
                 rem = parts[0]; cse = parts[1]; act = parts[2];
             } else {
-                // Fallback to legacy top 3 mapping
                 cse = topMap[dName] ? topMap[dName].c : '';
                 act = topMap[dName] ? topMap[dName].a : '';
             }
@@ -1817,6 +1768,681 @@ function applyFilters() {
 
 function downloadExcel() { if(filteredData.length <= 1) { alert("No data"); return; } var ws = XLSX.utils.aoa_to_sheet(filteredData); var wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, "PQC_Data.xlsx"); }
 function downloadPDF() { const el = document.getElementById('tableContainer'); if(!el) return; html2pdf().set({ margin: 5, filename: 'PQC_Report.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } }).from(el).save(); }
+
+/* ==========================================================================
+   MASTER QUALITY REPORT EXPORTER (EXCELJS ENGINE)
+   Replicates all 8+ formatted sheets with real Root Causes & Action Plans (CAPA)
+   ========================================================================== */
+function getNormalizedQualityData(fromDate, toDate) {
+    let filteredRows = allData.slice(1).filter(r => {
+        let rDate = fixDate(r[0]);
+        if (fromDate && rDate < fromDate) return false;
+        if (toDate && rDate > toDate) return false;
+        return true;
+    });
+
+    let records = [];
+    let inputs = [];
+
+    filteredRows.forEach(r => {
+        let dateIso = fixDate(r[0]);
+        let line = r[2] ? r[2].toString().trim() : "Unknown";
+        let model = r[3] ? r[3].toString().trim() : "Unknown";
+        let inputQty = +r[4] || 0;
+        let totalDef = +r[5] || 0;
+
+        if (inputQty > 0 || totalDef > 0) {
+            inputs.push({
+                isoDate: dateIso,
+                date: getExcelDisplayDate(dateIso),
+                line: line,
+                model: model,
+                input: inputQty
+            });
+        }
+
+        let topMap = {};
+        if (r[17]) topMap[r[17].trim()] = { c: r[19] || '', a: r[20] || '' };
+        if (r[21]) topMap[r[21].trim()] = { c: r[23] || '', a: r[24] || '' };
+        if (r[25]) topMap[r[25].trim()] = { c: r[27] || '', a: r[28] || '' };
+
+        if (r[14]) {
+            let names = r[14].toString().split('\n');
+            let qtys = r[15].toString().split('\n');
+            let anals = (r[16] || "").toString().split('\n');
+
+            names.forEach((n, i) => {
+                if (!n || !n.trim()) return;
+                let match = n.match(/^\[(.*?)\]\s(.*)$/);
+                let cat = match ? match[1] : 'Process';
+                let pureDefect = match ? match[2].trim() : n.trim();
+                let q = (+qtys[i] || 0);
+
+                let rawRem = anals[i] || '';
+                let rem = rawRem, cse = '', act = '';
+                if (rawRem.includes('|~|')) {
+                    let parts = rawRem.split('|~|');
+                    rem = parts[0] || '';
+                    cse = parts[1] || '';
+                    act = parts[2] || '';
+                } else {
+                    cse = topMap[pureDefect] ? topMap[pureDefect].c : '';
+                    act = topMap[pureDefect] ? topMap[pureDefect].a : '';
+                }
+
+                records.push({
+                    isoDate: dateIso,
+                    date: getExcelDisplayDate(dateIso),
+                    line: line,
+                    model: model,
+                    stage: cat,
+                    category: cat,
+                    defect: pureDefect,
+                    qty: q,
+                    analysis: cse || rem || 'Analysis in progress',
+                    cause: cse || 'Not Specified',
+                    action: act || 'Process monitoring & standard adherence'
+                });
+            });
+        }
+    });
+
+    return { records, inputs };
+}
+
+function getExcelDisplayDate(isoDate) {
+    if (!isoDate) return "";
+    const m = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let p = isoDate.split('-');
+    if (p.length < 3) return isoDate;
+    return `${p[2]}-${m[parseInt(p[1], 10) - 1]}`;
+}
+
+async function exportMasterQualityReport() {
+    let fromDate = document.getElementById('dash_from') ? document.getElementById('dash_from').value : '';
+    let toDate = document.getElementById('dash_to') ? document.getElementById('dash_to').value : '';
+
+    const btn = document.getElementById('btnMasterExportDash');
+    let origText = btn ? btn.innerHTML : "";
+    if (btn) { btn.disabled = true; btn.innerHTML = "⏳ Generating Excel..."; }
+
+    setTimeout(async () => {
+        try {
+            const { records, inputs } = getNormalizedQualityData(fromDate, toDate);
+
+            if (records.length === 0 && inputs.length === 0) {
+                alert("⚠️ No data available in the selected date range.");
+                if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+                return;
+            }
+
+            const wb = new ExcelJS.Workbook();
+            const yellowFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
+            const blueFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD9E1F2' } };
+            const orangeFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFCE4D6' } };
+            const lightRedFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF4CCCC' } };
+            const lightGreenFill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2EFDA' } };
+            const borderStyle = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
+
+            function styleRow(row, fill, isPercent = false, isBold = true, textColor = 'FF000000') {
+                row.eachCell((cell) => {
+                    if (fill) cell.fill = fill;
+                    cell.border = borderStyle;
+                    cell.font = { bold: isBold, color: { argb: textColor } };
+                    if (isPercent) cell.numFmt = '0.00%';
+                });
+            }
+
+            function setupSheetHeader(ws, title) {
+                ws.getCell('B2').value = title;
+                ws.getCell('B2').font = { size: 15, bold: true, color: { argb: 'FF0F172A' } };
+                let cell = ws.getCell('B3');
+                cell.value = { text: '🔙 Back to Index', hyperlink: '#\'Index\'!A1' };
+                cell.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+                return 5;
+            }
+
+            let isoDates = [...new Set([...records.map(r => r.isoDate), ...inputs.map(i => i.isoDate)])].sort();
+            let dates = isoDates.map(d => getExcelDisplayDate(d));
+            let models = [...new Set([...records.map(r => r.model), ...inputs.map(i => i.model)])].sort();
+            let lines = [...new Set([...records.map(r => r.line), ...inputs.map(i => i.line)])].sort((a,b) => {
+                let nA = parseInt(a.replace(/\D/g, '')) || 0;
+                let nB = parseInt(b.replace(/\D/g, '')) || 0;
+                return nA - nB;
+            });
+
+            // 1. INDEX
+            const wsIndex = wb.addWorksheet('Index');
+            wsIndex.getColumn(1).width = 42;
+            wsIndex.getCell('A2').value = "Master Quality Report Navigation";
+            wsIndex.getRow(2).font = { size: 16, bold: true };
+            wsIndex.getCell('A3').value = `Date Range: ${fromDate || 'Start'} to ${toDate || 'End'} | Category: ${currentCategory}`;
+            wsIndex.getRow(3).font = { size: 11, italic: true, color: { argb: 'FF475569' } };
+
+            let mainLinks = [
+                'Overall Model Summary',
+                'Overall Line Summary',
+                'Defect Monitoring',
+                'Stage-Wise Reports',
+                'Line & Date Defect Review',
+                'Line Wise Top 5 Defects'
+            ];
+            lines.forEach(l => mainLinks.push(l));
+
+            mainLinks.forEach((sheetName, i) => {
+                let cell = wsIndex.getCell(`A${i + 5}`);
+                cell.value = { text: `▶ Go to: ${sheetName}`, hyperlink: `#'${sheetName}'!A1` };
+                cell.font = { color: { argb: 'FF0000FF' }, underline: true, size: 12, bold: true };
+            });
+
+            // 2. STAGE-WISE REPORTS
+            const wsStageWise = wb.addWorksheet('Stage-Wise Reports');
+            setupSheetHeader(wsStageWise, 'Stage-Wise Model Summary Reports');
+            wsStageWise.columns.forEach(col => col.width = 24);
+            wsStageWise.getColumn(1).width = 16;
+            wsStageWise.getColumn(5).width = 45;
+
+            let currentStageRow = 5;
+            let modelLinkMap = {};
+
+            models.forEach(modelName => {
+                modelLinkMap[modelName] = `A${currentStageRow}`;
+                let mRecs = records.filter(r => r.model === modelName);
+                let mInps = inputs.filter(i => i.model === modelName);
+                let mInp = mInps.reduce((s, x) => s + x.input, 0);
+                let mDef = mRecs.reduce((s, x) => s + x.qty, 0);
+                let mRej = mInp > 0 ? (mDef / mInp * 100).toFixed(2) + "%" : "0.00%";
+                let mFpy = mInp > 0 ? ((mInp - mDef) / mInp * 100).toFixed(2) + "%" : "100.00%";
+
+                let r1 = wsStageWise.getRow(currentStageRow++);
+                r1.values = ["Model", modelName, "", "", ""];
+                wsStageWise.mergeCells(`B${currentStageRow - 1}:E${currentStageRow - 1}`);
+                styleRow(r1, yellowFill, false, true, 'FFD32F2F');
+                r1.alignment = { horizontal: 'center', vertical: 'middle' };
+
+                let r2 = wsStageWise.getRow(currentStageRow++);
+                r2.values = [`Input: ${mInp.toLocaleString()}`, "", `Rej Rate: ${mRej}`, `FPY: ${mFpy}`, ""];
+                wsStageWise.mergeCells(`A${currentStageRow - 1}:B${currentStageRow - 1}`);
+                wsStageWise.mergeCells(`D${currentStageRow - 1}:E${currentStageRow - 1}`);
+                styleRow(r2, blueFill, false, true, 'FF0000FF');
+                r2.getCell(3).font = { bold: true, color: { argb: 'FFD32F2F' } };
+                r2.getCell(4).font = { bold: true, color: { argb: 'FF198754' } };
+                r2.alignment = { horizontal: 'center', vertical: 'middle' };
+
+                let r3 = wsStageWise.getRow(currentStageRow++);
+                r3.values = ["Stage", "Defect Name", "Total Defect Qty", "Total Defect Rate", "Analysis & Root Cause"];
+                styleRow(r3, yellowFill);
+                r3.alignment = { horizontal: 'center', vertical: 'middle' };
+
+                let stages = {};
+                mRecs.forEach(r => {
+                    if (!stages[r.stage]) stages[r.stage] = {};
+                    let key = r.defect + "|" + r.cause;
+                    if (!stages[r.stage][key]) stages[r.stage][key] = { defect: r.defect, analysis: r.analysis, qty: 0 };
+                    stages[r.stage][key].qty += r.qty;
+                });
+
+                Object.keys(stages).forEach(stageName => {
+                    let issues = Object.values(stages[stageName]).sort((a, b) => b.qty - a.qty);
+                    let startMerge = currentStageRow;
+                    issues.forEach((issue, idx) => {
+                        let rate = mInp > 0 ? (issue.qty / mInp * 100).toFixed(2) + "%" : "0.00%";
+                        let rData = wsStageWise.getRow(currentStageRow++);
+                        rData.values = [idx === 0 ? stageName : "", issue.defect, issue.qty, rate, issue.analysis];
+                        styleRow(rData, null, false, true);
+                        rData.getCell(3).font = { bold: true, color: { argb: 'FFD32F2F' } };
+                        rData.getCell(4).font = { bold: true, color: { argb: 'FFD32F2F' } };
+                        rData.getCell(5).font = { bold: false, color: { argb: 'FF475569' } };
+                        rData.alignment = { horizontal: 'center', vertical: 'middle' };
+                        rData.getCell(5).alignment = { horizontal: 'left', vertical: 'middle' };
+                    });
+                    if (issues.length > 1) {
+                        wsStageWise.mergeCells(`A${startMerge}:A${currentStageRow - 1}`);
+                    }
+                });
+                currentStageRow += 2;
+            });
+
+            // 3. OVERALL MODEL SUMMARY
+            const wsOverallModel = wb.addWorksheet('Overall Model Summary');
+            let startRowM = setupSheetHeader(wsOverallModel, 'Overall Model Summary');
+            let mHRow = wsOverallModel.getRow(startRowM);
+            mHRow.values = ["Category", ...models, "Total"];
+            styleRow(mHRow, lightRedFill, false, true, 'FF990033');
+
+            mHRow.eachCell(cell => {
+                if (models.includes(cell.value)) {
+                    cell.value = { text: cell.value, hyperlink: `#'Stage-Wise Reports'!${modelLinkMap[cell.value] || 'A1'}` };
+                    cell.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+                }
+            });
+
+            let rProd = ["Production Qty"], rProc = ["Process Defect Qty"], rRmd = ["RMD Defect Qty"], rSmt = ["SMT Defect Qty"], rTotalDef = ["Total Defects Qty"];
+            let rProcRate = ["Process Rej. Rate%"], rRmdRate = ["RMD Rej. Rate%"], rSmtRate = ["SMT Rej. Rate%"], rTotalRate = ["Total Rejection Rate%"], rFpy = ["FPY"];
+            let gtM = { prod: 0, proc: 0, rmd: 0, smt: 0, def: 0 };
+
+            models.forEach(m => {
+                let inps = inputs.filter(i => i.model === m).reduce((s, x) => s + x.input, 0);
+                let procs = records.filter(r => r.model === m && r.category.toLowerCase().includes('process')).reduce((s, x) => s + x.qty, 0);
+                let rmds = records.filter(r => r.model === m && r.category.toLowerCase().includes('rmd')).reduce((s, x) => s + x.qty, 0);
+                let smts = records.filter(r => r.model === m && r.category.toLowerCase().includes('smt')).reduce((s, x) => s + x.qty, 0);
+                let defs = records.filter(r => r.model === m).reduce((s, x) => s + x.qty, 0);
+
+                gtM.prod += inps; gtM.proc += procs; gtM.rmd += rmds; gtM.smt += smts; gtM.def += defs;
+                rProd.push(inps); rProc.push(procs); rRmd.push(rmds); rSmt.push(smts); rTotalDef.push(defs);
+                rProcRate.push(inps ? procs / inps : 0);
+                rRmdRate.push(inps ? rmds / inps : 0);
+                rSmtRate.push(inps ? smts / inps : 0);
+                rTotalRate.push(inps ? defs / inps : 0);
+                rFpy.push(inps ? (inps - defs) / inps : 0);
+            });
+
+            rProd.push(gtM.prod); rProc.push(gtM.proc); rRmd.push(gtM.rmd); rSmt.push(gtM.smt); rTotalDef.push(gtM.def);
+            rProcRate.push(gtM.prod ? gtM.proc / gtM.prod : 0);
+            rRmdRate.push(gtM.prod ? gtM.rmd / gtM.prod : 0);
+            rSmtRate.push(gtM.prod ? gtM.smt / gtM.prod : 0);
+            rTotalRate.push(gtM.prod ? gtM.def / gtM.prod : 0);
+            rFpy.push(gtM.prod ? (gtM.prod - gtM.def) / gtM.prod : 0);
+
+            wsOverallModel.getRow(startRowM + 1).values = rProd;
+            wsOverallModel.getRow(startRowM + 2).values = rProc;
+            wsOverallModel.getRow(startRowM + 3).values = rRmd;
+            wsOverallModel.getRow(startRowM + 4).values = rSmt;
+            wsOverallModel.getRow(startRowM + 5).values = rTotalDef;
+            wsOverallModel.getRow(startRowM + 6).values = rProcRate;
+            wsOverallModel.getRow(startRowM + 7).values = rRmdRate;
+            wsOverallModel.getRow(startRowM + 8).values = rSmtRate;
+            wsOverallModel.getRow(startRowM + 9).values = rTotalRate;
+            wsOverallModel.getRow(startRowM + 10).values = rFpy;
+
+            styleRow(wsOverallModel.getRow(startRowM + 1), orangeFill);
+            for (let i = startRowM + 2; i <= startRowM + 5; i++) styleRow(wsOverallModel.getRow(i), blueFill);
+            for (let i = startRowM + 6; i <= startRowM + 10; i++) styleRow(wsOverallModel.getRow(i), yellowFill, true);
+            wsOverallModel.columns.forEach(col => col.width = 16);
+
+            // 4. OVERALL LINE SUMMARY
+            const wsLineSummary = wb.addWorksheet('Overall Line Summary');
+            let startRowLSum = setupSheetHeader(wsLineSummary, 'Overall Line Summary');
+            let lHRow = wsLineSummary.getRow(startRowLSum);
+            lHRow.values = ["Category", ...lines, "Total"];
+            styleRow(lHRow, lightRedFill, false, true, 'FF990033');
+
+            lHRow.eachCell(cell => {
+                if (lines.includes(cell.value)) {
+                    cell.value = { text: cell.value, hyperlink: `#'${cell.value}'!A1` };
+                    cell.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+                }
+            });
+
+            let lineProd = ["Production Qty"], lineProc = ["Process Defect"], lineRmd = ["RMD Defect"], lineSmt = ["SMT Defect"], lineDef = ["Total Defects Qty"];
+            let lineProcR = ["Process Rej. Rate%"], lineRmdR = ["RMD Rej. Rate%"], lineSmtR = ["SMT Rej. Rate%"], lineTotR = ["Total Rejection"], lineFpy = ["FPY"];
+            let gtL = { prod: 0, proc: 0, rmd: 0, smt: 0, def: 0 };
+
+            lines.forEach(l => {
+                let inps = inputs.filter(i => i.line === l).reduce((s, x) => s + x.input, 0);
+                let procs = records.filter(r => r.line === l && r.category.toLowerCase().includes('process')).reduce((s, x) => s + x.qty, 0);
+                let rmds = records.filter(r => r.line === l && r.category.toLowerCase().includes('rmd')).reduce((s, x) => s + x.qty, 0);
+                let smts = records.filter(r => r.line === l && r.category.toLowerCase().includes('smt')).reduce((s, x) => s + x.qty, 0);
+                let defs = records.filter(r => r.line === l).reduce((s, x) => s + x.qty, 0);
+
+                gtL.prod += inps; gtL.proc += procs; gtL.rmd += rmds; gtL.smt += smts; gtL.def += defs;
+                lineProd.push(inps); lineProc.push(procs); lineRmd.push(rmds); lineSmt.push(smts); lineDef.push(defs);
+                lineProcR.push(inps ? procs / inps : 0);
+                lineRmdR.push(inps ? rmds / inps : 0);
+                lineSmtR.push(inps ? smts / inps : 0);
+                lineTotR.push(inps ? defs / inps : 0);
+                lineFpy.push(inps ? (inps - defs) / inps : 0);
+            });
+
+            lineProd.push(gtL.prod); lineProc.push(gtL.proc); lineRmd.push(gtL.rmd); lineSmt.push(gtL.smt); lineDef.push(gtL.def);
+            lineProcR.push(gtL.prod ? gtL.proc / gtL.prod : 0);
+            lineRmdR.push(gtL.prod ? gtL.rmd / gtL.prod : 0);
+            lineSmtR.push(gtL.prod ? gtL.smt / gtL.prod : 0);
+            lineTotR.push(gtL.prod ? gtL.def / gtL.prod : 0);
+            lineFpy.push(gtL.prod ? (gtL.prod - gtL.def) / gtL.prod : 0);
+
+            wsLineSummary.getRow(startRowLSum + 1).values = lineProd;
+            wsLineSummary.getRow(startRowLSum + 2).values = lineProc;
+            wsLineSummary.getRow(startRowLSum + 3).values = lineRmd;
+            wsLineSummary.getRow(startRowLSum + 4).values = lineSmt;
+            wsLineSummary.getRow(startRowLSum + 5).values = lineDef;
+            wsLineSummary.getRow(startRowLSum + 6).values = lineProcR;
+            wsLineSummary.getRow(startRowLSum + 7).values = lineRmdR;
+            wsLineSummary.getRow(startRowLSum + 8).values = lineSmtR;
+            wsLineSummary.getRow(startRowLSum + 9).values = lineTotR;
+            wsLineSummary.getRow(startRowLSum + 10).values = lineFpy;
+
+            styleRow(wsLineSummary.getRow(startRowLSum + 1), orangeFill);
+            for (let i = startRowLSum + 2; i <= startRowLSum + 5; i++) styleRow(wsLineSummary.getRow(i), blueFill);
+            for (let i = startRowLSum + 6; i <= startRowLSum + 10; i++) styleRow(wsLineSummary.getRow(i), yellowFill, true);
+            wsLineSummary.columns.forEach(col => col.width = 16);
+
+            // 5. DEFECT MONITORING
+            const wsMonitor = wb.addWorksheet('Defect Monitoring');
+            let startRowMon = setupSheetHeader(wsMonitor, 'Defect Monitoring');
+            let monHead = wsMonitor.getRow(startRowMon);
+            monHead.values = ["Defect Monitoring", ...dates, "Total"];
+            styleRow(monHead, lightRedFill);
+            monHead.getCell(1).fill = blueFill;
+            monHead.getCell(1).font = { bold: true, color: { argb: 'FF0000FF' }, size: 13 };
+
+            let mTotalDef = [], mTotalProd = [];
+            isoDates.forEach(isoD => {
+                mTotalDef.push(records.filter(r => r.isoDate === isoD).reduce((s, x) => s + x.qty, 0));
+                mTotalProd.push(inputs.filter(i => i.isoDate === isoD).reduce((s, x) => s + x.input, 0));
+            });
+            let grandDef = mTotalDef.reduce((a, b) => a + b, 0);
+            let grandProd = mTotalProd.reduce((a, b) => a + b, 0);
+
+            let curMonRow = startRowMon + 1;
+            lines.forEach(l => {
+                let row = [l];
+                let lTot = 0;
+                isoDates.forEach(isoD => {
+                    let qty = records.filter(x => x.line === l && x.isoDate === isoD).reduce((s, x) => s + x.qty, 0);
+                    row.push(qty);
+                    lTot += qty;
+                });
+                row.push(lTot);
+                let r = wsMonitor.getRow(curMonRow++);
+                r.values = row;
+                r.eachCell(c => c.border = borderStyle);
+                r.getCell(1).font = { bold: true, color: { argb: 'FF0000FF' } };
+            });
+
+            let rTotDefRow = wsMonitor.getRow(curMonRow++);
+            rTotDefRow.values = ["Total Defects", ...mTotalDef, grandDef];
+            let rTotProdRow = wsMonitor.getRow(curMonRow++);
+            rTotProdRow.values = ["Total Prod", ...mTotalProd, grandProd];
+
+            let rateArr = ["Def Percentage"], fpyArr = ["Line FPY"];
+            mTotalDef.forEach((dTot, idx) => {
+                let pTot = mTotalProd[idx];
+                rateArr.push(pTot ? dTot / pTot : 0);
+                fpyArr.push(pTot ? (pTot - dTot) / pTot : 0);
+            });
+            rateArr.push(grandProd ? grandDef / grandProd : 0);
+            fpyArr.push(grandProd ? (grandProd - grandDef) / grandProd : 0);
+
+            let rRateRow = wsMonitor.getRow(curMonRow++);
+            rRateRow.values = rateArr;
+            let rFpyRow = wsMonitor.getRow(curMonRow++);
+            rFpyRow.values = fpyArr;
+
+            styleRow(rTotDefRow, lightGreenFill);
+            styleRow(rTotProdRow, lightGreenFill);
+            styleRow(rRateRow, lightGreenFill, true);
+            styleRow(rFpyRow, lightGreenFill, true);
+            wsMonitor.getColumn(1).width = 20;
+
+            // 6. LINE & DATE DEFECT REVIEW (WITH REAL CAPA ACTIONS)
+            const wsReview = wb.addWorksheet('Line & Date Defect Review');
+            let startRowRev = setupSheetHeader(wsReview, 'Line & Date Defect Review & CAPA Improvement Report');
+
+            wsReview.getColumn(1).width = 14;
+            wsReview.getColumn(2).width = 14;
+            wsReview.getColumn(3).width = 14;
+            wsReview.getColumn(4).width = 16;
+            wsReview.getColumn(5).width = 16;
+            wsReview.getColumn(6).width = 16;
+            wsReview.getColumn(7).width = 16;
+            wsReview.getColumn(8).width = 14;
+            wsReview.getColumn(9).width = 14;
+            wsReview.getColumn(10).width = 48;
+            wsReview.getColumn(11).width = 48;
+            wsReview.getColumn(12).width = 16;
+            wsReview.getColumn(13).width = 20;
+
+            let curRevRow = startRowRev;
+            let thRev = wsReview.getRow(curRevRow++);
+            thRev.values = [
+                "Line", "Date", "Input Qty", "Process Defect", "RMD Defect", "SMT Defect",
+                "Total Defect", "Rej Rate%", "FPY (Yield%)", "Defect Causes / Root Cause Analysis",
+                "Review Findings & Corrective Action (CAPA)", "Review Status", "Line Link"
+            ];
+            styleRow(thRev, lightRedFill, false, true, 'FF990033');
+            thRev.alignment = { horizontal: 'center', vertical: 'middle' };
+
+            lines.forEach(l => {
+                isoDates.forEach(isoD => {
+                    let dInp = inputs.filter(i => i.line === l && i.isoDate === isoD).reduce((s, x) => s + x.input, 0);
+                    let dRecs = records.filter(r => r.line === l && r.isoDate === isoD);
+                    let dProc = dRecs.filter(r => r.category.toLowerCase().includes('process')).reduce((s, x) => s + x.qty, 0);
+                    let dRmd = dRecs.filter(r => r.category.toLowerCase().includes('rmd')).reduce((s, x) => s + x.qty, 0);
+                    let dSmt = dRecs.filter(r => r.category.toLowerCase().includes('smt')).reduce((s, x) => s + x.qty, 0);
+                    let dDef = dRecs.reduce((s, x) => s + x.qty, 0);
+
+                    if (dInp === 0 && dDef === 0) return;
+
+                    let rej = dInp > 0 ? (dDef / dInp) : 0;
+                    let fpy = dInp > 0 ? ((dInp - dDef) / dInp) : (dDef === 0 ? 1 : 0);
+
+                    let causeList = [];
+                    let actionList = [];
+
+                    dRecs.forEach(r => {
+                        let cText = r.cause && r.cause !== '-' ? r.cause : (r.analysis || 'Investigating');
+                        let aText = r.action && r.action !== '-' ? r.action : 'Routine Process Check';
+                        causeList.push(`[${r.category}] ${r.defect} (Cause: ${cText}) - Qty: ${r.qty}`);
+                        actionList.push(`[${r.defect}] ${aText}`);
+                    });
+
+                    let rData = wsReview.getRow(curRevRow++);
+                    rData.values = [
+                        l,
+                        getExcelDisplayDate(isoD),
+                        dInp,
+                        dProc,
+                        dRmd,
+                        dSmt,
+                        dDef,
+                        rej,
+                        fpy,
+                        causeList.length > 0 ? causeList.join(';\n') : 'Zero Defects',
+                        actionList.length > 0 ? actionList.join(';\n') : 'Process stable. Standard 5S & SOP maintenance.',
+                        fpy < 0.97 ? "Action Required" : "Monitored",
+                        `▶ Go to Line ${l}`
+                    ];
+                    styleRow(rData, null, false, false);
+                    rData.getCell(8).numFmt = '0.00%';
+                    rData.getCell(9).numFmt = '0.00%';
+                    rData.getCell(10).alignment = { wrapText: true, vertical: 'middle' };
+                    rData.getCell(11).alignment = { wrapText: true, vertical: 'middle' };
+                    rData.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+                    rData.getCell(2).alignment = { horizontal: 'center', vertical: 'middle' };
+
+                    let cellLink = rData.getCell(13);
+                    cellLink.value = { text: `▶ Go to Line ${l}`, hyperlink: `#'${l}'!A1` };
+                    cellLink.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+                });
+            });
+
+            // 7. LINE WISE TOP 5 DEFECTS (WITH REAL DEFECT CAUSES & REAL CAPA ACTIONS)
+            const wsTop5 = wb.addWorksheet('Line Wise Top 5 Defects');
+            let startRowT5 = setupSheetHeader(wsTop5, 'Line-Wise Top 5 Defect Analysis (Process, RMD, SMT) & Action Plan');
+
+            wsTop5.getColumn(1).width = 14;
+            wsTop5.getColumn(2).width = 14;
+            wsTop5.getColumn(3).width = 10;
+            wsTop5.getColumn(4).width = 26;
+            wsTop5.getColumn(5).width = 14;
+            wsTop5.getColumn(6).width = 14;
+            wsTop5.getColumn(7).width = 46;
+            wsTop5.getColumn(8).width = 52;
+            wsTop5.getColumn(9).width = 16;
+            wsTop5.getColumn(10).width = 16;
+            wsTop5.getColumn(11).width = 14;
+            wsTop5.getColumn(12).width = 18;
+
+            let curT5Row = startRowT5;
+
+            lines.forEach(lineName => {
+                let lInp = inputs.filter(i => i.line === lineName).reduce((s, x) => s + x.input, 0);
+                let lRecs = records.filter(r => r.line === lineName);
+                let lDefs = lRecs.reduce((s, x) => s + x.qty, 0);
+                let lYield = lInp > 0 ? (((lInp - lDefs) / lInp) * 100).toFixed(2) + '%' : '100.00%';
+
+                let lineBanner = wsTop5.getRow(curT5Row++);
+                lineBanner.values = [
+                    `▶ Line: ${lineName} | Total Input: ${lInp.toLocaleString()} | Total Defects: ${lDefs.toLocaleString()} | FPY: ${lYield}`,
+                    "", "", "", "", "", "", "", "", "", "",
+                    `▶ Go to Line ${lineName}`
+                ];
+                wsTop5.mergeCells(`A${curT5Row - 1}:K${curT5Row - 1}`);
+                lineBanner.getCell(1).fill = yellowFill;
+                lineBanner.getCell(1).font = { bold: true, color: { argb: 'FF000000' } };
+
+                let linkCell = lineBanner.getCell(12);
+                linkCell.fill = yellowFill;
+                linkCell.value = { text: `▶ Go to Line ${lineName}`, hyperlink: `#'${lineName}'!A1` };
+                linkCell.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+
+                let thRow = wsTop5.getRow(curT5Row++);
+                thRow.values = [
+                    "Line", "Category", "Rank", "Defect Name", "Defect Qty", "Defect Rate%",
+                    "Defect Cause / Failure Analysis", "Corrective & Preventive Action (CAPA)",
+                    "Action Owner", "Target Date", "Status", "Line Link"
+                ];
+                styleRow(thRow, lightRedFill, false, true, 'FF990033');
+                thRow.alignment = { horizontal: 'center', vertical: 'middle' };
+
+                ['Process', 'RMD', 'SMT'].forEach(cat => {
+                    let catRecs = lRecs.filter(r => r.category.toLowerCase().includes(cat.toLowerCase()));
+                    let defMap = {};
+
+                    catRecs.forEach(r => {
+                        if (!defMap[r.defect]) {
+                            defMap[r.defect] = { name: r.defect, qty: 0, causes: new Set(), actions: new Set() };
+                        }
+                        defMap[r.defect].qty += r.qty;
+                        if (r.cause && r.cause !== '-') defMap[r.defect].causes.add(r.cause);
+                        if (r.action && r.action !== '-') defMap[r.defect].actions.add(r.action);
+                    });
+
+                    let sorted = Object.values(defMap).sort((a, b) => b.qty - a.qty).slice(0, 5);
+
+                    for (let rank = 1; rank <= 5; rank++) {
+                        let item = sorted[rank - 1];
+                        let rRow = wsTop5.getRow(curT5Row++);
+
+                        if (item) {
+                            let rate = lInp > 0 ? (item.qty / lInp) : 0;
+                            let causeStr = Array.from(item.causes).join('; ') || 'Failure under investigation';
+                            let actionStr = Array.from(item.actions).join('; ') || `Root cause audit and parameter verification for ${item.name}`;
+
+                            rRow.values = [
+                                lineName, cat, `#${rank}`, item.name, item.qty, rate,
+                                causeStr, actionStr, "Quality/Prod Team", "Immediate", "Open", `▶ View Line`
+                            ];
+                            styleRow(rRow, null, false, false);
+                            rRow.getCell(6).numFmt = '0.00%';
+                            rRow.getCell(5).font = { bold: true, color: { argb: 'FFD32F2F' } };
+                        } else {
+                            rRow.values = [
+                                lineName, cat, `#${rank}`, "[No Defect Recorded]", 0, 0,
+                                "None", "No action needed", "-", "-", "Closed", `▶ View Line`
+                            ];
+                            styleRow(rRow, null, false, false);
+                            rRow.getCell(6).numFmt = '0.00%';
+                            rRow.getCell(4).font = { italic: true, color: { argb: 'FF888888' } };
+                        }
+
+                        rRow.getCell(7).alignment = { wrapText: true, vertical: 'middle' };
+                        rRow.getCell(8).alignment = { wrapText: true, vertical: 'middle' };
+                        rRow.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' };
+                        rRow.getCell(2).alignment = { horizontal: 'center', vertical: 'middle' };
+                        rRow.getCell(3).alignment = { horizontal: 'center', vertical: 'middle' };
+
+                        let cLink = rRow.getCell(12);
+                        cLink.value = { text: `▶ Line ${lineName}`, hyperlink: `#'${lineName}'!A1` };
+                        cLink.font = { color: { argb: 'FF0000FF' }, underline: true, bold: true };
+                    }
+                });
+                curT5Row++;
+            });
+
+            // 8. INDIVIDUAL LINE SHEETS (1, 2, 3...)
+            let allUniqueDefects = [...new Set(records.map(r => r.defect))].sort();
+
+            lines.forEach(l => {
+                const wsLine = wb.addWorksheet(l);
+                let startRowL = setupSheetHeader(wsLine, `Line Report: Line ${l}`);
+
+                let dateHeaderRow = wsLine.getRow(startRowL);
+                dateHeaderRow.values = ["Date", ...dates, "Total"];
+                styleRow(dateHeaderRow, lightRedFill);
+
+                let lProd = ["Prod Qty"], lProc = ["Process Defect"], lRmd = ["RMD Defect"], lSmt = ["SMT Defect"], lTot = ["Total Defect"];
+                let lProcR = ["Process Rate"], lRmdR = ["RMD Rate"], lSmtR = ["SMT Rate"], lTotR = ["Total Rej Rate"], lFpyR = ["FPY"];
+                let lGt = { p: 0, pr: 0, rm: 0, sm: 0, d: 0 };
+
+                isoDates.forEach(isoD => {
+                    let dp = inputs.filter(i => i.line === l && i.isoDate === isoD).reduce((s, x) => s + x.input, 0);
+                    let dpr = records.filter(r => r.line === l && r.isoDate === isoD && r.category.toLowerCase().includes('process')).reduce((s, x) => s + x.qty, 0);
+                    let drm = records.filter(r => r.line === l && r.isoDate === isoD && r.category.toLowerCase().includes('rmd')).reduce((s, x) => s + x.qty, 0);
+                    let dsm = records.filter(r => r.line === l && r.isoDate === isoD && r.category.toLowerCase().includes('smt')).reduce((s, x) => s + x.qty, 0);
+                    let ddef = records.filter(r => r.line === l && r.isoDate === isoD).reduce((s, x) => s + x.qty, 0);
+
+                    lGt.p += dp; lGt.pr += dpr; lGt.rm += drm; lGt.sm += dsm; lGt.d += ddef;
+                    lProd.push(dp); lProc.push(dpr); lRmd.push(drm); lSmt.push(dsm); lTot.push(ddef);
+                    lProcR.push(dp ? dpr / dp : 0);
+                    lRmdR.push(dp ? drm / dp : 0);
+                    lSmtR.push(dp ? dsm / dp : 0);
+                    lTotR.push(dp ? ddef / dp : 0);
+                    lFpyR.push(dp ? (dp - ddef) / dp : 0);
+                });
+
+                lProd.push(lGt.p); lProc.push(lGt.pr); lRmd.push(lGt.rm); lSmt.push(lGt.sm); lTot.push(lGt.d);
+                lProcR.push(lGt.p ? lGt.pr / lGt.p : 0);
+                lRmdR.push(lGt.p ? lGt.rm / lGt.p : 0);
+                lSmtR.push(lGt.p ? lGt.sm / lGt.p : 0);
+                lTotR.push(lGt.p ? lGt.d / lGt.p : 0);
+                lFpyR.push(lGt.p ? (lGt.p - lGt.d) / lGt.p : 0);
+
+                wsLine.getRow(startRowL + 1).values = lProd;
+                wsLine.getRow(startRowL + 2).values = lProc;
+                wsLine.getRow(startRowL + 3).values = lRmd;
+                wsLine.getRow(startRowL + 4).values = lSmt;
+                wsLine.getRow(startRowL + 5).values = lTot;
+                wsLine.getRow(startRowL + 6).values = lProcR;
+                wsLine.getRow(startRowL + 7).values = lRmdR;
+                wsLine.getRow(startRowL + 8).values = lSmtR;
+                wsLine.getRow(startRowL + 9).values = lTotR;
+                wsLine.getRow(startRowL + 10).values = lFpyR;
+
+                styleRow(wsLine.getRow(startRowL + 1), orangeFill);
+                for (let i = startRowL + 2; i <= startRowL + 5; i++) styleRow(wsLine.getRow(i), blueFill);
+                for (let i = startRowL + 6; i <= startRowL + 10; i++) styleRow(wsLine.getRow(i), yellowFill, true);
+
+                let curDefRow = startRowL + 11;
+                allUniqueDefects.forEach(defName => {
+                    let rArr = [defName];
+                    let rSum = 0;
+                    isoDates.forEach(isoD => {
+                        let q = records.filter(r => r.line === l && r.isoDate === isoD && r.defect === defName).reduce((s, x) => s + x.qty, 0);
+                        rArr.push(q);
+                        rSum += q;
+                    });
+                    rArr.push(rSum);
+                    let rowAdded = wsLine.getRow(curDefRow++);
+                    rowAdded.values = rArr;
+                    rowAdded.eachCell(c => c.border = borderStyle);
+                });
+                wsLine.getColumn(1).width = 24;
+            });
+
+            const buffer = await wb.xlsx.writeBuffer();
+            saveAs(new Blob([buffer]), `Master_Quality_Report_${fromDate || 'Start'}_to_${toDate || 'End'}.xlsx`);
+
+            if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+        } catch (err) {
+            console.error("Master Export Error:", err);
+            alert("Error exporting Master Quality Report: " + err.message);
+            if (btn) { btn.disabled = false; btn.innerHTML = origText; }
+        }
+    }, 200);
+}
+
 async function load(){ try { const res = await fetch(API + "?sheet=" + currentCategory); const j = await res.json(); allData = j.rows; populateFilters(); applyFilters(); filterDashboard(); renderMonthlyReview(); } catch(e) { console.error(e); } }
 function closeModal(){ document.getElementById("overlay").style.display='none'; document.getElementById("previewModal").style.display='none'; }
 function resetForm(){ document.querySelectorAll('#entryForm input').forEach(i => i.value = ''); editingRowIndex = null; document.getElementById("saveBtn").innerText = "SAVE RECORD"; document.getElementById("saveBtn").style.background = "var(--primary)"; document.getElementById('process_container').innerHTML = ''; addDefectRow('Process'); }
